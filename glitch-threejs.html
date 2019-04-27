@@ -1,0 +1,142 @@
+<script src='../../resources/three.js'></script>
+<script src="../../resources/glitch-canvas-browser.js"></script>
+<script src="../../resources/js/libs/dat.gui.min.js"></script>
+<canvas id="canvas" width="256" height="256"></canvas>
+<script>
+  var camera, scene, renderer;
+  var mat2, plane;
+
+  var controls = new function(){
+    this.amount = 35;
+    this.iterations = 20;
+    this.quality = 30;
+    this.seed = 25;
+    this.showHelpers = false;
+
+  }
+
+  var params = {
+				amount:  controls.amount,
+				iterations:  controls.iterations,
+				quality:  controls.quality,
+				seed:      controls.seed,
+        showHelpers: controls.showHelpers
+			};
+  //document.addEventListener('change', controls);
+
+  init();
+  //animate();
+  render();
+
+  function init(){
+  // init renderer
+	renderer	= new THREE.WebGLRenderer({
+		antialias: true,
+		alpha: true
+	});
+
+	renderer.setClearColor(new THREE.Color('lightgrey'), 0)
+  renderer.setPixelRatio( window.devicePixelRatio );
+	renderer.setSize( window.innerWidth, window.innerHeight );
+	renderer.localClippingEnabled = true;
+	renderer.domElement.style.position = 'absolute'
+	renderer.domElement.style.top = '0px'
+	renderer.domElement.style.left = '0px'
+	//renderer.localClippingEnabled = true;
+	document.body.appendChild( renderer.domElement );
+
+	// array of functions for the rendering loop
+	var onRenderFcts= [];
+
+	// init scene and camera
+	scene	= new THREE.Scene();
+
+	//////////////////////////////////////////////////////////////////////////////////
+	//		Initialize a basic camera
+	//////////////////////////////////////////////////////////////////////////////////
+
+	// Create a camera
+  camera = new THREE.PerspectiveCamera( 50, window.innerWidth / window.innerHeight, 1, 2000 );
+	camera.position.z = 500;
+	//camera = new THREE.Camera();
+  //camera.position.z = 5;
+	scene.add(camera);
+
+  var texture;
+
+  var canvasContainerEl = document.getElementById( 'canvas' )
+
+  var image = new Image();
+
+  var gui = new dat.GUI();
+	gui.add( controls, 'amount', 0, 56 ).step( 0.01 ).name( 'random amount' ).onChange( function ( value ) {
+					controls.amount = value;
+					//console.log('Hello!');
+					//console.log(params.amount);
+					//render();
+				} );
+	console.log(params);
+  console.log(controls.amount);
+  console.log(plane);
+
+  gui.add( controls, 'showHelpers' ).name( 'show helpers' ).onChange( function ( value ) {
+        controls.showHelpers = value;
+        //console.log(params.showHelpers);
+        //render();
+      } );
+  //console.log(params.showHelpers);
+
+  image.onload = function ( params ) {
+    glitch()
+    .fromImage( image )
+      .toImageData()
+      .then( function( imageData ) {
+        var ctx = canvasContainerEl.getContext( '2d' );
+        ctx.putImageData( imageData, 0, 0 );
+      } );
+  };
+
+  image.src = '../../resources/data/textures/flower-glitch.jpg'
+
+  texture = new THREE.CanvasTexture(canvasContainerEl);
+  texture.needsUpdate = true;
+
+  var mat = new THREE.MeshLambertMaterial({color: 0xbbbbff, map: texture});
+  var planeGeom = new THREE.PlaneGeometry(1,1,2,2);
+  plane = new THREE.Mesh(planeGeom, mat);
+  plane.needsUpdate = true;
+  //plane.rotation.x=-0.5*Math.PI;
+	plane.scale.x = 1.1;
+	plane.scale.y = 1.1;
+  scene.add(plane);
+  console.log(plane.rotation.x);
+
+  var wireframe = new THREE.WireframeGeometry( planeGeom );
+
+  var line = new THREE.LineSegments( wireframe );
+  line.material.depthTest = true;
+  //line.material.opacity = 0.25;
+  //line.material.transparent = true;
+
+  scene.add( line );
+
+  window.addEventListener( 'resize', onWindowResize, false );
+}
+
+function onWindowResize() {
+			camera.aspect = window.innerWidth / window.innerHeight;
+			camera.updateProjectionMatrix();
+			renderer.setSize( window.innerWidth, window.innerHeight );
+			render();
+			}
+
+function render() {
+
+      controls.amount += 0.2;
+      //console.log(controls);
+      plane.rotation.x += 0.01;
+		  plane.rotation.y += 0.01;
+      requestAnimationFrame( render );
+			renderer.render( scene, camera );
+    }
+</script>

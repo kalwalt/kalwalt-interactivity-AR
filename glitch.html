@@ -1,0 +1,313 @@
+---
+layout: interactivity
+title: Noise Noise
+meta-name: false
+---
+<script src='../../resources/three.js'></script>
+<script src="../../resources/ar.min.js"></script>
+<script src="../../resources/js/noise/SimplexNoise.js"></script>
+<script src="../../resources/js/SVGLoader.js"></script>
+<script src="../../resources/glitch-canvas-browser.js"></script>
+<script src="../../resources/js/libs/dat.gui.min.js"></script>
+<!--<div id="canvas-container"></div>-->
+<canvas id="canvas" width="256" height="256"></canvas>
+<button type="button" name="button" id="clickme">Click me</button>
+<script>
+	//////////////////////////////////////////////////////////////////////////////////
+	//		Init
+	//////////////////////////////////////////////////////////////////////////////////
+
+	// init renderer
+	var renderer	= new THREE.WebGLRenderer({
+		antialias: true,
+		alpha: true
+	});
+  //var w = screen.width;
+  //var h = screen.height;
+	var w = 640;
+  var h = 480;
+	renderer.setClearColor(new THREE.Color('lightgrey'), 0)
+	renderer.setSize( w, h );
+	renderer.domElement.style.position = 'absolute'
+	renderer.domElement.style.top = '0px'
+	renderer.domElement.style.left = '0px'
+	//renderer.localClippingEnabled = true;
+	document.body.appendChild( renderer.domElement );
+
+	// array of functions for the rendering loop
+	var onRenderFcts= [];
+
+	// init scene and camera
+	var scene	= new THREE.Scene();
+
+	//////////////////////////////////////////////////////////////////////////////////
+	//		Initialize a basic camera
+	//////////////////////////////////////////////////////////////////////////////////
+
+	// Create a camera
+	var camera = new THREE.Camera();
+	scene.add(camera);
+
+	////////////////////////////////////////////////////////////////////////////////
+	//          handle arToolkitSource
+	////////////////////////////////////////////////////////////////////////////////
+
+	var arToolkitSource = new THREEx.ArToolkitSource({
+		// to read from the webcam
+		sourceType : 'webcam',
+
+	})
+
+	arToolkitSource.init(function onReady(){
+		onResizeElement()
+	})
+
+	// handle resize
+	window.addEventListener('resize', function(){
+		onResizeElement()
+	})
+	function onResizeElement(){
+		arToolkitSource.onResizeElement()
+		arToolkitSource.copyElementSizeTo(renderer.domElement)
+		if( arToolkitContext.arController !== null ){
+			arToolkitSource.copyElementSizeTo(arToolkitContext.arController.canvas)
+		}
+	}
+	////////////////////////////////////////////////////////////////////////////////
+	//          initialize arToolkitContext
+	////////////////////////////////////////////////////////////////////////////////
+
+
+	// create atToolkitContext
+	var arToolkitContext = new THREEx.ArToolkitContext({
+		//cameraParametersUrl: THREEx.ArToolkitContext.baseURL + '../resources/data/camera_para.dat',
+		cameraParametersUrl: '../../resources/data/camera_para.dat',
+		detectionMode: 'mono',
+	})
+	// initialize it
+	arToolkitContext.init(function onCompleted(){
+		// copy projection matrix to camera
+		camera.projectionMatrix.copy( arToolkitContext.getProjectionMatrix() );
+	})
+
+	// update artoolkit on every frame
+	onRenderFcts.push(function(){
+		if( arToolkitSource.ready === false )	return
+
+		arToolkitContext.update( arToolkitSource.domElement )
+
+		// update scene.visible if the marker is seen
+		scene.visible = camera.visible
+
+	})
+
+	////////////////////////////////////////////////////////////////////////////////
+	//          Create a ArMarkerControls
+	////////////////////////////////////////////////////////////////////////////////
+
+	// init controls for camera
+	var markerControls = new THREEx.ArMarkerControls(arToolkitContext, camera, {
+		type : 'pattern',
+		//patternUrl : '../../resources/data/noise-noise.patt',
+		patternUrl : '../../resources/data/patt.hiro',
+		// as we controls the camera, set changeMatrixMode: 'cameraTransformMatrix'
+		changeMatrixMode: 'cameraTransformMatrix'
+	})
+	// as we do changeMatrixMode: 'cameraTransformMatrix', start with invisible scene
+	scene.visible = false
+
+	//////////////////////////////////////////////////////////////////////////////////
+	//		add a gltf object in the scene
+	//////////////////////////////////////////////////////////////////////////////////
+
+  var ambientLight = new THREE.AmbientLight( 0xcccccc, 0.4 );
+  scene.add( ambientLight );
+
+  var pointLight = new THREE.PointLight( 0xffffff, 0.8 );
+  camera.add( pointLight );
+
+  var simplex = new SimplexNoise();
+	var t;
+	var loader = new THREE.FontLoader();
+	loader.load( '../../resources/fonts/helvetiker_regular.typeface.json', function ( font ) {
+
+		var xMid, text;
+
+		var textShape = new THREE.BufferGeometry();
+
+		var color = 0x0000cc;
+
+		var matDark = new THREE.LineBasicMaterial( {
+			color: color,
+			side: THREE.DoubleSide
+		} );
+
+		var matLite = new THREE.MeshBasicMaterial( {
+			color: color,
+			transparent: true,
+			opacity: 0.5,
+			side: THREE.DoubleSide
+		} );
+
+		//var message = "art poetry";
+		function createMessage(t){
+			var message = ['a','r','t',' ','p','o','e','t','r','y'];
+			var data = [];
+			var finalMessage = [];
+			for (var x = 0; x < message.length; x++){
+				data[x] = (message[x].charCodeAt(0) - 97) + Math.floor(Math.abs(simplex.noise(x,t)*2));
+				finalMessage[x] = String.fromCharCode(97 + data[x]);
+			}
+			var out = finalMessage.join();
+      return out.split(',').join('')
+
+		}
+
+		//var t = 0.5;
+		//console.log(t);
+		var sms = createMessage(t);
+		var shapes = font.generateShapes( sms, 2, 2 );
+
+		var geometry = new THREE.ShapeGeometry( shapes );
+		geometry.computeBoundingBox();
+		geometry.verticesNeedUpdate = true;
+
+		xMid = - 0.5 * ( geometry.boundingBox.max.x - geometry.boundingBox.min.x );
+
+		geometry.translate( xMid, 0, 0 );
+
+		// make shape ( N.B. edge view not visible )
+
+		textShape.fromGeometry( geometry );
+
+		text = new THREE.Mesh( textShape, matLite );
+		text.rotation.x = -0.5*Math.PI;
+		text.scale.x = 0.1;
+		text.scale.y = 0.1;
+		text.scale.z = 0.1;
+		text.position.z = -1;
+		scene.add( text );
+
+		// make line shape ( N.B. edge view remains visible )
+
+		var holeShapes = [];
+
+		for ( var i = 0; i < shapes.length; i ++ ) {
+
+			var shape = shapes[ i ];
+
+			if ( shape.holes && shape.holes.length > 0 ) {
+
+				for ( var j = 0; j < shape.holes.length; j ++ ) {
+
+					var hole = shape.holes[ j ];
+					holeShapes.push( hole );
+
+				}
+
+			}
+
+		}
+
+		shapes.push.apply( shapes, holeShapes );
+
+
+	} ); //end load function
+  var texture;
+
+  var canvasContainerEl = document.getElementById( 'canvas' )
+  var params = {
+				amount:     35,
+				iterations: 20,
+				quality:    30,
+				seed:       25
+			};
+
+  var image = new Image();
+
+  function changeParam() {
+		params.amount = Math.random() * 12;
+		params.iterations = Math.random() * 12;
+		params.quality = Math.random() * 12;
+		params.seed = Math.random() * 12;
+		console.log(params);
+    return params;
+  }
+
+	function clickT() {
+		console.log('Hello!');
+	};
+
+	//console.log(document.getElementById("clickme"));
+	document.getElementById("clickme").addEventListener('click',clickT, true);
+	var gui = new dat.GUI();
+	gui.add( params, 'amount', 0, 56 ).step( 0.01 ).name( 'random amount' ).onChange( function ( value ) {
+					params.amount = value;
+					//this.params.amount = params.amount;
+					//console.log('Hello!');
+					//console.log(this.params.amount);
+
+					onRenderFcts.push(function(){
+						renderer.render( scene, camera );
+					})
+				} );
+	console.log(params.amount);
+
+
+  image.onload = function ( params ) {
+    glitch()
+    .fromImage( image )
+      .toImageData()
+      .then( function( imageData ) {
+        var ctx = canvasContainerEl.getContext( '2d' );
+        ctx.putImageData( imageData, 0, 0 );
+      } );
+  };
+
+  image.src = '../../resources/data/textures/flower-glitch.jpg'
+
+  texture = new THREE.CanvasTexture(canvasContainerEl, THREE.ClampToEdgeWrapping);
+  texture.magFilter = THREE.NearestFilter;
+  texture.minFilter = THREE.NearestFilter;
+
+  var mat = new THREE.MeshLambertMaterial({color: 0xbbbbff, map: texture});
+  var planeGeom = new THREE.PlaneGeometry(1,1,2,2);
+  var plane = new THREE.Mesh(planeGeom, mat);
+  plane.rotation.x=-0.5*Math.PI;
+	plane.scale.x = 1.1;
+	plane.scale.y = 1.1;
+  scene.add(plane);
+
+	//////////////////////////////////////////////////////////////////////////////////
+	//		render the whole thing on the page
+	//////////////////////////////////////////////////////////////////////////////////
+
+
+	// render the scene
+	onRenderFcts.push(function(){
+		renderer.render( scene, camera );
+	})
+
+	// run the rendering loop
+	var lastTimeMsec= null
+
+	requestAnimationFrame(function animate(nowMsec){
+		// keep looping
+		requestAnimationFrame( animate );
+		// measure time
+		lastTimeMsec	= lastTimeMsec || nowMsec-1000/60
+		var deltaMsec	= Math.min(200, nowMsec - lastTimeMsec)
+		lastTimeMsec	= nowMsec
+		var time = Date.now() * 0.001;
+		//mesh2.rotation.z = time;
+		//mesh.rotation.z = time;
+		//console.log(time);
+		var time2 = Date.now() * 0.00005;
+		var h = ( 360 * ( 1.0 + time2 ) % 360 ) / 360;
+		t = h;
+		// call each update function
+		onRenderFcts.forEach(function(onRenderFct){
+			onRenderFct(deltaMsec/1000, nowMsec/1000)
+		})
+	})
+</script>
