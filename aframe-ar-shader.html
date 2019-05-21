@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <title>As imple example with a shader</title>
+    <script src='../../resources/aframe.js'></script>
+    <script src='../../resources/aframe-ar.js'></script>
+  </head>
+  <body style='margin : 0px; overflow: hidden;'>
+    <script>
+    AFRAME.registerShader('noise', {
+      schema: {
+        // ...
+        color: {type:'color', is:'uniform', default:'red'},
+       // It is customary to support opacity, for fading in and out.
+       opacity: {type:'number', is:'uniform', default:1.0}
+       },
+       raw: false,
+       fragmentShader:
+    `
+     // Use medium precision.
+     precision mediump float;
+
+     // This receives the color value from the schema, which becomes a vec3 in the shader.
+     uniform vec3 color;
+
+     // This receives the opacity value from the schema, which becomes a number.
+     uniform float opacity;
+
+     // This is the shader program.
+     // A fragment shader can set the color via gl_FragColor,
+     // or decline to draw anything via discard.
+     void main () {
+       // Note that this shader doesn't use texture coordinates.
+       // Set the RGB portion to our color,
+       // and the alpha portion to our opacity.
+       gl_FragColor = vec4(color, opacity);
+     }
+    `
+    });
+    </script>
+    <a-scene embedded arjs='sourceType: webcam' renderer='precision: medium'>
+      <a-marker preset='hiro'>
+        <a-box material="shader:noise; color:blue; opacity:0.7; transparent:true" position="0 0 0"></a-box>
+      </a-marker>
+    </a-scene>
+    <a-entity camera></a-entity>
+  </body>
+</html>
