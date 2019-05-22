@@ -1,0 +1,17 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <title>A simple plane with a texture</title>
+    <script src='../../resources/aframe.js'></script>
+    <script src='../../resources/aframe-ar.js'></script>
+  </head>
+  <body style='margin : 0px; overflow: hidden;'>
+    <a-scene embedded arjs='sourceType: webcam;' renderer='precision: medium'>
+      <a-marker preset='hiro'>
+        <a-entity id="updateMe" geometry="primitive: icosahedron" position='0 0 0'></a-entity>
+      </a-marker>
+      <a-entity camera> </a-entity>
+    </a-scene>
+  </body>
+</html>

@@ -1,0 +1,39 @@
+<!doctype html>
+<html>
+	<head>
+		<meta charset="utf-8" />
+		<title>glitch-canvas issue #26</title>
+	</head>
+	<body>
+		<canvas id="result-canvas" />
+	</body>
+	<script src="../resources/glitch-canvas-browser.js"></script>
+	<script>
+var resultCanvasEl = document.getElementById( 'result-canvas' );
+
+resultCanvasEl.width = 500;
+resultCanvasEl.height = 500;
+
+var resultCtx = resultCanvasEl.getContext( '2d' );
+
+var imageEl = new Image();
+
+imageEl.onload = glitchImage;
+imageEl.src = '../resources/data/textures/aframe-k.png';
+
+function glitchImage () {
+	var randomSeed = Math.round( Math.random() * 100 );
+	var randomQuality = Math.round( Math.random() * 100 );
+
+	glitch( { seed: randomSeed, quality: randomQuality } )
+		.fromImage( imageEl )
+		.toImageData()
+		.then( function ( imageData ) {
+			resultCtx.putImageData( imageData, 0, 0 );
+			//setInterval( glitchImage, 0 );
+			setTimeout( glitchImage, 100 );
+		} );
+}
+
+	</script>
+</html>

@@ -1,0 +1,111 @@
+<!doctype html>
+<html>
+	<head>
+		<meta charset="utf-8" />
+		<title>glitch-canvas issue #26</title>
+	</head>
+	<body>
+		<canvas id="result-canvas" />
+	</body>
+	<script src="../resources/glitch-canvas-browser.js"></script>
+<script>
+function glitchItem() {
+  var canvas = document.getElementById("result-canvas"),
+    ctx = canvas.getContext('2d'),
+    path = "../resources/data/textures/",
+    w = 512, //canvas.clientWidth
+    h = 512; //canvas.clientWidth;
+  canvas.height = h;
+  canvas.width = w;
+
+  var image = new Image();
+
+  var framesCache = [];
+  var currentFrameIndex = 0;
+  var isAnimating = false;
+  var fps = 20
+
+  image.onload = function() {
+    generateGlitchedImageData(90, image).then(function(frames) {
+      framesCache = frames;
+      canvas.addEventListener('click', toggleAnimation);
+      startAnimation();
+    });
+  };
+  //image.crossOrigin = "Anonymous";
+  image.src = "../resources/data/textures/aframe-k.png";
+
+  function startAnimation() {
+    isAnimating = true;
+    showNextFrame();
+  }
+
+  function stopAnimation() {
+    isAnimating = false;
+  }
+
+  function toggleAnimation() {
+    if (isAnimating) {
+      stopAnimation();
+    } else {
+      startAnimation();
+    }
+  }
+
+  function clearAnimation() {
+    isAnimating = false;
+    framesCache = [];
+  }
+
+  // animate to one of the cached frames
+  function showNextFrame() {
+    if (isAnimating) {
+      if (framesCache.length) {
+        currentFrameIndex++;
+
+        if (currentFrameIndex > framesCache.length - 1) {
+          currentFrameIndex = 0;
+        }
+      }
+
+      requestAnimationFrame(function() {
+        ctx.putImageData(framesCache[currentFrameIndex], 0, 0);
+        setTimeout(showNextFrame, 1000 / fps);
+      });
+    }
+  }
+}
+
+// create a few different glitched images
+function generateGlitchedImageData(frameCount, image) {
+  var glitchPromses = [];
+
+  for (var i = 0; i < frameCount; ++i) {
+    glitchPromses[i] = glitch(getRandomGlitchParams())
+      .fromImage(image)
+      .toImageData();
+  }
+
+  return Promise.all(glitchPromses);
+}
+
+function getRandomHeight(maxHeight) {
+  return Math.floor((Math.random() * maxHeight) + 1)
+}
+
+function getRandomWidth(maxWidth) {
+  return Math.floor((Math.random() * maxWidth) + 1)
+}
+
+// return different params every time
+function getRandomGlitchParams() {
+  return {
+    seed: Math.floor((Math.random() * 99) + 1), // integer between 0 and 99 - default 20
+    quality: Math.floor((Math.random() * 99) + 1), // integer between 0 and 99 - default 30
+    amount: Math.floor((Math.random() * 99) + 1), // integer between 0 and 99 - default 35
+    iterations: Math.floor((Math.random() * 99) + 1) // integer - default 20
+  };
+}
+glitchItem();
+</script>
+</html>
