@@ -1,0 +1,145 @@
+<!DOCTYPE html>
+<html>
+<!-- code taken from https://github.com/alexadam/glitch-studio/tree/master/static-jpeg -->
+    <head>
+        <title>js Glitch Lib</title>
+        <style>
+  			body {
+  				margin: 0px;
+  				background-color: #050505;
+  				color: #fff;
+  				overflow: hidden;
+  			}
+  			#canvas {
+  				position: absolute;
+  				background-color: #000000;
+  				top: 0px;
+  				left: 0px;
+  				z-index: 3000;
+  				cursor: crosshair;
+  			}
+  		</style>
+    </head>
+
+    <body>
+
+        <canvas id="canvas" height="128" width="128"></canvas>
+        <script src='../../resources/three.js'></script>
+        <script src="../../resources/js/libs/dat.gui.min.js"></script>
+        <script src="./resources/js/glitchLib.js"></script>
+        <script src="../../resources/js/WebGL.js"></script>
+        <script>
+        if ( WEBGL.isWebGLAvailable() === false ) {
+				document.body.appendChild( WEBGL.getWebGLErrorMessage() );
+			}
+        var camera, scene, renderer;
+        var mat, plane, texture;
+        var controls = new function(){
+          this.amount = 2;
+          this.glitchOn = true;
+        }
+        var params = {
+              amount:  controls.amount,
+              glitchOn: controls.glitchOn,
+            };
+        init();
+
+        render();
+
+        function drawImageOnCanvas(canvasId, imgSrc) {
+          let can = document.getElementById(canvasId);
+          let drawingContext = can.getContext('2d');
+          drawingContext.fillStyle = '#FFFFFF';
+				  drawingContext.fillRect( 0, 0, 128, 128 );
+          let img = new Image();
+          img.onload = function() {
+              can.width = img.width = 128;
+              can.height = img.height = 128;
+              //glitch(controls.amount);
+              drawingContext.drawImage(img, 0, 0, img.width, img.height);
+              //glitch(controls.amount);
+              }
+          img.src = imgSrc;
+          //return can;
+        }
+        function glitch(amount) {
+
+          return glitchImage('canvas', amount);
+
+        }
+
+        function init() {
+
+          // Create a camera
+          camera = new THREE.PerspectiveCamera( 50, window.innerWidth / window.innerHeight, 1, 2000 );
+          camera.position.z = 10;
+
+        	// init scene and camera
+        	scene	= new THREE.Scene();
+
+          scene.add(camera);
+
+          // init renderer
+
+          renderer = new THREE.WebGLRenderer( { antialias: true } );
+				  renderer.setPixelRatio( window.devicePixelRatio );
+				  renderer.setSize( window.innerWidth, window.innerHeight );
+				  document.body.appendChild( renderer.domElement );
+				  window.addEventListener( 'resize', onWindowResize, false );
+
+          //var canvContainer = drawImageOnCanvas('canvas', '../resources/data/textures/aframe-k.png');
+          drawImageOnCanvas('canvas', '../resources/data/textures/aframe-k.png');
+
+          var gui = new dat.GUI();
+          gui.add( controls, 'amount', 0, 56 ).step( 1 ).name( 'random amount' ).onChange( function ( value ) {
+          				controls.amount = value;
+          			} );
+          gui.add( controls, 'glitchOn', true).name('Glitch on').onChange( function (value){
+            controls.glitchOn = value;
+          });
+
+          var light = new THREE.AmbientLight( 0x404040 ); // soft white light
+          scene.add( light );
+
+          mat = new THREE.MeshLambertMaterial();
+          var can = document.getElementById('canvas');
+          //ctx = canvas.getContext('2d');
+          //var can = drawImageOnCanvas('canvas', '../resources/data/textures/aframe-k.png');
+          var ctx = can.getContext('2d');
+          texture = new THREE.CanvasTexture( can );
+          //texture.minFilter =  THREE.LinearMipMapLinearFilter;
+          //texture.magFilter =  THREE.LinearFilter;
+          //texture.format = THREE.RGBformat;
+          mat.map = texture;
+          mat.map.needsUpdate = true;
+
+          var planeGeom = new THREE.PlaneGeometry(10,10,4,4);
+          plane = new THREE.Mesh(planeGeom, mat);
+          plane.needsUpdate = true;
+        	plane.scale.x = 1;
+          plane.scale.y = 1;
+          scene.add(plane);
+
+          window.addEventListener( 'resize', onWindowResize, false );
+          }
+        function onWindowResize() {
+          			camera.aspect = window.innerWidth / window.innerHeight;
+          			camera.updateProjectionMatrix();
+          			renderer.setSize( window.innerWidth, window.innerHeight );
+          			render();
+          			}
+
+          function render() {
+                if(controls.glitchOn==true){
+                glitch(controls.amount);
+              };
+                //controls.amount += 1;
+                plane.rotation.x += 0.01;
+                plane.rotation.y += 0.01;
+                requestAnimationFrame( render );
+          			renderer.render( scene, camera );
+              }
+        </script>
+    </body>
+
+</html>
