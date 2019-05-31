@@ -5,16 +5,15 @@
     <title>A simple plane with a texture</title>
     <script src='../../resources/aframe.js'></script>
     <script src='../../resources/aframe-ar.js'></script>
-    <script src='../../resources/js/aframe-extras/aframe-extras.js'></script>
   </head>
   <body style='margin : 0px; overflow: hidden;'>
     <a-scene embedded arjs='sourceType: webcam;' renderer='precision: medium'>
-      <!-- importing CesiumMan.gltf model from Three.js lib -->
+      <!-- importing Duck.gltf model from Three.js lib -->
       <a-assets>
-        <a-asset-item id="CesiumMan" src="../../resources/models/CesiumMan/glTF/CesiumMan.gltf"></a-asset-item>
+        <a-asset-item id="Duck" src="../../resources/models/Duck/glTF/Duck.gltf"></a-asset-item>
       </a-assets>
       <a-marker preset='hiro'>
-        <a-entity gltf-model="#CesiumMan" animation-mixer></a-entity>
+        <a-entity gltf-model="#Duck"></a-entity>
       </a-marker>
       <a-entity camera> </a-entity>
     </a-scene>
