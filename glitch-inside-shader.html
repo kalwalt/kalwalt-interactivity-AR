@@ -2,7 +2,7 @@
 <script src="../../resources/js/shaders/DigitalGlitch.js"></script>
 <body>
 <script>
-  var renderer, scene, camera, dt_size;
+  var renderer, scene, camera, cube, dt_size;
   var uniforms;
   init();
 
@@ -21,7 +21,8 @@ function init(){
   scene = new THREE.Scene();
 
   // Create a camera
-	camera = new THREE.Camera();
+  camera = new THREE.PerspectiveCamera(70, window.innerWidth / window.innerHeight, 0.01, 100);
+  camera.position.z = 2;
 	scene.add(camera);
 
   if ( THREE.DigitalGlitch === undefined ) console.error( "THREE.GlitchPass relies on THREE.DigitalGlitch" );
@@ -55,7 +56,7 @@ function init(){
 
 
     var geometry = new THREE.BoxGeometry( 1, 1, 1 );
-    var cube = new THREE.Mesh( geometry, material );
+    cube = new THREE.Mesh( geometry, material );
     scene.add(cube);
 
 	}
@@ -91,9 +92,12 @@ function onWindowResize() {
   }
 
   function render() {
+        var time = performance.now();
         requestAnimationFrame( render );
         uniforms[ 'seed' ].value = Math.random();
         uniforms[ 'amount' ].value = Math.random() / 90;
+        cube.rotation.x = time * 0.0005;
+        cube.rotation.y = time * 0.0005;
   			renderer.render( scene, camera );
       }
 </script>
