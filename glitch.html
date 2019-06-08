@@ -1,8 +1,3 @@
----
-layout: interactivity
-title: Noise Noise
-meta-name: false
----
 <script src='../../resources/three.js'></script>
 <script src="../../resources/ar.min.js"></script>
 <script src="../../resources/js/noise/SimplexNoise.js"></script>
@@ -238,21 +233,16 @@ meta-name: false
 		console.log('Hello!');
 	};
 
-	//console.log(document.getElementById("clickme"));
 	document.getElementById("clickme").addEventListener('click',clickT, true);
 	var gui = new dat.GUI();
 	gui.add( params, 'amount', 0, 56 ).step( 0.01 ).name( 'random amount' ).onChange( function ( value ) {
 					params.amount = value;
-					//this.params.amount = params.amount;
-					//console.log('Hello!');
-					//console.log(this.params.amount);
 
 					onRenderFcts.push(function(){
 						renderer.render( scene, camera );
 					})
 				} );
 	console.log(params.amount);
-
 
   image.onload = function ( params ) {
     glitch()
@@ -264,7 +254,7 @@ meta-name: false
       } );
   };
 
-  image.src = '../../resources/data/textures/flower-glitch.jpg'
+  image.src = '../../resources/data/textures/flower-glitch.jpg';
 
   texture = new THREE.CanvasTexture(canvasContainerEl, THREE.ClampToEdgeWrapping);
   texture.magFilter = THREE.NearestFilter;
@@ -299,9 +289,7 @@ meta-name: false
 		var deltaMsec	= Math.min(200, nowMsec - lastTimeMsec)
 		lastTimeMsec	= nowMsec
 		var time = Date.now() * 0.001;
-		//mesh2.rotation.z = time;
-		//mesh.rotation.z = time;
-		//console.log(time);
+
 		var time2 = Date.now() * 0.00005;
 		var h = ( 360 * ( 1.0 + time2 ) % 360 ) / 360;
 		t = h;
