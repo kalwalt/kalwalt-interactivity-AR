@@ -44,6 +44,7 @@ function init(){
   uniforms[ 'distortion_y' ].value = THREE.Math.randFloat( 0, 1 );
   uniforms[ 'seed_x' ].value = THREE.Math.randFloat( - 0.3, 0.3 );
   uniforms[ 'seed_y' ].value = THREE.Math.randFloat( - 0.3, 0.3 );
+  uniforms[ 'col_s' ].value = THREE.Math.randFloat( - 0.5, 0.5 );
 
 
   var material = new THREE.ShaderMaterial( {
