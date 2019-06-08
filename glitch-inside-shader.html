@@ -1,0 +1,100 @@
+<script src='../../resources/three.js'></script>
+<script src="../../resources/js/shaders/DigitalGlitch.js"></script>
+<body>
+<script>
+  var renderer, scene, camera, dt_size;
+  var uniforms;
+  init();
+
+  render();
+
+function init(){
+  // init renderer
+  renderer	= new THREE.WebGLRenderer({
+    antialias: true,
+    alpha: true
+  });
+  renderer.setPixelRatio(window.setPixelRatio);
+  renderer.setSize( window.innerWidth, window.innerHeight );
+  document.body.appendChild(renderer.domElement);
+  window.addEventListener( 'resize', onWindowResize, false );
+  scene = new THREE.Scene();
+
+  // Create a camera
+	camera = new THREE.Camera();
+	scene.add(camera);
+
+  if ( THREE.DigitalGlitch === undefined ) console.error( "THREE.GlitchPass relies on THREE.DigitalGlitch" );
+
+  var shader = THREE.DigitalGlitch;
+  uniforms = THREE.UniformsUtils.clone( shader.uniforms );
+
+  if ( dt_size == undefined ) dt_size = 64;
+  var loader = new THREE.TextureLoader();
+  diffuseTex = loader.load( '../resources/data/textures/aframe-k.png' );
+
+  uniforms[ "tDisp" ].value = generateHeightmap( dt_size );
+  uniforms[ "tDiffuse" ].value = diffuseTex;
+  uniforms[ 'seed' ].value = Math.random();//default seeding
+  uniforms[ 'byp' ].value = 0;
+  uniforms[ 'amount' ].value = Math.random() / 90;
+  uniforms[ 'angle' ].value = THREE.Math.randFloat( - Math.PI, Math.PI );
+  uniforms[ 'distortion_x' ].value = THREE.Math.randFloat( 0, 1 );
+  uniforms[ 'distortion_y' ].value = THREE.Math.randFloat( 0, 1 );
+  uniforms[ 'seed_x' ].value = THREE.Math.randFloat( - 0.3, 0.3 );
+  uniforms[ 'seed_y' ].value = THREE.Math.randFloat( - 0.3, 0.3 );
+
+
+  var material = new THREE.ShaderMaterial( {
+		uniforms: uniforms,
+		vertexShader: shader.vertexShader,
+		fragmentShader: shader.fragmentShader
+	} );
+
+	generateTrigger();
+
+
+    var geometry = new THREE.BoxGeometry( 1, 1, 1 );
+    var cube = new THREE.Mesh( geometry, material );
+    scene.add(cube);
+
+	}
+
+
+function generateTrigger() {
+
+  this.randX = THREE.Math.randInt( 120, 240 );
+
+}
+
+function generateHeightmap( dt_size ) {
+
+  var data_arr = new Float32Array( dt_size * dt_size * 3 );
+  var length = dt_size * dt_size;
+
+  for ( var i = 0; i < length; i ++ ) {
+
+    var val = THREE.Math.randFloat( 0, 1 );
+    data_arr[ i * 3 + 0 ] = val;
+    data_arr[ i * 3 + 1 ] = val;
+    data_arr[ i * 3 + 2 ] = val;
+
+  }
+  var texture = new THREE.DataTexture( data_arr, dt_size, dt_size, THREE.RGBFormat, THREE.FloatType );
+  texture.needsUpdate = true;
+}
+function onWindowResize() {
+  camera.aspect = window.innerWidth / window.innerHeight;
+  camera.updateProjectionMatrix();
+  renderer.setSize( window.innerWidth, window.innerHeight );
+  render();
+  }
+
+  function render() {
+        requestAnimationFrame( render );
+        uniforms[ 'seed' ].value = Math.random();
+        uniforms[ 'amount' ].value = Math.random() / 90;
+  			renderer.render( scene, camera );
+      }
+</script>
+</body>
