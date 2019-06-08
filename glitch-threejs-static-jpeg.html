@@ -87,7 +87,6 @@
 				  document.body.appendChild( renderer.domElement );
 				  window.addEventListener( 'resize', onWindowResize, false );
 
-          //var canvContainer = drawImageOnCanvas('canvas', '../resources/data/textures/aframe-k.png');
           drawImageOnCanvas('canvas', '../resources/data/textures/aframe-k.png');
 
           var gui = new dat.GUI();
@@ -98,19 +97,18 @@
             controls.glitchOn = value;
           });
 
-          var light = new THREE.AmbientLight( 0x404040 ); // soft white light
-          scene.add( light );
+          var ambientLight = new THREE.AmbientLight( 0xcccccc, 0.4 );
+          scene.add( ambientLight );
 
-          mat = new THREE.MeshLambertMaterial();
+          var pointLight = new THREE.PointLight( 0xffffff, 0.8 );
+          camera.add( pointLight );
+
           var can = document.getElementById('canvas');
-          //ctx = canvas.getContext('2d');
-          //var can = drawImageOnCanvas('canvas', '../resources/data/textures/aframe-k.png');
-          var ctx = can.getContext('2d');
-          texture = new THREE.CanvasTexture( can );
-          //texture.minFilter =  THREE.LinearMipMapLinearFilter;
-          //texture.magFilter =  THREE.LinearFilter;
-          //texture.format = THREE.RGBformat;
-          mat.map = texture;
+
+          texture = new THREE.CanvasTexture( can, THREE.ClampToEdgeWrapping );
+          texture.magFilter = THREE.NearestFilter;
+          texture.minFilter = THREE.NearestFilter;
+          mat = new THREE.MeshLambertMaterial({color: 0xbbbbff, map: texture});
           mat.map.needsUpdate = true;
 
           var planeGeom = new THREE.PlaneGeometry(10,10,4,4);
