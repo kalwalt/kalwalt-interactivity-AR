@@ -121,8 +121,6 @@
         clock = new THREE.Clock();
         scene.add(camera);
         geometry = new THREE.PlaneBufferGeometry(10,10,2,2);
-        var loader = new THREE.TextureLoader();
-        texture = loader.load('../resources/data/textures/FloorsCheckerboard_S_Diffuse.jpg');
         mouse = new THREE.Vector2()
         document.addEventListener('mousemove', onDocumentMouseMove, false);
         uniforms = {
