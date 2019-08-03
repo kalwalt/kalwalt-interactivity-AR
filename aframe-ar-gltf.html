@@ -3,11 +3,6 @@
   <head>
     <meta charset="utf-8">
     <title>A simple plane with a texture</title>
-    <!-- Use this if you run your code from localhost on your machine-->
-    <!--<script src='../../resources/aframe.js'></script>
-    <script src='../../resources/aframe-ar.js'></script>
-    <script src='../../resources/js/aframe-extras/aframe-extras.js'></script>-->
-    <!-- This is because my path source path start with https://kalwalt.github.io/kalwalt-interactivity-AR/ -->
     <script src='./resources/aframe.js'></script>
     <script src='./resources/aframe-ar.js'></script>
     <script src='./resources/js/aframe-extras/aframe-extras.js'></script>
@@ -16,8 +11,7 @@
     <a-scene embedded arjs='sourceType: webcam;' renderer='precision: medium'>
       <!-- importing CesiumMan.gltf model from Three.js lib -->
       <a-assets>
-        <!--<a-asset-item id="CesiumMan" src="../../resources/models/CesiumMan/glTF/CesiumMan.gltf"></a-asset-item>-->
-        <a-asset-item id="CesiumMan" src="./kalwalt-interactivity-AR/resources/models/CesiumMan/glTF/CesiumMan.gltf"></a-asset-item>
+        <a-asset-item id="CesiumMan" src="./resources/models/CesiumMan/glTF/CesiumMan.gltf"></a-asset-item>
       </a-assets>
       <a-marker preset='hiro'>
         <a-entity gltf-model="#CesiumMan" animation-mixer></a-entity>
