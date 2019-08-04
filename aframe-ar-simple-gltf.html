@@ -3,14 +3,14 @@
   <head>
     <meta charset="utf-8">
     <title>A simple plane with a texture</title>
-    <script src='../../resources/aframe.js'></script>
-    <script src='../../resources/aframe-ar.js'></script>
+    <script src='./resources/aframe.js'></script>
+    <script src='./resources/aframe-ar.js'></script>
   </head>
   <body style='margin : 0px; overflow: hidden;'>
     <a-scene embedded arjs='sourceType: webcam;' renderer='precision: medium'>
       <!-- importing Duck.gltf model from Three.js lib -->
       <a-assets>
-        <a-asset-item id="Duck" src="../../resources/models/Duck/glTF/Duck.gltf"></a-asset-item>
+        <a-asset-item id="Duck" src="./resources/models/Duck/glTF/Duck.gltf"></a-asset-item>
       </a-assets>
       <a-marker preset='hiro'>
         <a-entity gltf-model="#Duck"></a-entity>
