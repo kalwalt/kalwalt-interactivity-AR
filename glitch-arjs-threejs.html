@@ -6,15 +6,15 @@
   <meta name="viewport" content="width=device-width, user-scalable=no, minimum-scale=1.0, maximum-scale=1.0">
 </head>
 <body>
-<script src='../../resources/three-r103.js'></script>
-<script src="../../resources/ar.min.js"></script>
-<script src="../../resources/js/shaders/CopyShader.js"></script>
-<script src="../../resources/js/shaders/DigitalGlitch.js"></script>
-<script src="../../resources/js/postprocessing/EffectComposer.js"></script>
-<script src="../../resources/js/postprocessing/RenderPass.js"></script>
-<script src="../../resources/js/postprocessing/MaskPass.js"></script>
-<script src="../../resources/js/postprocessing/ShaderPass.js"></script>
-<script src="../../resources/js/postprocessing/GlitchPass.js"></script>
+<script src='./resources/three-r103.js'></script>
+<script src="./resources/ar.min.js"></script>
+<script src="./resources/js/shaders/CopyShader.js"></script>
+<script src="./resources/js/shaders/DigitalGlitch.js"></script>
+<script src="./resources/js/postprocessing/EffectComposer.js"></script>
+<script src="./resources/js/postprocessing/RenderPass.js"></script>
+<script src="./resources/js/postprocessing/MaskPass.js"></script>
+<script src="./resources/js/postprocessing/ShaderPass.js"></script>
+<script src="./resources/js/postprocessing/GlitchPass.js"></script>
 
 <script id="vertexShader" type="x-shader/x-vertex">
 			precision mediump float;
@@ -130,7 +130,7 @@
 
 	var glitchPass;
 
-	  
+
 	// init renderer
 	renderer	= new THREE.WebGLRenderer({
 		antialias: true,
@@ -141,7 +141,7 @@
 	renderer.setPixelRatio( window.devicePixelRatio );
 	renderer.setSize( window.innerWidth, window.innerHeight );
 	document.body.appendChild( renderer.domElement );
-	
+
 	// init scene and camera
 	scene	= new THREE.Scene();
 	scene.fog = new THREE.Fog( 0x000000, 1, 1000 );
@@ -261,12 +261,12 @@
 	  mesh.scale.z = 1.25;
 	  //mesh.position.x = 1.0;
 	  scene.add( mesh );
-	  
+
           var geometry = new THREE.BoxGeometry( 1, 1, 1 );
 	  var material = new THREE.MeshBasicMaterial( { color: 0x00ff00 } );
 	  var cube = new THREE.Mesh( geometry, material );
 	  //scene.add( cube );
-		
+
 	  scene.add( new THREE.AmbientLight( 0x222222 ) );
 
 	  light = new THREE.DirectionalLight( 0xffffff );

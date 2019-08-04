@@ -44,7 +44,7 @@
             }
             document.getElementById("uploadimage").addEventListener("change", draw, false)
             //drawImageOnCanvas.addEventListener("change", draw, false)
-            drawImageOnCanvas('canvas', '../resources/data/textures/monalisa.jpg');
+            drawImageOnCanvas('canvas', './resources/data/textures/monalisa.jpg');
             function drawImageOnCanvas(canvasId, imgSrc) {
                 var can = document.getElementById(canvasId);
                 var ctx = can.getContext('2d');
