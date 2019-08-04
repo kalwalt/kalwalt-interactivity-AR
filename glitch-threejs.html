@@ -1,7 +1,8 @@
-<script src='../../resources/three.js'></script>
-<script src="../../resources/glitch-canvas-browser.js"></script>
-<script src="../../resources/js/libs/dat.gui.min.js"></script>
+<script src='./resources/three.js'></script>
+<script src="./resources/glitch-canvas-browser.js"></script>
+<script src="./resources/js/libs/dat.gui.min.js"></script>
 <canvas id="canvas" width="256" height="256"></canvas>
+<body>
 <script>
   var camera, scene, renderer;
   var mat2, plane;
@@ -96,7 +97,7 @@
       } );
   };
 
-  image.src = '../../resources/data/textures/flower-glitch.jpg'
+  image.src = './resources/data/textures/flower-glitch.jpg'
 
   texture = new THREE.CanvasTexture(canvasContainerEl);
   texture.needsUpdate = true;
@@ -140,3 +141,4 @@ function render() {
 			renderer.render( scene, camera );
     }
 </script>
+</body>
