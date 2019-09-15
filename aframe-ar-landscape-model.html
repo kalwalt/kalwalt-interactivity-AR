@@ -1,0 +1,22 @@
+<!doctype HTML>
+    <html>
+    <script src="https://aframe.io/releases/0.9.2/aframe.min.js"></script>
+    <script src="https://cdn.rawgit.com/jeromeetienne/AR.js/1.7.8/aframe/build/aframe-ar.js"></script>
+
+    <body style='margin : 0px; overflow: hidden;'>
+        <a-scene embedded arjs renderer="precision: medium">
+          <a-assets>
+            <a-asset-item id="hirise-obj" src="./resources/models/hirise/hirise.obj"></a-asset-item>
+            <a-asset-item id="hirise-mtl" src="./resources/models/hirise/hirise.mtl"></a-asset-item>
+		<!--<a-asset-item id="hires" src="./resources/models/hires-gltf/hires.gltf"></a-asset-item>-->
+          </a-assets>
+            <a-marker  preset='hiro'>
+                <!--<a-entity obj-model="#hires" scale="0.1 0.1 0.1"> </a-entity>-->
+                <a-obj-model src="#hirise-obj" mtl="#hirise-mtl" scale="0.00001 0.00001 0.00001"></a-obj-model>
+                <a-obj-model src="./resources/models/hirise/hirise.obj" mtl="./resources/models/hirise/hirise.mtl" ></a-obj-model>
+            </a-marker>
+            <a-entity camera></a-entity>
+        </a-scene>
+    </body>
+
+    </html>
