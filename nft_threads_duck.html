@@ -90,7 +90,7 @@ window.ARThreeOnLoad = function() {
 			var markerRoot = arController.createThreeNFTMarker(markerId);
 			//markerRoot.add(sphere);
       var loader = new THREE.GLTFLoader();
-  						loader.load( 'resources/models/CesiumMan/glTF/CesiumMan.gltf', function ( gltf ) {
+  						loader.load( 'resources/models/Duck/glTF/Duck.gltf', function ( gltf ) {
                 gltf.scene.rotation.x = 0.5*Math.PI;
 									gltf.scene.position.z = 40;
 									gltf.scene.position.x = 80;
@@ -109,7 +109,7 @@ window.ARThreeOnLoad = function() {
 			var markerRoot = arController.createThreeMarker(markerId);
 
       var loader = new THREE.GLTFLoader();
-  						loader.load( 'resources/models/CesiumMan/glTF/CesiumMan.gltf', function ( gltf ) {
+  						loader.load( 'resources/models/Duck/glTF/Duck.gltf', function ( gltf ) {
                 gltf.scene.rotation.x = 0.5*Math.PI;
 								//gltf.animations[0];
 								gltf.animations.duration = 2;
