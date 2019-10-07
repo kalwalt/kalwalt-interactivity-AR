@@ -103,35 +103,19 @@ window.ARThreeOnLoad = function() {
                });
 			arScene.scene.add(markerRoot);
 		});
-		const mixers = [];
-		const clock = new THREE.Clock();
+
 		arController.loadMarker('resources/data/patt.kanji', function(markerId) {
 			var markerRoot = arController.createThreeMarker(markerId);
 
       var loader = new THREE.GLTFLoader();
   						loader.load( 'resources/models/Duck/glTF/Duck.gltf', function ( gltf ) {
                 gltf.scene.rotation.x = 0.5*Math.PI;
-								//gltf.animations[0];
-								gltf.animations.duration = 2;
-								//const clock = new THREE.Clock();
-								var mixer = new THREE.AnimationMixer( gltf.scene.children[ 0 ] );
-								mixers.push( mixer );
-								var action = mixer.clipAction( gltf.animations[0] );
-								action.play();
   							markerRoot.add( gltf.scene );
   						} , undefined, function ( error ) {
   	             console.error( error );
                });
 			arScene.scene.add(markerRoot);
 		});
-
-		const delta = clock.getDelta();
-
-  for ( const mixer of mixers ) {
-
-    mixer.update( delta );
-
-  }
 
 		var tick = function() {
 			arScene.process();
