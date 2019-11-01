@@ -3,17 +3,17 @@
   <head>
     <meta charset="utf-8">
     <title>A simple plane with a texture</title>
-    <script src='./resources/aframe.js'></script>
-    <script src='./resources/aframe-ar.js'></script>
+    <script src='../resources/aframe.js'></script>
+    <script src='../resources/aframe-ar.js'></script>
   </head>
   <body style='margin : 0px; overflow: hidden;'>
     <a-scene embedded arjs='sourceType: webcam;' renderer='precision: medium'>
-      <a-assets >
-        <img id="texture" src='./resources/data/textures/aframe-k.png' crossorigin="anonymous">
+      <!-- importing Duck.gltf model from Three.js lib -->
+      <a-assets>
+        <a-asset-item id="Duck" src="../resources/models/Duck/glTF/Duck.gltf"></a-asset-item>
       </a-assets>
       <a-marker preset='hiro'>
-        <a-plane  position='0 0 0'
-        rotation="-90 0 0" material='opacity: 0.85; src: #texture;'></a-plane>
+        <a-entity gltf-model="#Duck"></a-entity>
       </a-marker>
       <a-entity camera> </a-entity>
     </a-scene>
