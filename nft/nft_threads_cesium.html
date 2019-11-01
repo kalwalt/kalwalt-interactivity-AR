@@ -27,16 +27,16 @@ html,body {
 
 <p>&larr; <a href="index.html">Back to examples</a></p>
 
-<script src="./resources/jsartoolkit5/threaded/artoolkitNft_td.min.js"></script>
-<script src="./resources/three-r103.js"></script>
-<!--<script src="./resources/js/GLTFLoader.js"></script>-->
-<script src="./resources/jsartoolkit5/artoolkit/artoolkit.three.js"></script>
+<script src="../resources/jsartoolkit5/threaded/artoolkitNft_td.min.js"></script>
+<script src="../resources/three-r103.js"></script>
+<script src="../resources/js/GLTFLoader.js"></script>
+<script src="../resources/jsartoolkit5/artoolkit/artoolkit.three.js"></script>
 
 <script>
 alert("To use this Nft example, enable the SharedArrayBuffer option in the browser! Use carefully, see the Spectre issue!")
 window.ARThreeOnLoad = function() {
 
-	ARController.getUserMediaThreeScene({maxARVideoSize: 320, cameraParam: './resources/data/camera_para-iPhone 5 rear 640x480 1.0m.dat',
+	ARController.getUserMediaThreeScene({maxARVideoSize: 320, cameraParam: '../resources/data/camera_para-iPhone 5 rear 640x480 1.0m.dat',
 	onSuccess: function(arScene, arController, arCamera) {
 
 		document.body.className = arController.orientation;
@@ -73,32 +73,65 @@ window.ARThreeOnLoad = function() {
 			new THREE.MeshNormalMaterial()
 		);
 
+		var ambient = new THREE.AmbientLight( 0x222222 );
+					arScene.scene.add( ambient );
+
+		var directionalLight = new THREE.DirectionalLight( 0xdddddd, 4 );
+					directionalLight.position.set( 0, 0, 1 ).normalize();
+					arScene.scene.add( directionalLight );
+
 		sphere.material.flatShading;
 		sphere.position.z = 40;
 		sphere.position.x = 80;
 		sphere.position.y = 80;
 		sphere.scale.set(80,80,80);
 
-		var torus = new THREE.Mesh(
-			new THREE.TorusGeometry(0.3, 0.2, 8, 8),
-			new THREE.MeshNormalMaterial()
-		);
-
-		torus.material.shading = THREE.FlatShading;
-		torus.position.z = 0.5;
-		torus.rotation.x = Math.PI/2;
-
-		arController.loadNFTMarker('resources/dataNFT/pinball', function(markerId) {
+		arController.loadNFTMarker('../resources/dataNFT/pinball', function(markerId) {
 			var markerRoot = arController.createThreeNFTMarker(markerId);
-			markerRoot.add(sphere);
+			//markerRoot.add(sphere);
+      var loader = new THREE.GLTFLoader();
+  						loader.load( '../resources/models/CesiumMan/glTF/CesiumMan.gltf', function ( gltf ) {
+                gltf.scene.rotation.x = 0.5*Math.PI;
+									gltf.scene.position.z = 40;
+									gltf.scene.position.x = 80;
+									gltf.scene.position.y = 80;
+								gltf.scene.scale.set(80,80,80);
+
+  							markerRoot.add( gltf.scene );
+  						} , undefined, function ( error ) {
+  	             console.error( error );
+               });
+			arScene.scene.add(markerRoot);
+		});
+		const mixers = [];
+		const clock = new THREE.Clock();
+		arController.loadMarker('../resources/data/patt.kanji', function(markerId) {
+			var markerRoot = arController.createThreeMarker(markerId);
+
+      var loader = new THREE.GLTFLoader();
+  						loader.load( '../resources/models/CesiumMan/glTF/CesiumMan.gltf', function ( gltf ) {
+                gltf.scene.rotation.x = 0.5*Math.PI;
+								//gltf.animations[0];
+								gltf.animations.duration = 2;
+								//const clock = new THREE.Clock();
+								var mixer = new THREE.AnimationMixer( gltf.scene.children[ 0 ] );
+								mixers.push( mixer );
+								var action = mixer.clipAction( gltf.animations[0] );
+								action.play();
+  							markerRoot.add( gltf.scene );
+  						} , undefined, function ( error ) {
+  	             console.error( error );
+               });
 			arScene.scene.add(markerRoot);
 		});
 
-		arController.loadMarker('resources/data/patt.kanji', function(markerId) {
-			var markerRoot = arController.createThreeMarker(markerId);
-			markerRoot.add(torus);
-			arScene.scene.add(markerRoot);
-		});
+		const delta = clock.getDelta();
+
+  for ( const mixer of mixers ) {
+
+    mixer.update( delta );
+
+  }
 
 		var tick = function() {
 			arScene.process();

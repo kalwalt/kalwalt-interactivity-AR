@@ -27,15 +27,15 @@ html,body {
 
 <p>&larr; <a href="index.html">Back to examples</a></p>
 
-<script src="./resources/jsartoolkit5/standard/artoolkitNft.min.js"></script>
-<script src="./resources/three-r103.js"></script>
+<script src="../resources/jsartoolkit5/standard/artoolkitNft.min.js"></script>
+<script src="../resources/three-r103.js"></script>
 <!--<script src="./resources/js/GLTFLoader.js"></script>-->
-<script src="./resources/jsartoolkit5/artoolkit/artoolkit.three.js"></script>
+<script src="../resources/jsartoolkit5/artoolkit/artoolkit.three.js"></script>
 
 <script>
 window.ARThreeOnLoad = function() {
 
-	ARController.getUserMediaThreeScene({maxARVideoSize: 320, cameraParam: './resources/data/camera_para-iPhone 5 rear 640x480 1.0m.dat',
+	ARController.getUserMediaThreeScene({maxARVideoSize: 320, cameraParam: '../resources/data/camera_para-iPhone 5 rear 640x480 1.0m.dat',
 	onSuccess: function(arScene, arController, arCamera) {
 
 		document.body.className = arController.orientation;
@@ -87,13 +87,13 @@ window.ARThreeOnLoad = function() {
 		torus.position.z = 0.5;
 		torus.rotation.x = Math.PI/2;
 
-		arController.loadNFTMarker('resources/dataNFT/pinball', function(markerId) {
+		arController.loadNFTMarker('../resources/dataNFT/pinball', function(markerId) {
 			var markerRoot = arController.createThreeNFTMarker(markerId);
 			markerRoot.add(sphere);
 			arScene.scene.add(markerRoot);
 		});
 
-		arController.loadMarker('resources/data/patt.kanji', function(markerId) {
+		arController.loadMarker('../resources/data/patt.kanji', function(markerId) {
 			var markerRoot = arController.createThreeMarker(markerId);
 			markerRoot.add(torus);
 			arScene.scene.add(markerRoot);

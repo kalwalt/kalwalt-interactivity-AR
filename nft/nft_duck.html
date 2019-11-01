@@ -27,15 +27,15 @@ html,body {
 
 <p>&larr; <a href="index.html">Back to examples</a></p>
 
-<script src="./resources/jsartoolkit5/standard/artoolkitNft.min.js"></script>
-<script src="./resources/three-r103.js"></script>
-<script src="./resources/js/GLTFLoader.js"></script>
-<script src="./resources/jsartoolkit5/artoolkit/artoolkit.three.js"></script>
+<script src="../resources/jsartoolkit5/standard/artoolkitNft.min.js"></script>
+<script src="../resources/three-r103.js"></script>
+<script src="../resources/js/GLTFLoader.js"></script>
+<script src="../resources/jsartoolkit5/artoolkit/artoolkit.three.js"></script>
 
 <script>
 window.ARThreeOnLoad = function() {
 
-	ARController.getUserMediaThreeScene({maxARVideoSize: 320, cameraParam: './resources/data/camera_para-iPhone 5 rear 640x480 1.0m.dat',
+	ARController.getUserMediaThreeScene({maxARVideoSize: 320, cameraParam: '../resources/data/camera_para-iPhone 5 rear 640x480 1.0m.dat',
 	onSuccess: function(arScene, arController, arCamera) {
 
 		document.body.className = arController.orientation;
@@ -85,11 +85,11 @@ window.ARThreeOnLoad = function() {
 		sphere.position.y = 80;
 		sphere.scale.set(80,80,80);
 
-		arController.loadNFTMarker('resources/dataNFT/pinball', function(markerId) {
+		arController.loadNFTMarker('../resources/dataNFT/pinball', function(markerId) {
 			var markerRoot = arController.createThreeNFTMarker(markerId);
 			//markerRoot.add(sphere);
       var loader = new THREE.GLTFLoader();
-  						loader.load( 'resources/models/Duck/glTF/Duck.gltf', function ( gltf ) {
+  						loader.load( '../resources/models/Duck/glTF/Duck.gltf', function ( gltf ) {
                 gltf.scene.rotation.x = 0.5*Math.PI;
 									gltf.scene.position.z = 40;
 									gltf.scene.position.x = 80;
@@ -103,11 +103,11 @@ window.ARThreeOnLoad = function() {
 			arScene.scene.add(markerRoot);
 		});
 
-		arController.loadMarker('resources/data/patt.kanji', function(markerId) {
+		arController.loadMarker('../resources/data/patt.kanji', function(markerId) {
 			var markerRoot = arController.createThreeMarker(markerId);
 
       var loader = new THREE.GLTFLoader();
-  						loader.load( 'resources/models/Duck/glTF/Duck.gltf', function ( gltf ) {
+  						loader.load( '../resources/models/Duck/glTF/Duck.gltf', function ( gltf ) {
                 gltf.scene.rotation.x = 0.5*Math.PI;
   							markerRoot.add( gltf.scene );
   						} , undefined, function ( error ) {
