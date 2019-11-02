@@ -13,7 +13,7 @@
   </style>
 </head>
 <body>
-<script src='../resources/three-r103.js'></script>
+<script src='../resources/three.js'></script>
 <script src="../resources/js/shaders/CopyShader.js"></script>
 <script src="../resources/js/shaders/DigitalGlitch.js"></script>
 <script src="../resources/js/postprocessing/EffectComposer.js"></script>
@@ -177,8 +177,8 @@
   var positionAttribute = new THREE.Float32BufferAttribute( positions, 3 );
   var colorAttribute = new THREE.Uint8BufferAttribute( colors, 4 );
   colorAttribute.normalized = true; // this will map the buffer values to 0.0f - +1.0f in the shader
-  geometry.addAttribute( 'position', positionAttribute );
-  geometry.addAttribute( 'color', colorAttribute );
+  geometry.setAttribute( 'position', positionAttribute );
+  geometry.setAttribute( 'color', colorAttribute );
   // material
   var material = new THREE.RawShaderMaterial( {
     	uniforms: {
