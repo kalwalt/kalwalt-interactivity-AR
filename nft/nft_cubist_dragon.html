@@ -1,7 +1,7 @@
 <html>
 <head>
 <title>NFT marker example with Three.js</title>
-<meta name="viewport" content="width=device-width, initial-scale=1, minimum-scale=1, maximum-scale=1">
+<meta name="viewport" content="width=device-width, user-scalable=no, initial-scale=1, minimum-scale=1, maximum-scale=1">
 <style>
 html,body {
 	margin: 0;
@@ -27,6 +27,10 @@ html,body {
 
 <p>&larr; <a href="../index.html">Back to examples</a></p>
 
+<video id="video" autoplay loop crossOrigin="anonymous" webkit-playsinline style="display:none">
+			<source src="../../resources/data/video/cubic-dragon-background01e.mp4" type='video/mp4; codecs="avc1.42E01E, mp4a.40.2"'>
+			<source src="../../resources/data/video/cubic-dragon-background01e.ogv" type='video/ogg; codecs="theora, vorbis"'>
+</video>
 <script src="../resources/jsartoolkit5/standard/artoolkitNft.min.js"></script>
 <script src="../resources/three.js"></script>
 <script src="../resources/jsartoolkit5/artoolkit/artoolkit.three.js"></script>
@@ -39,9 +43,8 @@ window.ARThreeOnLoad = function() {
 
 		document.body.className = arController.orientation;
 
-		var renderer = new THREE.WebGLRenderer({antialias: true});
-		renderer.gammaOutput = true;
-		renderer.gammaFactor = 2.2;
+		var renderer = new THREE.WebGLRenderer({antialias: true, alpha: true});
+		//var renderer = new THREE.WebGLRenderer({antialias: true});
 		if (arController.orientation === 'portrait') {
 			var w = (window.innerWidth / arController.videoHeight) * arController.videoWidth;
 			var h = window.innerWidth;
@@ -66,30 +69,38 @@ window.ARThreeOnLoad = function() {
 			rotationTarget += 1;
 		}, false);
 
-		var sphere = new THREE.Mesh(
-			new THREE.SphereGeometry(0.5, 8, 8),
-			new THREE.MeshNormalMaterial()
-		);
-
-		sphere.material.flatShading;
-		sphere.position.z = 40;
-		sphere.position.x = 80;
-		sphere.position.y = 80;
-		sphere.scale.set(80,80,80);
+	var ambientLight = new THREE.AmbientLight( 0xcccccc, 0.4 );
+  arScene.scene.add( ambientLight );
+  var pointLight = new THREE.PointLight( 0xffffff, 0.8 );
+  arScene.camera.add( pointLight );
 
 		var torus = new THREE.Mesh(
 			new THREE.TorusGeometry(0.3, 0.2, 8, 8),
 			new THREE.MeshNormalMaterial()
 		);
 
-		//torus.material.shading = THREE.FlatShading;
 		torus.material.flatShading;
 		torus.position.z = 0.5;
 		torus.rotation.x = Math.PI/2;
 
+	var video = document.getElementById( 'video' );
+	var texture = new THREE.VideoTexture( video );
+	texture.minFilter = THREE.LinearFilter;
+	texture.magFilter = THREE.LinearFilter;
+	texture.format = THREE.RGBFormat;
+	var mat = new THREE.MeshLambertMaterial({color: 0xbbbbff, map: texture});
+  var planeGeom = new THREE.PlaneGeometry(1,1,2,2);
+  var plane = new THREE.Mesh(planeGeom, mat);
+	plane.position.z = 40;
+	plane.position.x = 40;
+	plane.position.y = 40;
+	plane.scale.set(80,80,80);
+
+
 		arController.loadNFTMarker('../resources/dataNFT/cubist-dragon', function(markerId) {
 			var markerRoot = arController.createThreeNFTMarker(markerId);
-			markerRoot.add(sphere);
+			//markerRoot.add(sphere);
+			markerRoot.add(plane);
 			arScene.scene.add(markerRoot);
 		});
 
@@ -101,10 +112,6 @@ window.ARThreeOnLoad = function() {
 
 		var tick = function() {
 			arScene.process();
-			rotationV += (rotationTarget - sphere.rotation.z) * 0.05;
-			sphere.rotation.z += rotationV;
-			rotationV *= 0.8;
-
 			arScene.renderOn(renderer);
 			requestAnimationFrame(tick);
 		};
