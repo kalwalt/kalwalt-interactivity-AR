@@ -26,8 +26,8 @@
 			}
 		</style>
 
-		<script src='./resources/three-r103.js'></script>
-		<script src="./resources/js/WebGL.js"></script>
+		<script src='../resources/three-r103.js'></script>
+		<script src="../resources/js/WebGL.js"></script>
 
 	</head>
 	<body>
@@ -49,7 +49,7 @@
 				scene = new THREE.Scene();
 				clock = new THREE.Clock();
 				var loader = new THREE.TextureLoader();
-				diffuseMap = loader.load( './resources/data/textures/FloorsCheckerboard_S_Diffuse.jpg', animate );
+				diffuseMap = loader.load( '../resources/data/textures/FloorsCheckerboard_S_Diffuse.jpg', animate );
 				diffuseMap.minFilter = THREE.LinearFilter;
 				diffuseMap.generateMipmaps = false;
 				console.log(diffuseMap);

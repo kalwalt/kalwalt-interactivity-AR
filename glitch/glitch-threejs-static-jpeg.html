@@ -24,10 +24,10 @@
     <body>
 
         <canvas id="canvas" height="128" width="128"></canvas>
-        <script src='./resources/three.js'></script>
-        <script src="./resources/js/libs/dat.gui.min.js"></script>
-        <script src="./resources/js/glitchLib.js"></script>
-        <script src="./resources/js/WebGL.js"></script>
+        <script src='../resources/three.js'></script>
+        <script src="../resources/js/libs/dat.gui.min.js"></script>
+        <script src="../resources/js/glitchLib.js"></script>
+        <script src="../resources/js/WebGL.js"></script>
         <script>
         if ( WEBGL.isWebGLAvailable() === false ) {
 				document.body.appendChild( WEBGL.getWebGLErrorMessage() );
@@ -87,7 +87,7 @@
 				  document.body.appendChild( renderer.domElement );
 				  window.addEventListener( 'resize', onWindowResize, false );
 
-          drawImageOnCanvas('canvas', './resources/data/textures/aframe-k.png');
+          drawImageOnCanvas('canvas', '../resources/data/textures/aframe-k.png');
 
           var gui = new dat.GUI();
           gui.add( controls, 'amount', 0, 56 ).step( 1 ).name( 'random amount' ).onChange( function ( value ) {
