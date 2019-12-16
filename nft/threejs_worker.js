@@ -4,9 +4,9 @@ function isMobile() {
 
 let markers = {
     "cubist": {
-        width: 1637,
-        height: 2048,
-        dpi: 215,
+        width: 1080,
+        height: 760,
+        dpi: 72,
         //url: "../resources/DataNFT/cubist-dragon",
         url: "cubist/cubist-dragon",
     },
@@ -42,7 +42,7 @@ function start(container, marker, video, input_width, input_height, canvas_draw,
     renderer.setPixelRatio(window.devicePixelRatio);
 
     let scene = new THREE.Scene();
-    
+
     var ambientLight = new THREE.AmbientLight( 0xcccccc, 0.4 );
     scene.add( ambientLight );
 
