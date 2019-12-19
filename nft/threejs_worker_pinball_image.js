@@ -78,7 +78,7 @@ function start(container, marker, video, input_width, input_height, canvas_draw,
   	var mat = new THREE.MeshLambertMaterial({color: 0xbbbbff, map: texture});
     var planeGeom = new THREE.PlaneGeometry(1,1,1,1);
     var plane = new THREE.Mesh(planeGeom, mat);
-  	plane.position.z = 40;
+  	plane.position.z = 0;
   	plane.position.x = 40;
   	plane.position.y = 40;
   	plane.scale.set(80,80,80);
