@@ -31,7 +31,7 @@
 <script src="../resources/three.js"></script>
 <script src="../resources/js/libs/stats.min.js"></script>
 <!--<script src="../resources/jsartoolkit5/artoolkit/artoolkit.three.js"></script>-->
-<script src="threejs_worker_cubist_dragon.js"></script>
+<script src="threejs_worker_pinball_video.js"></script>
 <script>
 		let statsMain = new Stats();
 		statsMain.showPanel(1); // 0: fps, 1: ms, 2: mb, 3+: custom
@@ -69,7 +69,8 @@
 						video.srcObject = stream;
 						video.addEventListener("loadedmetadata", () => {
 								video.play();
-								start(container, markers["cubist"], video, video.videoWidth, video.videoHeight, canvas_draw, () => statsMain.update(), () => statsWorker.update(), greyCover);
+								//start(container, markers["cubist"], video, video.videoWidth, video.videoHeight, canvas_draw, () => statsMain.update(), () => statsWorker.update(), greyCover);
+								start(container, markers["pinball"], video, video.videoWidth, video.videoHeight, canvas_draw, () => statsMain.update(), () => statsWorker.update(), greyCover);
 						});
 				});
 		}

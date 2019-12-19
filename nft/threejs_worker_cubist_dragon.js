@@ -28,15 +28,6 @@ let markers = {
         url: "../../dataNFT/cubist-dragon",
     },
 };
-/*
-let markers = {
-    "pinball": {
-        width: 1637,
-        height: 2048,
-        dpi: 600,
-        url: "../../dataNFT/pinball",
-    },
-};*/
 
 var setMatrix = function (matrix, value) {
     let array = [];
