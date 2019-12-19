@@ -2,15 +2,41 @@ function isMobile() {
     return /Android|mobile|iPad|iPhone/i.test(navigator.userAgent);
 }
 
+const interpolationFactor = 24;
+
+let trackedMatrix = {
+    // for interpolation
+    delta: [
+        0,0,0,0,
+        0,0,0,0,
+        0,0,0,0,
+        0,0,0,0
+    ],
+    interpolated: [
+        0,0,0,0,
+        0,0,0,0,
+        0,0,0,0,
+        0,0,0,0
+    ]
+}
+
 let markers = {
     "cubist": {
-        width: 1080,
-        height: 760,
-        dpi: 72,
-        //url: "../resources/DataNFT/cubist-dragon",
-        url: "cubist/cubist-dragon",
+        width: 2160,
+        height: 1520,
+        dpi: 600,
+        url: "../../dataNFT/cubist-dragon",
     },
 };
+/*
+let markers = {
+    "pinball": {
+        width: 1637,
+        height: 2048,
+        dpi: 600,
+        url: "../../dataNFT/pinball",
+    },
+};*/
 
 var setMatrix = function (matrix, value) {
     let array = [];
@@ -48,8 +74,7 @@ function start(container, marker, video, input_width, input_height, canvas_draw,
 
     let camera = new THREE.Camera();
     camera.matrixAutoUpdate = false;
-    // let camera = new THREE.PerspectiveCamera(70, window.innerWidth / window.innerHeight, 1, 1000);
-    // camera.position.z = 400;
+
     var pointLight = new THREE.PointLight( 0xffffff, 0.8 );
     camera.add( pointLight );
 
@@ -64,7 +89,7 @@ function start(container, marker, video, input_width, input_height, canvas_draw,
   	texture.magFilter = THREE.LinearFilter;
   	texture.format = THREE.RGBFormat;
   	var mat = new THREE.MeshLambertMaterial({color: 0xbbbbff, map: texture});
-    var planeGeom = new THREE.PlaneGeometry(1,1,2,2);
+    var planeGeom = new THREE.PlaneGeometry(1,1,1,1);
     var plane = new THREE.Mesh(planeGeom, mat);
   	plane.position.z = 40;
   	plane.position.x = 40;
@@ -174,8 +199,14 @@ function start(container, marker, video, input_width, input_height, canvas_draw,
             let w = width / dpi * 2.54 * 10;
             let h = height / dpi * 2.54 * 10;
 
+            // interpolate matrix
+            for( let i = 0; i < 16; i++ ) {
+               trackedMatrix.delta[i] = world[i] - trackedMatrix.interpolated[i];
+               trackedMatrix.interpolated[i] = trackedMatrix.interpolated[i] + ( trackedMatrix.delta[i] / interpolationFactor );
+             }
+
+            setMatrix( root.matrix, trackedMatrix.interpolated );
             plane.visible = true;
-            setMatrix(root.matrix, world);
         }
         renderer.render(scene, camera);
     };
