@@ -22,15 +22,13 @@
 			<canvas style="position: absolute; left:0; top:0" id="canvas_draw"></canvas>
 	</div>
 
-<!-- image https://www.kalwaltart.com/assets/images/uploads/cubist_dragon.jpg-->
 <video id="video-cubist" autoplay loop crossOrigin="anonymous" playsinline style="display:none">
 			<source src="../../resources/data/video/cubic-dragon-background01e.mp4" type='video/mp4; codecs="avc1.42E01E, mp4a.40.2"'>
 			<source src="../../resources/data/video/cubic-dragon-background01e.ogv" type='video/ogg; codecs="theora, vorbis"'>
 </video>
 <link rel="stylesheet" type="text/css" href="../resources/css/style.css">
-<script src="../resources/three.js"></script>
+<script src="../resources/three.min.js"></script>
 <script src="../resources/js/libs/stats.min.js"></script>
-<!--<script src="../resources/jsartoolkit5/artoolkit/artoolkit.three.js"></script>-->
 <script src="threejs_worker_pinball_video.js"></script>
 <script>
 		let statsMain = new Stats();
@@ -69,7 +67,6 @@
 						video.srcObject = stream;
 						video.addEventListener("loadedmetadata", () => {
 								video.play();
-								//start(container, markers["cubist"], video, video.videoWidth, video.videoHeight, canvas_draw, () => statsMain.update(), () => statsWorker.update(), greyCover);
 								start(container, markers["pinball"], video, video.videoWidth, video.videoHeight, canvas_draw, () => statsMain.update(), () => statsWorker.update(), greyCover);
 						});
 				});
