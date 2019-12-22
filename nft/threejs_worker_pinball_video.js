@@ -41,6 +41,12 @@ var setMatrix = function (matrix, value) {
     }
 };
 
+var videoCub = document.getElementById( 'video-cubist' );
+var texture = new THREE.VideoTexture( videoCub );
+texture.minFilter = THREE.LinearFilter;
+texture.magFilter = THREE.LinearFilter;
+texture.format = THREE.RGBFormat;
+
 function start(container, marker, video, input_width, input_height, canvas_draw, render_update, track_update, greyCover) {
     let vw, vh;
     let sw, sh;
@@ -74,11 +80,6 @@ function start(container, marker, video, input_width, input_height, canvas_draw,
     let root = new THREE.Object3D();
     scene.add(root);
 
-    var videoCub = document.getElementById( 'video-cubist' );
-  	var texture = new THREE.VideoTexture( videoCub );
-  	texture.minFilter = THREE.LinearFilter;
-  	texture.magFilter = THREE.LinearFilter;
-  	texture.format = THREE.RGBFormat;
   	var mat = new THREE.MeshLambertMaterial({color: 0xbbbbff, map: texture});
     var planeGeom = new THREE.PlaneGeometry(1,1,1,1);
     var plane = new THREE.Mesh(planeGeom, mat);
