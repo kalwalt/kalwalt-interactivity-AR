@@ -40,6 +40,7 @@ var setMatrix = function (matrix, value) {
         matrix.elements = [].slice.call(array);
     }
 };
+var texture = new THREE.TextureLoader().load( '../resources/data/textures/aframe-k.png' );
 
 function start(container, marker, video, input_width, input_height, canvas_draw, render_update, track_update, greyCover) {
     let vw, vh;
@@ -74,7 +75,6 @@ function start(container, marker, video, input_width, input_height, canvas_draw,
     let root = new THREE.Object3D();
     scene.add(root);
 
-  	var texture = new THREE.TextureLoader().load( '../resources/data/textures/aframe-k.png' );
   	var mat = new THREE.MeshLambertMaterial({color: 0xbbbbff, map: texture});
     var planeGeom = new THREE.PlaneGeometry(1,1,1,1);
     var plane = new THREE.Mesh(planeGeom, mat);
