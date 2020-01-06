@@ -216,7 +216,7 @@
                     jsfeat.imgproc.gaussian_blur(lev0_img, lev_img, options.blur_size|0); // this is more robust
                     corners_num = detect_keypoints(lev_img, lev_corners, max_per_level);
                     jsfeat.orb.describe(lev_img, lev_corners, corners_num, lev_descr);
-                    //console.log("train " + lev_img.cols + "x" + lev_img.rows + " points: " + corners_num);
+                    console.log("train " + lev_img.cols + "x" + lev_img.rows + " points: " + corners_num);
                     sc /= sc_inc;
                     // lets do multiple scale levels
                     // we can use Canvas context draw method for faster resize
@@ -235,7 +235,7 @@
                             lev_corners[i].x *= 1./sc;
                             lev_corners[i].y *= 1./sc;
                         }
-                        //console.log("train " + lev_img.cols + "x" + lev_img.rows + " points: " + corners_num);
+                        console.log("train " + lev_img.cols + "x" + lev_img.rows + " points: " + corners_num);
                         sc /= sc_inc;
                     }
                 };
