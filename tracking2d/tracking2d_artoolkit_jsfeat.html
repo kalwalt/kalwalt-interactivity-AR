@@ -1,0 +1,150 @@
+<!doctype html>
+
+<html lang="en">
+    <head>
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1, minimum-scale=1, maximum-scale=1">
+        <title>Example NFT, based on JSFeat and artoolkit</title>
+        <!--<link rel="stylesheet" href="../resources/css/jsfeat.css">-->
+        <!-- Based on this example by @evaristoc https://github.com/evaristoc
+        https://github.com/evaristoc/ar_experiments/blob/gh-pages/jsfeat/tests/test6.html
+        -->
+    </head>
+    <body>
+        <script type="text/javascript" src="../resources/jsfeat/jsfeat-min.js"></script>
+        <!--<script type="text/javascript" src="../resources/js/libs/compatibility.js"></script>
+        <script type="text/javascript" src="../resources/js/libs/profiler.js"></script>
+        <script type="text/javascript" src="../resources/js/libs/dat.gui.min.js"></script>-->
+        <script async type="text/javascript" src="../resources/jsartoolkit5/standard/artoolkit.min.js"></script>
+        <script async src="../resources/three.min.js"></script>
+        <script async src="../resources/jsartoolkit5/artoolkit/artoolkit.three.js"></script>
+        <script src="tracking2d/main.js" ></script>
+        <canvas id="patternCanvas"></canvas>
+        <script type="text/javascript">
+        var foto = new Image();
+        foto.src = '../resources/data/textures/aframe-k.png'
+        var targetview = new Image();
+        targetview.src = '../resources/data/textures/pinball.jpg'
+        window.ARThreeOnLoad = function() {
+
+          ARController.getUserMediaThreeScene({maxARVideoSize: 640, cameraParam: '../resources/data/camera_para-iPhone 5 rear 640x480 1.0m.dat',
+          onSuccess: function(arScene, arController, arCamera) {
+
+            document.body.className = arController.orientation;
+
+            var renderer = new THREE.WebGLRenderer({antialias: true});
+            renderer.gammaOutput = true;
+            renderer.gammaFactor = 2.2;
+            if (arController.orientation === 'portrait') {
+              var w = (window.innerWidth / arController.videoHeight) * arController.videoWidth;
+              var h = window.innerWidth;
+              renderer.setSize(w, h);
+              renderer.domElement.style.paddingBottom = (w-h) + 'px';
+            } else {
+              if (/Android|mobile|iPad|iPhone/i.test(navigator.userAgent)) {
+                renderer.setSize(window.innerWidth, (window.innerWidth / arController.videoWidth) * arController.videoHeight);
+              } else {
+                renderer.setSize(arController.videoWidth, arController.videoHeight);
+                document.body.className += ' desktop';
+              }
+            }
+
+            document.body.insertBefore(renderer.domElement, document.body.firstChild);
+
+            var rotationV = 0;
+            var rotationTarget = 0;
+
+            renderer.domElement.addEventListener('click', function(ev) {
+              ev.preventDefault();
+              rotationTarget += 1;
+            }, false);
+
+
+
+            init();
+
+            var canvas = document.getElementById('patternCanvas');
+            canvas.width = targetview.width;
+            canvas.height = targetview.height;
+            var ctx = canvas.getContext('2d');
+            ctx.drawImage(targetview, 0,0, targetview.width,targetview.height);
+            var imageData = ctx.getImageData(0, 0, targetview.width, targetview.height);
+            ctx.fillStyle = "rgb(0,255,0)";
+            ctx.strokeStyle = "rgb(0,255,0)";
+
+            if(!imageData){
+              return;
+            } else {
+              setTimeout(
+                function(){
+                  train_pattern(imageData);
+                }, 300);
+            }
+
+            var sphere = new THREE.Mesh(
+      				new THREE.SphereGeometry(1.0, 8, 8),
+      				new THREE.MeshNormalMaterial()
+      			);
+
+      			sphere.material.flatShading;
+      			sphere.position.z = 1.0;
+
+            arController.loadMarker('../resources/data/patt.hiro', function(markerId) {
+      				var markerRoot = arController.createThreeMarker(markerId, 3);
+      				markerRoot.add(sphere);
+      				arScene.scene.add(markerRoot);
+      			});
+
+
+
+            var tick = function() {
+              arScene.process();
+              //var videoDataBuff = new Uint8ClampedArray(640*480);
+              //videoDataBuff.set(arController.getProcessingImage());
+              var videoDataBuff = arController.getProcessingImage();
+              console.log(videoDataBuff);
+              //jsfeat.imgproc.grayscale(videoData, 640, 480, img_u8);
+              //jsfeat.imgproc.gaussian_blur(img_u8, img_u8_smooth, blur_size);
+              jsfeat.imgproc.gaussian_blur(videoDataBuff, img_u8_smooth, blur_size);
+              jsfeat.fast_corners.set_threshold(match_threshold);
+              num_corners = detect_keypoints(img_u8_smooth, screen_corners, 500);
+              jsfeat.orb.describe(img_u8_smooth, screen_corners, num_corners, screen_descriptors);
+              var data_u32 = new Uint32Array(videoDataBuff);
+              render_corners(screen_corners, num_corners, data_u32, 640);
+              num_matches = match_pattern();
+              console.log(num_matches);
+              good_matches = find_transform(matches, num_matches);
+              if(num_matches) {
+                  var contextM = renderer.getContext('2d');
+                  //contextM.putImageData(img_u8);
+                  render_matches(contextM, matches, num_matches);
+                  //if(good_matches > 8)
+                  //render_pattern_shape(ctx);
+                  if (good_matches_num.length > 20) {
+                    good_matches_num.shift();
+                  };
+                  if(good_matches > 5){
+                    good_matches_num.push(1);
+                  }else{
+                    good_matches_num.push(0);
+                  };
+                  if (good_matches_num && good_matches_num.reduce((a,b)=>{return a+b},0)/good_matches_num.length > .5) {
+                      render_pattern_shape(contextM);
+                    }
+                  }
+              arScene.renderOn(renderer);
+              requestAnimationFrame(tick);
+            };
+
+            tick();
+            }
+          })
+          delete window.ARThreeOnLoad;
+        };
+
+        if (window.ARController && ARController.getUserMediaThreeScene) {
+        	ARThreeOnLoad();
+        }
+        </script>
+    </body>
+</html>
