@@ -20,6 +20,7 @@
         <script async src="../resources/jsartoolkit5/artoolkit/artoolkit.three.js"></script>
         <script src="tracking2d/main.js" ></script>
         <canvas id="patternCanvas"></canvas>
+        <canvas id="renderer"></canvas>
         <script type="text/javascript">
         var foto = new Image();
         foto.src = '../resources/data/textures/aframe-k.png'
@@ -33,6 +34,7 @@
             document.body.className = arController.orientation;
 
             var renderer = new THREE.WebGLRenderer({antialias: true});
+            renderer.canvas = document.getElementById('renderer');
             renderer.gammaOutput = true;
             renderer.gammaFactor = 2.2;
             if (arController.orientation === 'portrait') {
@@ -61,12 +63,13 @@
 
 
 
-            init();
+            init(640, 480, targetview.width, targetview.height);
 
             var canvas = document.getElementById('patternCanvas');
             canvas.width = targetview.width;
             canvas.height = targetview.height;
             var ctx = canvas.getContext('2d');
+            //console.log(ctx)
             ctx.drawImage(targetview, 0,0, targetview.width,targetview.height);
             var imageData = ctx.getImageData(0, 0, targetview.width, targetview.height);
             ctx.fillStyle = "rgb(0,255,0)";
@@ -77,8 +80,8 @@
             } else {
               setTimeout(
                 function(){
-                  train_pattern(imageData);
-                }, 300);
+                  train_pattern(imageData, targetview.width, targetview.height);
+                }, 100);
             }
 
             var sphere = new THREE.Mesh(
@@ -99,25 +102,28 @@
 
             var tick = function() {
               arScene.process();
-              //var videoDataBuff = new Uint8ClampedArray(640*480);
-              //videoDataBuff.set(arController.getProcessingImage());
-              var videoDataBuff = arController.getProcessingImage();
-              console.log(videoDataBuff);
-              //jsfeat.imgproc.grayscale(videoData, 640, 480, img_u8);
-              //jsfeat.imgproc.gaussian_blur(img_u8, img_u8_smooth, blur_size);
-              jsfeat.imgproc.gaussian_blur(videoDataBuff, img_u8_smooth, blur_size);
+              /*var bufferPointer = artoolkit.frameMalloc;
+              var buffSize = 640*480;
+              var videoDataBuff = new Uint8Array(Module.HEAPU8.buffer, bufferPointer, buffSize);
+              videoDataBuff.set(arController.getProcessingImage());
+              //var videoDataBuff = arController.getProcessingImage();
+              //console.log(videoDataBuff);*/
+
+              var ctx_renderer = renderer.canvas.getContext('2d');
+              var videoData = ctx_renderer.getImageData(0, 0, 640, 480);
+              jsfeat.imgproc.grayscale(videoData.data, 640, 480, v_u8);
+              jsfeat.imgproc.gaussian_blur(v_u8, v_u8_smooth, blur_size|0);
+              //jsfeat.imgproc.gaussian_blur(videoDataBuff, img_u8_smooth, blur_size);
               jsfeat.fast_corners.set_threshold(match_threshold);
-              num_corners = detect_keypoints(img_u8_smooth, screen_corners, 500);
-              jsfeat.orb.describe(img_u8_smooth, screen_corners, num_corners, screen_descriptors);
-              var data_u32 = new Uint32Array(videoDataBuff);
+              num_corners = detect_keypoints(v_u8_smooth, screen_corners, 500);
+              jsfeat.orb.describe(v_u8_smooth, screen_corners, num_corners, screen_descriptors);
+              var data_u32 = new Uint32Array(videoData.data);
               render_corners(screen_corners, num_corners, data_u32, 640);
               num_matches = match_pattern();
               console.log(num_matches);
               good_matches = find_transform(matches, num_matches);
               if(num_matches) {
-                  var contextM = renderer.getContext('2d');
-                  //contextM.putImageData(img_u8);
-                  render_matches(contextM, matches, num_matches);
+                  render_matches(ctx_renderer, matches, num_matches);
                   //if(good_matches > 8)
                   //render_pattern_shape(ctx);
                   if (good_matches_num.length > 20) {
@@ -129,7 +135,7 @@
                     good_matches_num.push(0);
                   };
                   if (good_matches_num && good_matches_num.reduce((a,b)=>{return a+b},0)/good_matches_num.length > .5) {
-                      render_pattern_shape(contextM);
+                      render_pattern_shape(ctx_renderer);
                     }
                   }
               arScene.renderOn(renderer);
