@@ -1,5 +1,5 @@
 var gui,options,ctx,canvasWidth,canvasHeight;
-var img_u8, img_u8_smooth, screen_corners, num_corners, screen_descriptors;
+var img_u8, img_u8_smooth, v_u8, v_u8_smooth, screen_corners, num_corners, screen_descriptors;
 var pattern_corners, pattern_descriptors, pattern_preview;
 var matches, homo3x3, match_mask;
 var num_train_levels = 4;
@@ -21,8 +21,8 @@ var match_t = (function () {
     return match_t;
 })();
 
-var train_pattern = function (data) {
-    jsfeat.imgproc.grayscale(data.data, targetview.width, targetview.height, img_u8);
+var train_pattern = function (data, width, height) {
+    jsfeat.imgproc.grayscale(data.data, width, height, img_u8);
     var lev=0, i=0;
     var sc = 1.0;
     var max_pattern_size = 512;
@@ -415,20 +415,20 @@ var render_pattern_shape = function(ctx) {
                   )
 }
 
-var init =  function(videoWidth, videoHeight) {
+var init =  function(videoWidth, videoHeight, imgWidth, imgHeight) {
 
-      img_u8 = new jsfeat.matrix_t(640, 480, jsfeat.U8_t | jsfeat.C1_t);
-      //img_u8 = new jsfeat.matrix_t(targetview.width, targetview.height, jsfeat.U8_t | jsfeat.C1_t);
+      img_u8 = new jsfeat.matrix_t(imgWidth, imgHeight, jsfeat.U8_t | jsfeat.C1_t);
+      v_u8 =  new jsfeat.matrix_t(videoWidth, videoHeight, jsfeat.U8_t | jsfeat.C1_t);
       // after blur
-      img_u8_smooth = new jsfeat.matrix_t(640, 480, jsfeat.U8_t | jsfeat.C1_t);
-      //img_u8_smooth = new jsfeat.matrix_t(targetview.width, targetview.height, jsfeat.U8_t | jsfeat.C1_t);
+      img_u8_smooth = new jsfeat.matrix_t(imgWidth, imgHeight, jsfeat.U8_t | jsfeat.C1_t);
+      v_u8_smooth = new jsfeat.matrix_t(videoWidth, videoHeight, jsfeat.U8_t | jsfeat.C1_t);
       // we wll limit to 500 strongest points
       screen_descriptors = new jsfeat.matrix_t(32, 500, jsfeat.U8_t | jsfeat.C1_t);
       pattern_descriptors = [];
       screen_corners = [];
       pattern_corners = [];
       matches = [];
-      var i = 640*480;
+      var i = videoWidth * videoHeight;
       //var i = targetview.width*targetview.height;
       while(--i >= 0) {
           screen_corners[i] = new jsfeat.keypoint_t(0,0,0,0,-1);
