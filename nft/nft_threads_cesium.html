@@ -41,7 +41,7 @@ window.ARThreeOnLoad = function() {
 
 		document.body.className = arController.orientation;
 
-		var renderer = new THREE.WebGLRenderer({antialias: true});
+		var renderer = new THREE.WebGLRenderer({antialias: true, precision: 'mediump'});
 		renderer.gammaOutput = true;
 		renderer.gammaFactor = 2.2;
 		if (arController.orientation === 'portrait') {
@@ -88,9 +88,9 @@ window.ARThreeOnLoad = function() {
 
 		arController.loadNFTMarker('../resources/dataNFT/pinball', function(markerId) {
 			var markerRoot = arController.createThreeNFTMarker(markerId);
-			//markerRoot.add(sphere);
+
       var loader = new THREE.GLTFLoader();
-  						loader.load( '../resources/models/CesiumMan/glTF/CesiumMan.gltf', function ( gltf ) {
+  						loader.load( '../resources/models/CesiumMan/glTF/CesiumMan.glb', function ( gltf ) {
                 gltf.scene.rotation.x = 0.5*Math.PI;
 									gltf.scene.position.z = 40;
 									gltf.scene.position.x = 80;
@@ -111,9 +111,7 @@ window.ARThreeOnLoad = function() {
       var loader = new THREE.GLTFLoader();
   						loader.load( '../resources/models/CesiumMan/glTF/CesiumMan.gltf', function ( gltf ) {
                 gltf.scene.rotation.x = 0.5*Math.PI;
-								//gltf.animations[0];
 								gltf.animations.duration = 2;
-								//const clock = new THREE.Clock();
 								var mixer = new THREE.AnimationMixer( gltf.scene.children[ 0 ] );
 								mixers.push( mixer );
 								var action = mixer.clipAction( gltf.animations[0] );
