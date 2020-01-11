@@ -79,9 +79,9 @@ function start(container, marker, video, input_width, input_height, canvas_draw,
     var planeGeom = new THREE.PlaneGeometry(1,1,1,1);
     var plane = new THREE.Mesh(planeGeom, mat);
   	plane.position.z = 0;
-  	plane.position.x = 40;
-  	plane.position.y = 40;
-  	plane.scale.set(80,80,80);
+  	plane.position.x = 90;
+  	plane.position.y = 90;
+  	plane.scale.set(180,180,180);
 
 
     root.matrixAutoUpdate = false;
@@ -137,11 +137,13 @@ function start(container, marker, video, input_width, input_height, canvas_draw,
                     proj[9] *= ratioH;
                     proj[13] *= ratioH;
                     setMatrix(camera.projectionMatrix, proj);
-
+                    break;
+                }
+                case "endLoading":{
+                    if(msg.end == true)
                     // removing loader page if present
-                    if (greyCover && greyCover.parentElement) {
-                        greyCover.parentElement.removeChild(greyCover);
-                    }
+                    document.body.classList.remove( 'loading' );
+                    document.getElementById('loading').remove();
                     break;
                 }
                 case "found": {
@@ -158,9 +160,14 @@ function start(container, marker, video, input_width, input_height, canvas_draw,
         };
     };
 
-    let lastmsg = null;
-    let found = (msg) => {
-        lastmsg = msg;
+    let world;
+
+    let found = ( msg ) => {
+        if( !msg ) {
+            world = null;
+        } else {
+            world = JSON.parse( msg.matrixGL_RH );
+        }
     };
 
     let lasttime = Date.now();
@@ -168,23 +175,11 @@ function start(container, marker, video, input_width, input_height, canvas_draw,
 
     let draw = () => {
         render_update();
-        let now = Date.now();
-        let dt = now - lasttime;
-        time += dt;
-        lasttime = now;
 
-        if (!lastmsg) {
+        if (!world) {
             plane.visible = false;
         } else {
-            let proj = JSON.parse(lastmsg.proj);
-            let world = JSON.parse(lastmsg.matrixGL_RH);
-
-            let width = marker.width;
-            let height = marker.height;
-            let dpi = marker.dpi;
-
-            let w = width / dpi * 2.54 * 10;
-            let h = height / dpi * 2.54 * 10;
+            plane.visible = true;
 
             // interpolate matrix
             for( let i = 0; i < 16; i++ ) {
