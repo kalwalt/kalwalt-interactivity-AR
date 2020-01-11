@@ -60,14 +60,11 @@ function start(container, marker, video, input_width, input_height, canvas_draw,
 
     var scene = new THREE.Scene();
 
-    var ambientLight = new THREE.AmbientLight( 0xcccccc, 0.4 );
+    var ambientLight = new THREE.AmbientLight( 0xffffff );
     scene.add( ambientLight );
 
     var camera = new THREE.Camera();
     camera.matrixAutoUpdate = false;
-
-    var pointLight = new THREE.PointLight( 0xffffff, 0.8 );
-    camera.add( pointLight );
 
     scene.add(camera);
 
@@ -81,9 +78,9 @@ function start(container, marker, video, input_width, input_height, canvas_draw,
     var planeGeom = new THREE.PlaneGeometry(1,1,1,1);
     var plane = new THREE.Mesh(planeGeom, mat);
   	plane.position.z = 0;
-  	plane.position.x = 40;
-  	plane.position.y = 40;
-  	plane.scale.set(80,80,80);
+  	plane.position.x = 80;
+  	plane.position.y = 80;
+  	plane.scale.set(160,160,160);
 
 
     root.matrixAutoUpdate = false;
@@ -98,12 +95,12 @@ function start(container, marker, video, input_width, input_height, canvas_draw,
 
         sw = vw * sscale;
         sh = vh * sscale;
-        video.style.width = sw + "px";
+        /*video.style.width = sw + "px";
         video.style.height = sh + "px";
         container.style.width = sw + "px";
         container.style.height = sh + "px";
         canvas_draw.style.clientWidth = sw + "px";
-        canvas_draw.style.clientHeight = sh + "px";
+        canvas_draw.style.clientHeight = sh + "px";*/
         canvas_draw.width = sw;
         canvas_draw.height = sh;
         w = vw * pscale;
@@ -112,8 +109,8 @@ function start(container, marker, video, input_width, input_height, canvas_draw,
         ph = Math.max(h, w / 4 * 3);
         ox = (pw - w) / 2;
         oy = (ph - h) / 2;
-        canvas_process.style.clientWidth = pw + "px";
-        canvas_process.style.clientHeight = ph + "px";
+        //canvas_process.style.clientWidth = pw + "px";
+        //canvas_process.style.clientHeight = ph + "px";
         canvas_process.width = pw;
         canvas_process.height = ph;
 
@@ -168,7 +165,7 @@ function start(container, marker, video, input_width, input_height, canvas_draw,
         if( !msg ) {
             world = null;
         } else {
-            world = JSON.parse( msg.matrixGL_RH );	
+            world = JSON.parse( msg.matrixGL_RH );
         }
     };
 

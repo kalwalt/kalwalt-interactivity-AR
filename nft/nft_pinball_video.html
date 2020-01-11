@@ -2,7 +2,7 @@
 <head>
 <title>NFT marker example with Three.js</title>
 <meta name="viewport" content="width=device-width, initial-scale=1, minimum-scale=0.5, maximum-scale=1">
-
+<link rel="stylesheet" type="text/css" href="../resources/css/video-style.css">
 </head>
 <body>
 	<div id="loading">
@@ -54,9 +54,8 @@
 		         muted
 		         playsinline
 		         id="arvideo">
-		         <source src="../resources/data/video/cubic-dragon-background01e.mp4" type="video/mp4">	
+		         <source src="../resources/data/video/video--01.mp4" type='video/mp4'>
 		     </video>
-<link rel="stylesheet" type="text/css" href="../resources/css/video-style.css">
 <script src="../resources/three.min.js"></script>
 <script src="../resources/js/libs/stats.min.js"></script>
 <script src="threejs_worker_pinball_video.js"></script>
@@ -84,18 +83,23 @@ if (navigator.mediaDevices && navigator.mediaDevices.getUserMedia) {
 		video: true
 	};
 
-	if (window.innerWidth < 800) {
-		hint = {
-			audio: false,
-			video: {
-					width: { ideal: 480 },
-					height: { ideal: 640 },
-					facingMode:
-							{ exact:
-									"environment"
-							}
+	if( window.innerWidth < 800 ) {
+			let width = ( window.innerWidth < window.innerHeight ) ? 240 : 360;
+			let height = ( window.innerWidth < window.innerHeight ) ? 360 : 240;
+
+			let aspectRatio = window.innerWidth / window.innerHeight;
+
+			console.log( width, height );
+
+			hint = {
+					audio: false,
+					video: {
+							facingMode: 'environment',
+							width: { min: width, max: width }
 					},
-		};
+			};
+
+			console.log( hint );
 	}
 
 	navigator.mediaDevices.getUserMedia(hint).then(function(stream) {
