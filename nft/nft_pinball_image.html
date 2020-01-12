@@ -63,11 +63,11 @@ CAMERA VIDEO & CANVAS
 /**
  * STATS
  */
-let statsMain = new Stats();
+var statsMain = new Stats();
 statsMain.showPanel( 0 ); // 0: fps, 1: ms, 2: mb, 3+: custom
 document.getElementById( 'stats1' ).appendChild( statsMain.dom );
 
-let statsWorker = new Stats();
+var statsWorker = new Stats();
 statsWorker.showPanel( 0 ); // 0: fps, 1: ms, 2: mb, 3+: custom
 document.getElementById( 'stats2' ).appendChild( statsWorker.dom );
 
@@ -75,9 +75,9 @@ document.getElementById( 'stats2' ).appendChild( statsWorker.dom );
 /**
  * APP / ELEMENTS
  */
-let container = document.getElementById( 'app' );
-let video = document.getElementById( 'video' );
-let canvas = document.getElementById( 'canvas' );
+var container = document.getElementById( 'app' );
+var video = document.getElementById( 'video' );
+var canvas = document.getElementById( 'canvas' );
 
 
 /**
@@ -85,15 +85,15 @@ let canvas = document.getElementById( 'canvas' );
  */
 
 		if (navigator.mediaDevices && navigator.mediaDevices.getUserMedia) {
-			let hint = {
+			var hint = {
 					audio: false,
 					video: true
 			};
 			if( window.innerWidth < 800 ) {
-					let width = ( window.innerWidth < window.innerHeight ) ? 240 : 360;
-					let height = ( window.innerWidth < window.innerHeight ) ? 360 : 240;
+					var width = ( window.innerWidth < window.innerHeight ) ? 240 : 360;
+					var height = ( window.innerWidth < window.innerHeight ) ? 360 : 240;
 
-					let aspectRatio = window.innerWidth / window.innerHeight;
+					var aspectRatio = window.innerWidth / window.innerHeight;
 
 					console.log( width, height );
 
@@ -110,7 +110,7 @@ let canvas = document.getElementById( 'canvas' );
 
 			navigator.mediaDevices.getUserMedia( hint ).then( function( stream ) {
 					video.srcObject = stream;
-					video.addEventListener( 'loadedmetadata', () => {
+					video.addEventListener( 'loadedmetadata', function() {
 							video.play();
 
 							console.log( 'video', video, video.videoWidth, video.videoHeight );

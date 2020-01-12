@@ -94,6 +94,7 @@ function start(container, marker, video, input_width, input_height, canvas_draw,
 
         sw = vw * sscale;
         sh = vh * sscale;
+        // for custom sizing inside the load function
         /*video.style.width = sw + "px";
         video.style.height = sh + "px";
         container.style.width = sw + "px";
