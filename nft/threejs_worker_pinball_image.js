@@ -55,13 +55,12 @@ function start(container, marker, video, input_width, input_height, canvas_draw,
     let canvas_process = document.createElement('canvas');
     let context_process = canvas_process.getContext('2d');
 
-    // let context_draw = canvas_draw.getContext('2d');
     let renderer = new THREE.WebGLRenderer({ canvas: canvas_draw, alpha: true, antialias: true });
     renderer.setPixelRatio(window.devicePixelRatio);
 
     let scene = new THREE.Scene();
 
-    var ambientLight = new THREE.AmbientLight( 0xcccccc, 0.4 );
+    var ambientLight = new THREE.AmbientLight( 0xcccccc );
     scene.add( ambientLight );
 
     let camera = new THREE.Camera();

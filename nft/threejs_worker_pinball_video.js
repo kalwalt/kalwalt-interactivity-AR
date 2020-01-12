@@ -54,7 +54,6 @@ function start(container, marker, video, input_width, input_height, canvas_draw,
     var canvas_process = document.createElement('canvas');
     var context_process = canvas_process.getContext('2d');
 
-    // var context_draw = canvas_draw.getContext('2d');
     var renderer = new THREE.WebGLRenderer({ canvas: canvas_draw, alpha: true, antialias: true });
     renderer.setPixelRatio(window.devicePixelRatio);
 
@@ -78,9 +77,9 @@ function start(container, marker, video, input_width, input_height, canvas_draw,
     var planeGeom = new THREE.PlaneGeometry(1,1,1,1);
     var plane = new THREE.Mesh(planeGeom, mat);
   	plane.position.z = 0;
-  	plane.position.x = 80;
-  	plane.position.y = 80;
-  	plane.scale.set(160,160,160);
+  	plane.position.x = 90;
+  	plane.position.y = 90;
+  	plane.scale.set(180,180,180);
 
 
     root.matrixAutoUpdate = false;
