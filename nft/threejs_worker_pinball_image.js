@@ -4,7 +4,7 @@ function isMobile() {
 
 const interpolationFactor = 24;
 
-let trackedMatrix = {
+var trackedMatrix = {
     // for interpolation
     delta: [
         0,0,0,0,
@@ -20,7 +20,7 @@ let trackedMatrix = {
     ]
 }
 
-let markers = {
+var markers = {
     "pinball": {
         width: 1637,
         height: 2048,
@@ -30,8 +30,8 @@ let markers = {
 };
 
 var setMatrix = function (matrix, value) {
-    let array = [];
-    for (let key in value) {
+    var array = [];
+    for (var key in value) {
         array[key] = value[key];
     }
     if (typeof matrix.elements.set === "function") {
@@ -43,27 +43,27 @@ var setMatrix = function (matrix, value) {
 var texture = new THREE.TextureLoader().load( '../resources/data/textures/aframe-k.png' );
 
 function start(container, marker, video, input_width, input_height, canvas_draw, render_update, track_update, greyCover) {
-    let vw, vh;
-    let sw, sh;
-    let pscale, sscale;
-    let w, h;
-    let pw, ph;
-    let ox, oy;
-    let worker;
-    let camera_para = '../../../resources/data/camera_para-iPhone 5 rear 640x480 1.0m.dat'
+    var vw, vh;
+    var sw, sh;
+    var pscale, sscale;
+    var w, h;
+    var pw, ph;
+    var ox, oy;
+    var worker;
+    var camera_para = '../../../resources/data/camera_para-iPhone 5 rear 640x480 1.0m.dat'
 
-    let canvas_process = document.createElement('canvas');
-    let context_process = canvas_process.getContext('2d');
+    var canvas_process = document.createElement('canvas');
+    var context_process = canvas_process.getContext('2d');
 
-    let renderer = new THREE.WebGLRenderer({ canvas: canvas_draw, alpha: true, antialias: true });
+    var renderer = new THREE.WebGLRenderer({ canvas: canvas_draw, alpha: true, antialias: true });
     renderer.setPixelRatio(window.devicePixelRatio);
 
-    let scene = new THREE.Scene();
+    var scene = new THREE.Scene();
 
     var ambientLight = new THREE.AmbientLight( 0xcccccc );
     scene.add( ambientLight );
 
-    let camera = new THREE.Camera();
+    var camera = new THREE.Camera();
     camera.matrixAutoUpdate = false;
 
     var pointLight = new THREE.PointLight( 0xffffff, 0.8 );
@@ -71,7 +71,7 @@ function start(container, marker, video, input_width, input_height, canvas_draw,
 
     scene.add(camera);
 
-    let root = new THREE.Object3D();
+    var root = new THREE.Object3D();
     scene.add(root);
 
   	var mat = new THREE.MeshLambertMaterial({color: 0xbbbbff, map: texture});
@@ -86,7 +86,7 @@ function start(container, marker, video, input_width, input_height, canvas_draw,
     root.matrixAutoUpdate = false;
     root.add(plane);
 
-    let load = () => {
+    var load = function() {
         vw = input_width;
         vh = input_height;
 
@@ -95,12 +95,13 @@ function start(container, marker, video, input_width, input_height, canvas_draw,
 
         sw = vw * sscale;
         sh = vh * sscale;
-        video.style.width = sw + "px";
+        // for custom sizing inside the load function
+        /*video.style.width = sw + "px";
         video.style.height = sh + "px";
         container.style.width = sw + "px";
         container.style.height = sh + "px";
         canvas_draw.style.clientWidth = sw + "px";
-        canvas_draw.style.clientHeight = sh + "px";
+        canvas_draw.style.clientHeight = sh + "px";*/
         canvas_draw.width = sw;
         canvas_draw.height = sh;
         w = vw * pscale;
@@ -109,8 +110,8 @@ function start(container, marker, video, input_width, input_height, canvas_draw,
         ph = Math.max(h, w / 4 * 3);
         ox = (pw - w) / 2;
         oy = (ph - h) / 2;
-        canvas_process.style.clientWidth = pw + "px";
-        canvas_process.style.clientHeight = ph + "px";
+        //canvas_process.style.clientWidth = pw + "px";
+        //canvas_process.style.clientHeight = ph + "px";
         canvas_process.width = pw;
         canvas_process.height = ph;
 
@@ -121,12 +122,12 @@ function start(container, marker, video, input_width, input_height, canvas_draw,
         worker.postMessage({ type: "load", pw: pw, ph: ph, camera_para: camera_para, marker: marker.url });
 
         worker.onmessage = (ev) => {
-            let msg = ev.data;
+            var msg = ev.data;
             switch (msg.type) {
                 case "loaded": {
-                    let proj = JSON.parse(msg.proj);
-                    let ratioW = pw / w;
-                    let ratioH = ph / h;
+                    var proj = JSON.parse(msg.proj);
+                    var ratioW = pw / w;
+                    var ratioH = ph / h;
                     proj[0] *= ratioW;
                     proj[4] *= ratioW;
                     proj[8] *= ratioW;
@@ -159,9 +160,9 @@ function start(container, marker, video, input_width, input_height, canvas_draw,
         };
     };
 
-    let world;
+    var world;
 
-    let found = ( msg ) => {
+    var found = ( msg ) => {
         if( !msg ) {
             world = null;
         } else {
@@ -169,10 +170,10 @@ function start(container, marker, video, input_width, input_height, canvas_draw,
         }
     };
 
-    let lasttime = Date.now();
-    let time = 0;
+    var lasttime = Date.now();
+    var time = 0;
 
-    let draw = () => {
+    var draw = () => {
         render_update();
 
         if (!world) {
@@ -181,7 +182,7 @@ function start(container, marker, video, input_width, input_height, canvas_draw,
             plane.visible = true;
 
             // interpolate matrix
-            for( let i = 0; i < 16; i++ ) {
+            for( var i = 0; i < 16; i++ ) {
                trackedMatrix.delta[i] = world[i] - trackedMatrix.interpolated[i];
                trackedMatrix.interpolated[i] = trackedMatrix.interpolated[i] + ( trackedMatrix.delta[i] / interpolationFactor );
              }
@@ -197,10 +198,10 @@ function start(container, marker, video, input_width, input_height, canvas_draw,
         context_process.fillRect(0, 0, pw, ph);
         context_process.drawImage(video, 0, 0, vw, vh, ox, oy, w, h);
 
-        let imageData = context_process.getImageData(0, 0, pw, ph);
+        var imageData = context_process.getImageData(0, 0, pw, ph);
         worker.postMessage({ type: "process", imagedata: imageData }, [imageData.data.buffer]);
     }
-    let tick = () => {
+    var tick = () => {
         draw();
         requestAnimationFrame(tick);
     };
