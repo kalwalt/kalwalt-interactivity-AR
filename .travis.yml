@@ -1,6 +1,11 @@
-language: "ruby"
+language: ruby
+rvm:
+  - 2.5
 branches:
   only:
     - master
 gemfile:
   - Gemfile
+before_install:
+    - gem install bundler
+    - gem install github-pages
