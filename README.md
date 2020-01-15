@@ -1,4 +1,4 @@
-<a href="https://www.patreon.com/bePatron?u=29397492" data-patreon-widget-type="become-patron-button">Become a Patron!</a><script async src="https://c6.patreon.com/becomePatronButton.bundle.js"></script>
+<span class="badge-patreon"><a href="https://patreon.com/walterperdan" title="Donate to this project using Patreon"><img src="https://img.shields.io/badge/patreon-donate-yellow.svg" alt="Patreon donate button" /></a></span>
 [![Build Status](https://travis-ci.com/kalwalt/kalwalt-interactivity-AR.svg?branch=master)](https://travis-ci.com/kalwalt/kalwalt-interactivity-AR)
 # kalwalt-interactivity-AR
 Some various experiments with [Ar.js](https://github.com/jeromeetienne/AR.js) and [Three.js](https://threejs.org/) and not only.
