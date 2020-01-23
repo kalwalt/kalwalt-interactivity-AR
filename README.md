@@ -1,3 +1,5 @@
+<span class="badge-patreon"><a href="https://patreon.com/walterperdan" title="Donate to this project using Patreon"><img src="https://img.shields.io/badge/patreon-donate-yellow.svg" alt="Patreon donate button" /></a></span>
+[![Build Status](https://travis-ci.com/kalwalt/kalwalt-interactivity-AR.svg?branch=master)](https://travis-ci.com/kalwalt/kalwalt-interactivity-AR)
 # kalwalt-interactivity-AR
 Some various experiments with [Ar.js](https://github.com/jeromeetienne/AR.js) and [Three.js](https://threejs.org/) and not only.
 Note that some of them maybe can not works... It's my notebook, block of sketches of small applications or fragments of code that I am testing.
