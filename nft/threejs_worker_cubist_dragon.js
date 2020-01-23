@@ -29,6 +29,19 @@ let markers = {
     },
 };
 
+<!-- image https://www.kalwaltart.com/assets/images/uploads/cubist_dragon.jpg-->
+var videoScene = document.createElement('video');
+videoScene.muted = true
+videoScene.src = '../resources/data/video/cubic-dragon-background01e.mp4';
+// video.play()
+videoScene.autoplay = true;
+window.videoScene = videoScene
+
+var texture = new THREE.VideoTexture( videoScene );
+texture.minFilter = THREE.LinearFilter;
+texture.magFilter = THREE.LinearFilter;
+texture.format = THREE.RGBFormat;
+
 var setMatrix = function (matrix, value) {
     let array = [];
     for (let key in value) {
@@ -60,32 +73,20 @@ function start(container, marker, video, input_width, input_height, canvas_draw,
 
     let scene = new THREE.Scene();
 
-    var ambientLight = new THREE.AmbientLight( 0xcccccc, 0.4 );
-    scene.add( ambientLight );
-
     let camera = new THREE.Camera();
     camera.matrixAutoUpdate = false;
-
-    var pointLight = new THREE.PointLight( 0xffffff, 0.8 );
-    camera.add( pointLight );
-
     scene.add(camera);
 
     let root = new THREE.Object3D();
     scene.add(root);
 
-    var videoCub = document.getElementById( 'video-cubist' );
-  	var texture = new THREE.VideoTexture( videoCub );
-  	texture.minFilter = THREE.LinearFilter;
-  	texture.magFilter = THREE.LinearFilter;
-  	texture.format = THREE.RGBFormat;
-  	var mat = new THREE.MeshLambertMaterial({color: 0xbbbbff, map: texture});
+  	var mat = new THREE.MeshBasicMaterial({map: texture, side: THREE.DoubleSide});
+    //var planeGeom = new THREE.PlaneGeometry(120,90);
     var planeGeom = new THREE.PlaneGeometry(1,1,1,1);
     var plane = new THREE.Mesh(planeGeom, mat);
-  	plane.position.z = 40;
-  	plane.position.x = 40;
-  	plane.position.y = 40;
-  	plane.scale.set(80,80,80);
+  	plane.position.x = 90;
+  	plane.position.y = 65;
+  	plane.scale.set(180,130,1);
 
 
     root.matrixAutoUpdate = false;
@@ -179,7 +180,12 @@ function start(container, marker, video, input_width, input_height, canvas_draw,
 
         if (!lastmsg) {
             plane.visible = false;
+            videoScene.pause();
         } else {
+            plane.visible = true;
+            console.log('Video play');
+            videoScene.play();
+            videoScene.muted = false;
             let proj = JSON.parse(lastmsg.proj);
             let world = JSON.parse(lastmsg.matrixGL_RH);
 
@@ -197,7 +203,7 @@ function start(container, marker, video, input_width, input_height, canvas_draw,
              }
 
             setMatrix( root.matrix, trackedMatrix.interpolated );
-            plane.visible = true;
+
         }
         renderer.render(scene, camera);
     };

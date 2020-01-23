@@ -2,7 +2,7 @@
 <head>
 <title>NFT marker example with Three.js</title>
 <meta name="viewport" content="width=device-width, initial-scale=1, minimum-scale=0.5, maximum-scale=1">
-
+<link rel="stylesheet" type="text/css" href="../resources/css/style.css">
 </head>
 <body>
 	<div class="grey-cover">
@@ -22,25 +22,19 @@
 			<canvas style="position: absolute; left:0; top:0" id="canvas_draw"></canvas>
 	</div>
 
-<!-- image https://www.kalwaltart.com/assets/images/uploads/cubist_dragon.jpg-->
-<video id="video-cubist" autoplay loop crossOrigin="anonymous" playsinline style="display:none">
-			<source src="../resources/data/video/cubic-dragon-background01e.mp4" type='video/mp4; codecs="avc1.42E01E, mp4a.40.2"'>
-			<source src="../resources/data/video/cubic-dragon-background01e.ogv" type='video/ogg; codecs="theora, vorbis"'>
-</video>
-<link rel="stylesheet" type="text/css" href="../resources/css/style.css">
 <script src="../resources/three.min.js"></script>
 <script src="../resources/js/libs/stats.min.js"></script>
 <script src="threejs_worker_cubist_dragon.js"></script>
 <script>
 		let statsMain = new Stats();
-		statsMain.showPanel(1); // 0: fps, 1: ms, 2: mb, 3+: custom
+		statsMain.showPanel(0); // 0: fps, 1: ms, 2: mb, 3+: custom
 		statsMain.domElement.style.position = 'relative';
 		statsMain.domElement.style.left = '0px';
 		statsMain.domElement.style.top = '0px';
 		document.getElementById("stats1").appendChild(statsMain.dom);
 
 		let statsWorker = new Stats();
-		statsWorker.showPanel(1); // 0: fps, 1: ms, 2: mb, 3+: custom
+		statsWorker.showPanel(0); // 0: fps, 1: ms, 2: mb, 3+: custom
 		statsWorker.domElement.style.position = 'relative';
 		statsWorker.domElement.style.left = '0px';
 		statsWorker.domElement.style.top = '0px';
