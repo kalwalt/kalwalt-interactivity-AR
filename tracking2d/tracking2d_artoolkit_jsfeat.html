@@ -111,13 +111,13 @@
 
               var ctx_renderer = renderer.canvas.getContext('2d');
               var videoData = ctx_renderer.getImageData(0, 0, 640, 480);
-              jsfeat.imgproc.grayscale(videoData.data, 640, 480, v_u8);
+              jsfeat.imgproc.grayscale(videoData.data.buffer, 640, 480, v_u8);
               jsfeat.imgproc.gaussian_blur(v_u8, v_u8_smooth, blur_size|0);
               //jsfeat.imgproc.gaussian_blur(videoDataBuff, img_u8_smooth, blur_size);
               jsfeat.fast_corners.set_threshold(match_threshold);
               num_corners = detect_keypoints(v_u8_smooth, screen_corners, 500);
               jsfeat.orb.describe(v_u8_smooth, screen_corners, num_corners, screen_descriptors);
-              var data_u32 = new Uint32Array(videoData.data);
+              var data_u32 = new Uint32Array(videoData.data.buffer);
               render_corners(screen_corners, num_corners, data_u32, 640);
               num_matches = match_pattern();
               console.log(num_matches);
