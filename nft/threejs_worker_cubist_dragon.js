@@ -29,6 +29,19 @@ let markers = {
     },
 };
 
+<!-- image https://www.kalwaltart.com/assets/images/uploads/cubist_dragon.jpg-->
+var videoScene = document.createElement('video');
+videoScene.muted = true
+videoScene.src = '../resources/data/video/cubic-dragon-background01e.mp4';
+// video.play()
+videoScene.autoplay = true;
+window.videoScene = videoScene
+
+var texture = new THREE.VideoTexture( videoScene );
+texture.minFilter = THREE.LinearFilter;
+texture.magFilter = THREE.LinearFilter;
+texture.format = THREE.RGBFormat;
+
 var setMatrix = function (matrix, value) {
     let array = [];
     for (let key in value) {
@@ -41,7 +54,7 @@ var setMatrix = function (matrix, value) {
     }
 };
 
-function start(container, marker, video, input_width, input_height, canvas_draw, render_update, track_update, greyCover) {
+function start(container, marker, video, input_width, input_height, canvas_draw, render_update, track_update) {
     let vw, vh;
     let sw, sh;
     let pscale, sscale;
@@ -60,32 +73,20 @@ function start(container, marker, video, input_width, input_height, canvas_draw,
 
     let scene = new THREE.Scene();
 
-    var ambientLight = new THREE.AmbientLight( 0xcccccc, 0.4 );
-    scene.add( ambientLight );
-
     let camera = new THREE.Camera();
     camera.matrixAutoUpdate = false;
-
-    var pointLight = new THREE.PointLight( 0xffffff, 0.8 );
-    camera.add( pointLight );
-
     scene.add(camera);
 
     let root = new THREE.Object3D();
     scene.add(root);
 
-    var videoCub = document.getElementById( 'video-cubist' );
-  	var texture = new THREE.VideoTexture( videoCub );
-  	texture.minFilter = THREE.LinearFilter;
-  	texture.magFilter = THREE.LinearFilter;
-  	texture.format = THREE.RGBFormat;
-  	var mat = new THREE.MeshLambertMaterial({color: 0xbbbbff, map: texture});
+  	var mat = new THREE.MeshBasicMaterial({map: texture, side: THREE.DoubleSide});
+    //var planeGeom = new THREE.PlaneGeometry(120,90);
     var planeGeom = new THREE.PlaneGeometry(1,1,1,1);
     var plane = new THREE.Mesh(planeGeom, mat);
-  	plane.position.z = 40;
-  	plane.position.x = 40;
-  	plane.position.y = 40;
-  	plane.scale.set(80,80,80);
+  	plane.position.x = 90;
+  	plane.position.y = 65;
+  	plane.scale.set(180,130,1);
 
 
     root.matrixAutoUpdate = false;
@@ -141,11 +142,13 @@ function start(container, marker, video, input_width, input_height, canvas_draw,
                     proj[9] *= ratioH;
                     proj[13] *= ratioH;
                     setMatrix(camera.projectionMatrix, proj);
-
+                    break;
+                }
+                case "endLoading":{
+                    if(msg.end == true)
                     // removing loader page if present
-                    if (greyCover && greyCover.parentElement) {
-                        greyCover.parentElement.removeChild(greyCover);
-                    }
+                    document.body.classList.remove( 'loading' );
+                    document.getElementById('loading').remove();
                     break;
                 }
                 case "found": {
@@ -162,9 +165,14 @@ function start(container, marker, video, input_width, input_height, canvas_draw,
         };
     };
 
-    let lastmsg = null;
-    let found = (msg) => {
-        lastmsg = msg;
+    var world;
+
+    var found = ( msg ) => {
+        if( !msg ) {
+            world = null;
+        } else {
+            world = JSON.parse( msg.matrixGL_RH );
+        }
     };
 
     let lasttime = Date.now();
@@ -172,23 +180,14 @@ function start(container, marker, video, input_width, input_height, canvas_draw,
 
     let draw = () => {
         render_update();
-        let now = Date.now();
-        let dt = now - lasttime;
-        time += dt;
-        lasttime = now;
-
-        if (!lastmsg) {
+        
+        if (!world) {
             plane.visible = false;
         } else {
-            let proj = JSON.parse(lastmsg.proj);
-            let world = JSON.parse(lastmsg.matrixGL_RH);
-
-            let width = marker.width;
-            let height = marker.height;
-            let dpi = marker.dpi;
-
-            let w = width / dpi * 2.54 * 10;
-            let h = height / dpi * 2.54 * 10;
+            plane.visible = true;
+            console.log('Video play');
+            videoScene.play();
+            videoScene.muted = false;
 
             // interpolate matrix
             for( let i = 0; i < 16; i++ ) {
@@ -197,7 +196,7 @@ function start(container, marker, video, input_width, input_height, canvas_draw,
              }
 
             setMatrix( root.matrix, trackedMatrix.interpolated );
-            plane.visible = true;
+
         }
         renderer.render(scene, camera);
     };
