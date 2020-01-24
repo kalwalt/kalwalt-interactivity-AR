@@ -78,7 +78,6 @@
 				} );
 	console.log(params);
   console.log(controls.amount);
-  console.log(plane);
 
   gui.add( controls, 'showHelpers' ).name( 'show helpers' ).onChange( function ( value ) {
         controls.showHelpers = value;
@@ -102,24 +101,17 @@
   texture = new THREE.CanvasTexture(canvasContainerEl);
   texture.needsUpdate = true;
 
-  var mat = new THREE.MeshLambertMaterial({color: 0xbbbbff, map: texture});
-  var planeGeom = new THREE.PlaneGeometry(1,1,2,2);
+  // can't pass the texture and the color is black (?)
+  //var mat = new THREE.MeshLambertMaterial({color: 0xbbbbff, map: texture });
+  var mat = new THREE.MeshLambertMaterial({ color: 0xbbbbff });
+  //mat.map.needsUpdate = true;
+  var planeGeom = new THREE.PlaneGeometry(100,100,10,10);
   plane = new THREE.Mesh(planeGeom, mat);
   plane.needsUpdate = true;
   //plane.rotation.x=-0.5*Math.PI;
 	plane.scale.x = 1.1;
 	plane.scale.y = 1.1;
   scene.add(plane);
-  console.log(plane.rotation.x);
-
-  var wireframe = new THREE.WireframeGeometry( planeGeom );
-
-  var line = new THREE.LineSegments( wireframe );
-  line.material.depthTest = true;
-  //line.material.opacity = 0.25;
-  //line.material.transparent = true;
-
-  scene.add( line );
 
   window.addEventListener( 'resize', onWindowResize, false );
 }
