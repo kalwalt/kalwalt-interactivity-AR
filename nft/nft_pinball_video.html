@@ -124,7 +124,11 @@ if (navigator.mediaDevices && navigator.mediaDevices.getUserMedia) {
 				null
 			);
 		});
-	});
+	}).catch(function(err) {
+
+	 console.log(err.name + ": " + err.message);
+
+ });
 }
 </script>
 
