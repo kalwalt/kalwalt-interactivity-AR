@@ -30,13 +30,15 @@
 				amount:     35,
 				iterations: 20,
 				quality:    30,
-				seed:       25
+				seed:       25,
+				init_glitch: loadImage
 			};
 
       var gui = new dat.GUI();
     	gui.add( params, 'amount', 0, 56 ).step( 1 ).name( 'random amount' ).onChange( function ( value ) {
     					params.amount = value;
     				} );
+			gui.add( params, "init_glitch" );
 
 			loadImage( imagePath, function ( img ) {
 				glitch( params )
