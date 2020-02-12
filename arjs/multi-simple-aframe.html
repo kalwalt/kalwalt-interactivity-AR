@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <title>A simple multi example with aframe-ar.js</title>
+    <script src='../resources/aframe-v1.0.4.js'></script>
+    <script src='../resources/aframe-ar.js'></script>
+  </head>
+  <body style='margin : 0px; overflow: hidden;'>
+    <a-scene embedded arjs='sourceType: webcam;' renderer='precision: medium'>
+      <a-marker preset='hiro'>
+        <a-entity id="updateMe" geometry="primitive: icosahedron" position='0 0 0'></a-entity>
+      </a-marker>
+      <a-marker preset='kanji'>
+        <a-entity id="updateMe" geometry="primitive: box" position='0 0 0'></a-entity>
+      </a-marker>
+      <a-marker
+				type='pattern'
+				url='../resources/data/letter-c.patt'
+			>
+        <a-entity id="updateMe" geometry="primitive: sphere" position='0 0 0'></a-entity>
+		  </a-marker>
+      <a-entity camera> </a-entity>
+    </a-scene>
+  </body>
+</html>
