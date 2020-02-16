@@ -4,6 +4,9 @@
 Some various experiments with [Ar.js](https://github.com/jeromeetienne/AR.js) and [Three.js](https://threejs.org/) and not only.
 Note that some of them maybe can not works... It's my notebook, block of sketches of small applications or fragments of code that I am testing.
 
+## NFT and Jsartoolkit5
+In the repository there are some examples not included in the official [artoolkitx/jsartoolkit5](https://github.com/artoolkitx/jsartoolkit5) repository.
+
 ## How to run things locally
 
 You should run a local server, if you have python run in a console:
