@@ -1,5 +1,30 @@
-importScripts('../standard/artoolkit.min.js');
+window = {};
+window.artoolkit_wasm_url = '../standard/artoolkit_wasm.wasm';
+window.listeners = {};
+window.addEventListener = function (name, callback) {
+    if (!window.listeners[name]) {
+        window.listeners[name] = [];
+    }
+    window.listeners[name].push(callback);
+};
+window.removeEventListener = function (name, callback) {
+    if (window.listeners[name]) {
+        var index = window.listeners[name].indexOf(callback);
+        if (index > -1) {
+            window.listeners[name].splice(index, 1);
+        }
+    }
+};
+window.dispatchEvent = function (event) {
+    var listeners = window.listeners[event.type];
+    if (listeners) {
+        for (var i = 0; i < listeners.length; i++) {
+            listeners[i].call(window, event);
+        }
+    }
+};
 
+importScripts('../standard/artoolkit_wasm.js');
 self.onmessage = function(e) {
     var msg = e.data;
     switch (msg.type) {
@@ -21,9 +46,7 @@ var ar = null;
 var markerResult = null;
 
 function load(msg) {
-
     var param = new ARCameraParam(msg.camera_para);
-
     param.onload = function () {
         ar = new ARController(msg.pw, msg.ph, param);
         var cameraMatrix = ar.getCameraMatrix();
@@ -65,3 +88,9 @@ function process() {
 
     next = null;
 }
+
+window.addEventListener('artoolkit-loaded', function() {
+    console.log('artoolkit-loaded');
+    Object.assign(self, window);
+    postMessage({type: "wasm"});
+});
