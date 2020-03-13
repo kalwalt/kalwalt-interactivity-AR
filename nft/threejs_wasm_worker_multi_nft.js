@@ -93,34 +93,32 @@ function start2(container, marker, video, input_width, input_height, canvas_draw
         side: THREE.DoubleSide
     });
 
-    var cubeGeom = new THREE.CubeGeometry(1, 1, 1);
-    var cube = new THREE.Mesh(cubeGeom, mat);
+    var plane = new THREE.Mesh(
+    new THREE.PlaneGeometry(120,90),
+    new THREE.MeshBasicMaterial({color: 'red', side: THREE.DoubleSide})
+    );
     var sphereGeom = new THREE.SphereGeometry(0.5, 8, 8);
     var sphere = new THREE.Mesh(sphereGeom, mat);
     var coneGeom = new THREE.ConeGeometry( 5, 20, 32 );
     var cone = new THREE.Mesh( coneGeom, mat );
     console.log(marker);
+    root.matrixAutoUpdate = false;
 
     if (marker == 'marker_1') {
-        cube.position.z = 0;
-        cube.position.x = 100;
-        cube.position.y = 100;
-        cube.scale.set(100, 100, 100);
-        root.matrixAutoUpdate = false;
-        root.add(cube);
+      plane.position.x = 60
+      plane.position.y = 45
+      root.add(plane);
     } else if(marker == 'marker_2') {
         sphere.position.z = 0;
         sphere.position.x = 1;
         sphere.position.y = 1;
         sphere.scale.set(20, 20, 20);
-        root.matrixAutoUpdate = false;
         root.add(sphere);
     } else if(marker == 'marker_3'){
         cone.position.z = 0;
         cone.position.x = 100;
         cone.position.y = 100;
         cone.scale.set(200, 200, 200);
-        root.matrixAutoUpdate = false;
         root.add(cone);
     }
 
@@ -183,8 +181,10 @@ function start2(container, marker, video, input_width, input_height, canvas_draw
                 case "endLoading": {
                   if (msg.end == true)
                     // removing loader page if present
+                    if(document.getElementById("loading")){
                       document.body.classList.remove("loading");
                       document.getElementById("loading").remove();
+                    }
                   break;
                 }
                 case 'found': {
