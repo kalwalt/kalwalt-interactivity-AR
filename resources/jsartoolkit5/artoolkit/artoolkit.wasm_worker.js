@@ -60,7 +60,7 @@ function load(msg) {
         });
 
         ar.loadNFTMarker(msg.marker, function (markerId) {
-            ar.trackNFTMarkerId(markerId, 2);
+            ar.trackNFTMarkerId(markerId);
             console.log("loadNFTMarker -> ", markerId);
             postMessage({
               type: "endLoading",
