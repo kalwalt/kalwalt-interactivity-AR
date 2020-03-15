@@ -32,7 +32,7 @@ let markers = {
 <!-- image https://www.kalwaltart.com/assets/images/uploads/cubist_dragon.jpg-->
 var videoScene = document.createElement('video');
 videoScene.muted = true
-videoScene.src = '../resources/data/video/cubic-dragon-background01e.mp4';
+videoScene.src = '../resources/data/videos/cubic-dragon-background01e.mp4';
 // video.play()
 videoScene.autoplay = true;
 window.videoScene = videoScene
@@ -180,7 +180,7 @@ function start(container, marker, video, input_width, input_height, canvas_draw,
 
     let draw = () => {
         render_update();
-        
+
         if (!world) {
             plane.visible = false;
         } else {
