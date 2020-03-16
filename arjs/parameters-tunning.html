@@ -235,6 +235,18 @@ body {
 		return sourceParameters
 	}
 
+	function buildContextParameters(){
+		var contextParameters = {}
+
+		var value = document.querySelector('#debug').value
+		if(value === 'true'){
+			contextParameters.debug = value;
+		} else if(value === 'false') {
+			contextParameters.debug = value;
+		}
+		return contextParameters
+	}
+
 	function onParametersChange(){
 		var parameters = {
 			sourceParameters : buildSourceParameters()
@@ -256,6 +268,29 @@ body {
 
 		console.log('there is a hash parameters', data)
 	}
+
+	function onEnableDebug() {
+		var parameters = {
+			contextParameters: buildContextParameters()
+		}
+		location.hash = '#' + encodeURIComponent( JSON.stringify(parameters) )
+		location.reload()
+	}
+
+	document.querySelector('#debug').addEventListener('change', onEnableDebug)
+
+	var contextParameters = {
+		debug : 'true'
+	}
+
+	if( location.hash.substring(1) ){
+		var data = JSON.parse( decodeURIComponent( location.hash.substring(1) ) )
+		contextParameters = data.contextParameters
+
+		console.log('there is a hash parameters', data)
+	}
+
+	var arToolkitContext = new THREEx.ArToolkitContext(contextParameters)
 
 
 	var arToolkitSource = new THREEx.ArToolkitSource(sourceParameters)
