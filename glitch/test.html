@@ -317,7 +317,6 @@
 					event.preventDefault();
 
 					//mouseXOnMouseDown = event.touches[ 0 ].pageX - windowHalfX;
-					//targetRotationOnMouseDown = targetRotation;
 
 				}
 
@@ -341,15 +340,9 @@
 		var deltaMsec	= Math.min(200, nowMsec - lastTimeMsec)
 		lastTimeMsec	= nowMsec
 		var time = Date.now() * 0.001;
-		//mesh2.rotation.z = time;
-		//mesh.rotation.z = time;
-		//console.log(time);
 		var time2 = Date.now() * 0.00005;
 		var h = ( 360 * ( 1.0 + time2 ) % 360 ) / 360;
 		t = h;
-		//text.rotation.z = time;
-		//sms = createMessage(t);
-		//console.log(t);
 		// call each update function
 		onRenderFcts.forEach(function(onRenderFct){
 			onRenderFct(deltaMsec/1000, nowMsec/1000)
