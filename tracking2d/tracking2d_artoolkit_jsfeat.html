@@ -103,24 +103,23 @@
             var tick = function() {
               arScene.process();
               /*var bufferPointer = artoolkit.frameMalloc;
+              bufferPointer = arController.getProcessingImage();
+              //console.log(bufferPointer);
               var buffSize = 640*480;
               var videoDataBuff = new Uint8Array(Module.HEAPU8.buffer, bufferPointer, buffSize);
-              videoDataBuff.set(arController.getProcessingImage());
+              //videoDataBuff.set(arController.getProcessingImage());
               //var videoDataBuff = arController.getProcessingImage();
               //console.log(videoDataBuff);*/
 
-              var ctx_renderer = renderer.canvas.getContext('2d');
-              var videoData = ctx_renderer.getImageData(0, 0, 640, 480);
-              jsfeat.imgproc.grayscale(videoData.data.buffer, 640, 480, v_u8);
+              jsfeat.imgproc.grayscale(renderer.canvas, 640, 480, v_u8);
               jsfeat.imgproc.gaussian_blur(v_u8, v_u8_smooth, blur_size|0);
-              //jsfeat.imgproc.gaussian_blur(videoDataBuff, img_u8_smooth, blur_size);
               jsfeat.fast_corners.set_threshold(match_threshold);
               num_corners = detect_keypoints(v_u8_smooth, screen_corners, 500);
               jsfeat.orb.describe(v_u8_smooth, screen_corners, num_corners, screen_descriptors);
-              var data_u32 = new Uint32Array(videoData.data.buffer);
+              var data_u32 = new Uint32Array(renderer.canvas);
               render_corners(screen_corners, num_corners, data_u32, 640);
               num_matches = match_pattern();
-              console.log(num_matches);
+              //console.log(num_matches);
               good_matches = find_transform(matches, num_matches);
               if(num_matches) {
                   render_matches(ctx_renderer, matches, num_matches);
