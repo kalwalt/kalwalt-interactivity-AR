@@ -1702,7 +1702,7 @@ THREEx.ARClickability = function (sourceElement) {
     this._cameraPicking = new THREE.PerspectiveCamera(42, fullWidth / fullHeight, 0.1, 100);
 
     console.warn('THREEx.ARClickability works only in modelViewMatrix')
-    console.warn('OBSOLETE OBSOLETE! instead use THREEx.HitTestingPlane or THREEx.HitTestingTango')
+    console.warn('OBSOLETE OBSOLETE! instead use THREEx.HitTestingPlane')
 }
 
 THREEx.ARClickability.prototype.onResize = function () {
@@ -2041,12 +2041,6 @@ ARjs.MarkerControls = THREEx.ArMarkerControls = function(context, object3d, para
 
 	if( _this.context.parameters.trackingBackend === 'artoolkit' ){
 		this._initArtoolkit()
-	}else if( _this.context.parameters.trackingBackend === 'aruco' ){
-		// TODO create a ._initAruco
-		// put aruco second
-		this._arucoPosit = new POS.Posit(this.parameters.size, _this.context.arucoContext.canvas.width)
-	}else if( _this.context.parameters.trackingBackend === 'tango' ){
-		this._initTango()
 	}else console.assert(false)
 }
 
@@ -2080,19 +2074,8 @@ ARjs.MarkerControls.prototype.updateWithModelViewMatrix = function(modelViewMatr
 		tmpMatrix.multiply(modelViewMatrix)
 
 		modelViewMatrix.copy(tmpMatrix)
-	}else if( this.context.parameters.trackingBackend === 'aruco' ){
-		// ...
-	}else if( this.context.parameters.trackingBackend === 'tango' ){
-		// ...
 	}else console.assert(false)
 
-
-	if( this.context.parameters.trackingBackend !== 'tango' ){
-
-		// change axis orientation on marker - artoolkit say Z is normal to the marker - ar.js say Y is normal to the marker
-		var markerAxisTransformMatrix = new THREE.Matrix4().makeRotationX(Math.PI/2)
-		modelViewMatrix.multiply(markerAxisTransformMatrix)
-	}
 
 	var renderReqd = false;
 
@@ -2241,21 +2224,6 @@ ARjs.MarkerControls.prototype._initArtoolkit = function(){
 		var modelViewMatrix = new THREE.Matrix4().fromArray(event.data.matrix)
 		_this.updateWithModelViewMatrix(modelViewMatrix)
 	}
-}
-
-//////////////////////////////////////////////////////////////////////////////
-//		aruco specific
-//////////////////////////////////////////////////////////////////////////////
-ARjs.MarkerControls.prototype._initAruco = function(){
-	this._arucoPosit = new POS.Posit(this.parameters.size, _this.context.arucoContext.canvas.width)
-}
-
-//////////////////////////////////////////////////////////////////////////////
-//		init for Artoolkit
-//////////////////////////////////////////////////////////////////////////////
-ARjs.MarkerControls.prototype._initTango = function(){
-	var _this = this
-	console.log('init tango ArMarkerControls')
 }
 var THREEx = THREEx || {}
 
@@ -2458,7 +2426,7 @@ ARjs.Context = THREEx.ArToolkitContext = function (parameters) {
 
     // handle default parameters
     this.parameters = {
-        // AR backend - ['artoolkit', 'aruco']
+        // AR backend - ['artoolkit']
         trackingBackend: 'artoolkit',
         // debug - true if one should display artoolkit debug canvas, false otherwise
         debug: false,
@@ -2468,7 +2436,7 @@ ARjs.Context = THREEx.ArToolkitContext = function (parameters) {
         matrixCodeType: '3x3',
 
         // url of the camera parameters
-        cameraParametersUrl: ARjs.Context.baseURL + 'parameters/camera_para.dat',
+        cameraParametersUrl: THREEx.ArToolkitContext.baseURL + '../data/data/camera_para.dat',
 
         // tune the maximum rate of pose detection in the source image
         maxDetectionRate: 60,
@@ -2484,11 +2452,10 @@ ARjs.Context = THREEx.ArToolkitContext = function (parameters) {
         imageSmoothingEnabled: false,
     }
     // parameters sanity check
-    console.assert(['artoolkit', 'aruco'].indexOf(this.parameters.trackingBackend) !== -1, 'invalid parameter trackingBackend', this.parameters.trackingBackend)
+    console.assert(['artoolkit'].indexOf(this.parameters.trackingBackend) !== -1, 'invalid parameter trackingBackend', this.parameters.trackingBackend)
     console.assert(['color', 'color_and_matrix', 'mono', 'mono_and_matrix'].indexOf(this.parameters.detectionMode) !== -1, 'invalid parameter detectionMode', this.parameters.detectionMode)
 
     this.arController = null;
-    this.arucoContext = null;
 
     _this.initialized = false
 
@@ -2523,10 +2490,9 @@ ARjs.Context = THREEx.ArToolkitContext = function (parameters) {
 
 Object.assign(ARjs.Context.prototype, THREE.EventDispatcher.prototype);
 
-// ARjs.Context.baseURL = '../'
 // default to github page
-ARjs.Context.baseURL = 'https://jeromeetienne.github.io/AR.js/three.js/'
-ARjs.Context.REVISION = '2.1.8';
+ARjs.Context.baseURL = 'https://ar-js-org.github.io/AR.js/three.js/'
+ARjs.Context.REVISION = '3.0.0-beta3';
 
 /**
  * Create a default camera for this trackingBackend
@@ -2538,9 +2504,7 @@ ARjs.Context.createDefaultCamera = function (trackingBackend) {
     // Create a camera
     if (trackingBackend === 'artoolkit') {
         var camera = new THREE.Camera();
-    } else if (trackingBackend === 'aruco') {
-        var camera = new THREE.PerspectiveCamera(42, renderer.domElement.width / renderer.domElement.height, 0.01, 100);
-    } else console.assert(false)
+    } else console.assert(false);
     return camera
 }
 
@@ -2551,10 +2515,8 @@ ARjs.Context.createDefaultCamera = function (trackingBackend) {
 ARjs.Context.prototype.init = function (onCompleted) {
     var _this = this
     if (this.parameters.trackingBackend === 'artoolkit') {
-        this._initArtoolkit(done)
-    } else if (this.parameters.trackingBackend === 'aruco') {
-        this._initAruco(done)
-    } else console.assert(false)
+        this._initArtoolkit(done);
+    } else console.assert(false);
     return
 
     function done() {
@@ -2591,11 +2553,9 @@ ARjs.Context.prototype.update = function (srcElement) {
 
     // process this frame
     if (this.parameters.trackingBackend === 'artoolkit') {
-        this._updateArtoolkit(srcElement)
-    } else if (this.parameters.trackingBackend === 'aruco') {
-        this._updateAruco(srcElement)
+        this._updateArtoolkit(srcElement);
     }  else {
-        console.assert(false)
+        console.assert(false);
     }
 
     // dispatch event
@@ -2722,55 +2682,6 @@ ARjs.Context.prototype.getProjectionMatrix = function (srcElement) {
 ARjs.Context.prototype._updateArtoolkit = function (srcElement) {
     this.arController.process(srcElement)
 }
-
-//////////////////////////////////////////////////////////////////////////////
-//		aruco specific
-//////////////////////////////////////////////////////////////////////////////
-ARjs.Context.prototype._initAruco = function (onCompleted) {
-    this.arucoContext = new THREEx.ArucoContext()
-
-    // honor this.parameters.canvasWidth/.canvasHeight
-    this.arucoContext.canvas.width = this.parameters.canvasWidth
-    this.arucoContext.canvas.height = this.parameters.canvasHeight
-
-    // honor this.parameters.imageSmoothingEnabled
-    var context = this.arucoContext.canvas.getContext('2d')
-    // context.mozImageSmoothingEnabled = this.parameters.imageSmoothingEnabled;
-    context.webkitImageSmoothingEnabled = this.parameters.imageSmoothingEnabled;
-    context.msImageSmoothingEnabled = this.parameters.imageSmoothingEnabled;
-    context.imageSmoothingEnabled = this.parameters.imageSmoothingEnabled;
-
-
-    setTimeout(function () {
-        onCompleted()
-    }, 0)
-}
-
-
-ARjs.Context.prototype._updateAruco = function (srcElement) {
-    // console.log('update aruco here')
-    var _this = this
-    var arMarkersControls = this._arMarkersControls
-    var detectedMarkers = this.arucoContext.detect(srcElement)
-
-    detectedMarkers.forEach(function (detectedMarker) {
-        var foundControls = null
-        for (var i = 0; i < arMarkersControls.length; i++) {
-            console.assert(arMarkersControls[i].parameters.type === 'barcode')
-            if (arMarkersControls[i].parameters.barcodeValue === detectedMarker.id) {
-                foundControls = arMarkersControls[i]
-                break;
-            }
-        }
-        if (foundControls === null) return
-
-        var tmpObject3d = new THREE.Object3D
-        _this.arucoContext.updateObject3D(tmpObject3d, foundControls._arucoPosit, foundControls.parameters.size, detectedMarker);
-        tmpObject3d.updateMatrix()
-
-        foundControls.updateWithModelViewMatrix(tmpObject3d.matrix)
-    })
-}
 var ARjs = ARjs || {}
 var THREEx = THREEx || {}
 
@@ -2878,10 +2789,6 @@ ARjs.Profile.prototype.defaultMarker = function (trackingBackend) {
         this.contextParameters.detectionMode = 'mono'
         this.defaultMarkerParameters.type = 'pattern'
         this.defaultMarkerParameters.patternUrl = THREEx.ArToolkitContext.baseURL + '../data/data/patt.hiro'
-    } else if (trackingBackend === 'aruco') {
-        this.contextParameters.detectionMode = 'mono'
-        this.defaultMarkerParameters.type = 'barcode'
-        this.defaultMarkerParameters.barcodeValue = 1001
     } else console.assert(false)
 
     return this
@@ -3352,11 +3259,6 @@ ARjs.Source.prototype.onResize = function (arToolkitContext, renderer, camera) {
         if (arToolkitContext.arController !== null) {
             this.copyElementSizeTo(arToolkitContext.arController.canvas)
         }
-    } else if (trackingBackend === 'aruco') {
-        this.onResizeElement()
-        this.copyElementSizeTo(renderer.domElement)
-
-        this.copyElementSizeTo(arToolkitContext.arucoContext.canvas)
     } else console.assert(false, 'unhandled trackingBackend ' + trackingBackend)
 
 
@@ -3365,9 +3267,6 @@ ARjs.Source.prototype.onResize = function (arToolkitContext, renderer, camera) {
         if (arToolkitContext.arController !== null) {
             camera.projectionMatrix.copy(arToolkitContext.getProjectionMatrix());
         }
-    } else if (trackingBackend === 'aruco') {
-        camera.aspect = renderer.domElement.width / renderer.domElement.height;
-        camera.updateProjectionMatrix();
     } else console.assert(false, 'unhandled trackingBackend ' + trackingBackend)
 }
 var THREEx = THREEx || {}
@@ -3637,7 +3536,7 @@ ARjs.Anchor = function(arSession, markerParameters){
 		this.controls = markerControls
 	}else{
 		// sanity check - MUST be a trackingBackend with markers
-		console.assert( arContext.parameters.trackingBackend === 'artoolkit' || arContext.parameters.trackingBackend === 'aruco' )
+		console.assert( arContext.parameters.trackingBackend === 'artoolkit' )
 
 		// honor markers-page-resolution for https://webxr.io/augmented-website
 		if( location.hash.substring(1).startsWith('markers-page-resolution=') === true ){
@@ -4144,8 +4043,6 @@ ARjs.Utils.createDefaultCamera = function (trackingMethod) {
     // Create a camera
     if (trackingBackend === 'artoolkit') {
         var camera = new THREE.Camera();
-    } else if (trackingBackend === 'aruco') {
-        var camera = new THREE.PerspectiveCamera(42, window.innerWidth / window.innerHeight, 0.01, 100);
     } else console.assert(false, 'unknown trackingBackend: ' + trackingBackend)
 
     return camera
@@ -4840,7 +4737,7 @@ ARjs.MarkersAreaUtils = THREEx.ArMultiMarkerUtils = {}
 
 /**
  * Navigate to the multi-marker learner page
- * 
+ *
  * @param {String} learnerBaseURL  - the base url for the learner
  * @param {String} trackingBackend - the tracking backend to use
  */
@@ -4859,7 +4756,7 @@ ARjs.MarkersAreaUtils.navigateToLearnerPage = function(learnerBaseURL, trackingB
 
 /**
  * Create and store a default multi-marker file
- * 
+ *
  * @param {String} trackingBackend - the tracking backend to use
  */
 ARjs.MarkersAreaUtils.storeDefaultMultiMarkerFile = function(trackingBackend){
@@ -4878,7 +4775,7 @@ ARjs.MarkersAreaUtils.storeDefaultMultiMarkerFile = function(trackingBackend){
 ARjs.MarkersAreaUtils.createDefaultMultiMarkerFile = function(trackingBackend){
 	console.assert(trackingBackend)
 	if( trackingBackend === undefined )	debugger
-	
+
 	// create absoluteBaseURL
 	var link = document.createElement('a')
 	link.href = ARjs.Context.baseURL
@@ -4892,7 +4789,7 @@ ARjs.MarkersAreaUtils.createDefaultMultiMarkerFile = function(trackingBackend){
 		},
 		trackingBackend : trackingBackend,
 		subMarkersControls : [
-			// empty for now... being filled 
+			// empty for now... being filled
 		]
 	}
 	// add a subMarkersControls
@@ -4903,11 +4800,8 @@ ARjs.MarkersAreaUtils.createDefaultMultiMarkerFile = function(trackingBackend){
 	if( trackingBackend === 'artoolkit' ){
 		file.subMarkersControls[0].parameters.type = 'pattern'
 		file.subMarkersControls[0].parameters.patternUrl = absoluteBaseURL + 'examples/marker-training/examples/pattern-files/pattern-hiro.patt'
-	}else if( trackingBackend === 'aruco' ){
-		file.subMarkersControls[0].parameters.type = 'barcode'
-		file.subMarkersControls[0].parameters.barcodeValue = 1001
 	}else console.assert(false)
-	
+
 	// json.strinfy the value and store it in localStorage
 	return file
 }
@@ -4918,7 +4812,7 @@ ARjs.MarkersAreaUtils.createDefaultMultiMarkerFile = function(trackingBackend){
 
 /**
  * Create a default controls parameters for the multi-marker learner
- * 
+ *
  * @param {String} trackingBackend - the tracking backend to use
  * @return {Object} - json object containing the controls parameters
  */
@@ -4956,33 +4850,6 @@ ARjs.MarkersAreaUtils.createDefaultMarkersControlsParameters = function(tracking
 				type : 'pattern',
 				patternUrl : absoluteBaseURL + 'examples/marker-training/examples/pattern-files/pattern-letterF.patt',
 			},
-		]		
-	}else if( trackingBackend === 'aruco' ){
-		var markersControlsParameters = [
-			{
-				type : 'barcode',
-				barcodeValue: 1001,
-			},
-			{
-				type : 'barcode',
-				barcodeValue: 1002,
-			},
-			{
-				type : 'barcode',
-				barcodeValue: 1003,
-			},
-			{
-				type : 'barcode',
-				barcodeValue: 1004,
-			},
-			{
-				type : 'barcode',
-				barcodeValue: 1005,
-			},
-			{
-				type : 'barcode',
-				barcodeValue: 1006,
-			},
 		]
 	}else console.assert(false)
 	return markersControlsParameters
@@ -5006,7 +4873,7 @@ ARjs.MarkersAreaUtils.storeMarkersAreaFileFromResolution = function (trackingBac
 //////////////////////////////////////////////////////////////////////////////
 //		Code Separator
 //////////////////////////////////////////////////////////////////////////////
-	
+
 ARjs.MarkersAreaUtils.buildMarkersAreaFileFromResolution = function(trackingBackend, resolutionW, resolutionH){
 	// create the base file
 	var file = {
@@ -5019,7 +4886,7 @@ ARjs.MarkersAreaUtils.buildMarkersAreaFileFromResolution = function(trackingBack
 			// empty for now...
 		]
 	}
-	
+
 	var whiteMargin = 0.1
 	if( resolutionW > resolutionH ){
 		var markerImageSize = 0.4 * resolutionH
@@ -5032,7 +4899,7 @@ ARjs.MarkersAreaUtils.buildMarkersAreaFileFromResolution = function(trackingBack
 
 	// console.warn('using new markerImageSize computation')
 	var actualMarkerSize = markerImageSize * (1 - 2*whiteMargin)
-	
+
 	var deltaX = (resolutionW - markerImageSize)/2 / actualMarkerSize
 	var deltaZ = (resolutionH - markerImageSize)/2 / actualMarkerSize
 
@@ -5041,18 +4908,18 @@ ARjs.MarkersAreaUtils.buildMarkersAreaFileFromResolution = function(trackingBack
 
 	var subMarkerControls = buildSubMarkerControls('topleft', -deltaX, -deltaZ)
 	file.subMarkersControls.push(subMarkerControls)
-	
+
 	var subMarkerControls = buildSubMarkerControls('topright', +deltaX, -deltaZ)
 	file.subMarkersControls.push(subMarkerControls)
 
 	var subMarkerControls = buildSubMarkerControls('bottomleft', -deltaX, +deltaZ)
 	file.subMarkersControls.push(subMarkerControls)
-	
+
 	var subMarkerControls = buildSubMarkerControls('bottomright', +deltaX, +deltaZ)
 	file.subMarkersControls.push(subMarkerControls)
 
 	return file
-	
+
 	//////////////////////////////////////////////////////////////////////////////
 	//		Code Separator
 	//////////////////////////////////////////////////////////////////////////////
@@ -5067,8 +4934,6 @@ ARjs.MarkersAreaUtils.buildMarkersAreaFileFromResolution = function(trackingBack
 		// fill the parameters
 		if( trackingBackend === 'artoolkit' ){
 			layout2MarkerParametersArtoolkit(subMarkersControls.parameters, layout)
-		}else if( trackingBackend === 'aruco' ){
-			layout2MarkerParametersAruco(subMarkersControls.parameters, layout)
 		}else console.assert(false)
 		// return subMarkersControls
 		return subMarkersControls
@@ -5079,7 +4944,7 @@ ARjs.MarkersAreaUtils.buildMarkersAreaFileFromResolution = function(trackingBack
 		var link = document.createElement('a')
 		link.href = ARjs.Context.baseURL
 		var absoluteBaseURL = link.href
-			
+
 		var layout2PatternUrl = {
 			'center' : convertRelativeUrlToAbsolute(absoluteBaseURL + 'examples/marker-training/examples/pattern-files/pattern-hiro.patt'),
 			'topleft' : convertRelativeUrlToAbsolute(absoluteBaseURL + 'examples/marker-training/examples/pattern-files/pattern-letterA.patt'),
@@ -5096,18 +4961,5 @@ ARjs.MarkersAreaUtils.buildMarkersAreaFileFromResolution = function(trackingBack
 			tmpLink.href = relativeUrl
 			return tmpLink.href
 		}
-	}
-
-	function layout2MarkerParametersAruco(parameters, layout){
-		var layout2Barcode = {
-			'center' : 1001,
-			'topleft' : 1002,
-			'topright' : 1003,
-			'bottomleft' : 1004,
-			'bottomright' : 1005,
-		}
-		console.assert(layout2Barcode[layout])
-		parameters.type = 'barcode'
-		parameters.barcodeValue = layout2Barcode[layout]
 	}
 }
