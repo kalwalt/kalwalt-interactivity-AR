@@ -4,7 +4,7 @@
     <meta charset="utf-8">
     <title>A simple plane with a texture</title>
     <script src='../resources//aframe-v1.0.4.min.js'></script>
-    <script src='../resources/aframe-ar.min.js'></script>
+    <script src='../resources/aframe-ar.js'></script>
   </head>
   <body style='margin : 0px; overflow: hidden;'>
     <a-scene embedded arjs='sourceType: webcam;' renderer='precision: medium'>
@@ -13,7 +13,7 @@
       </a-assets>
       <a-marker preset='hiro'>
         <a-plane  position='0 0 0'
-        rotation="-90 0 0" material='opacity: 0.85; src: #texture;'></a-plane>
+        rotation="0 0 0" material='opacity: 0.85; src: #texture;'></a-plane>
       </a-marker>
       <a-entity camera> </a-entity>
     </a-scene>
