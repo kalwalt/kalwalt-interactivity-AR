@@ -1,5 +1,5 @@
 <script src='../resources/three.js'></script>
-<script src="../resources/ar.min.js"></script>
+<script src="../resources/ar.js"></script>
 <script src="../resources/js/noise/SimplexNoise.js"></script>
 <script src="../resources/js/SVGLoader.js"></script>
 <body>
@@ -179,10 +179,8 @@
 					var shape = shapes[ j ];
 					var geometry = new THREE.ShapeBufferGeometry( shape );
 					mesh = new THREE.Mesh( geometry, material );
-					mesh.rotation.x = -0.5*Math.PI;
-					mesh.position.x = -1;
-					mesh.position.y = -1;
-					mesh.position.z = 1;
+					mesh.rotation.z = 0.5*Math.PI;
+					mesh.position.z = .5;
 					mesh.scale.x = .03;
 					mesh.scale.y = .03;
 					mesh.scale.z = .03;
@@ -214,7 +212,7 @@
 	var billboard = new THREE.PlaneGeometry(1,1,1,1);
   var material = new THREE.MeshBasicMaterial( { map: texture } );
 	var mesh2 = new THREE.Mesh( billboard, material );
-	mesh2.rotation.x = -0.5*Math.PI;
+	mesh2.rotation.z = 0.5*Math.PI;
 	mesh2.scale.x = 2.1;
 	mesh2.scale.y = 2.1;
 	mesh2.scale.z = 2.1;
@@ -275,11 +273,11 @@
 
 		text = new THREE.Mesh( textShape, matLite );
 		//text.geometry.needsUpdate = true;
-		text.rotation.x=-0.5*Math.PI;
+		text.rotation.z= 0.5*Math.PI;
 		text.scale.x=0.1;
 		text.scale.y=0.1;
 		text.scale.z=0.1;
-		text.position.z = - 1.5;
+		text.position.z = - .5;
 		scene.add( text );
 
 		// make line shape ( N.B. edge view remains visible )
@@ -319,7 +317,6 @@
 					event.preventDefault();
 
 					//mouseXOnMouseDown = event.touches[ 0 ].pageX - windowHalfX;
-					//targetRotationOnMouseDown = targetRotation;
 
 				}
 
@@ -343,15 +340,9 @@
 		var deltaMsec	= Math.min(200, nowMsec - lastTimeMsec)
 		lastTimeMsec	= nowMsec
 		var time = Date.now() * 0.001;
-		//mesh2.rotation.z = time;
-		//mesh.rotation.z = time;
-		//console.log(time);
 		var time2 = Date.now() * 0.00005;
 		var h = ( 360 * ( 1.0 + time2 ) % 360 ) / 360;
 		t = h;
-		//text.rotation.z = time;
-		//sms = createMessage(t);
-		//console.log(t);
 		// call each update function
 		onRenderFcts.forEach(function(onRenderFct){
 			onRenderFct(deltaMsec/1000, nowMsec/1000)

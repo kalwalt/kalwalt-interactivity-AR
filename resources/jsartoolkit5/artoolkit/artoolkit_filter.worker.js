@@ -1,4 +1,4 @@
-importScripts('../standard/artoolkit.min.js');
+importScripts('../standard/artoolkit_filter.min.js');
 
 self.onmessage = function(e) {
     var msg = e.data;
@@ -29,20 +29,13 @@ function load(msg) {
         var cameraMatrix = ar.getCameraMatrix();
 
         ar.addEventListener('getNFTMarker', function (ev) {
-            markerResult = {
-              type: "found",
-              matrixGL_RH: JSON.stringify(ev.data.matrixGL_RH),
-              proj: JSON.stringify(cameraMatrix),
-              id: ev.data.marker.id};
+            markerResult = {type: "found", matrixGL_RH: JSON.stringify(ev.data.matrixGL_RH), proj: JSON.stringify(cameraMatrix)};
         });
 
         ar.loadNFTMarker(msg.marker, function (markerId) {
-            ar.trackNFTMarkerId(markerId);
+            ar.trackNFTMarkerId(markerId, 2);
             console.log("loadNFTMarker -> ", markerId);
-            postMessage({
-              type: "endLoading",
-              id: markerId,
-              end: true})
+            postMessage({type: "endLoading", end: true})
         });
 
         postMessage({type: "loaded", proj: JSON.stringify(cameraMatrix)});

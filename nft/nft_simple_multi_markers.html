@@ -1,0 +1,106 @@
+<html>
+<head>
+<title>NFT marker example with Three.js</title>
+<meta name="viewport" content="width=device-width, initial-scale=1, minimum-scale=0.5, maximum-scale=1">
+<link rel="stylesheet" type="text/css" href="../resources/css/video-style.css">
+</head>
+<body>
+	<div id="loading">
+		<img alt="ar.js logo" src="../resources/data/logo.gif" />
+		<span class="loading-text">Loading, please wait</span>
+	</div>
+
+  	   <!--
+  	 ==================
+  	 STATS
+  	 ==================
+  	 -->
+
+  	   <div id="stats" class="ui stats">
+  	     <div id="stats1" class="stats-item">
+  	       <p class="stats-item-title">
+  	         Main
+  	       </p>
+  	     </div>
+
+  	     <div id="stats2" class="stats-item">
+  	       <p class="stats-item-title">
+  	         Worker
+  	       </p>
+  	     </div>
+  	   </div>
+  		<!--
+  			==================
+  			CAMERA VIDEO & CANVAS
+  			==================
+  			-->
+
+  		<div id="app">
+  			<video loop autoplay muted playsinline id="video"></video>
+
+  			<canvas id="canvas"></canvas>
+  		</div>
+      <script src="../resources/three.min.js"></script>
+      <script src="../resources/js/libs/stats.min.js"></script>
+      <script src='threejs_wasm_worker_multi_nft.js' type='text/javascript'></script>
+      <script>
+        /**
+         * STATS
+         */
+        var statsMain = new Stats();
+        statsMain.showPanel(0); // 0: fps, 1: ms, 2: mb, 3+: custom
+        document.getElementById("stats1").appendChild(statsMain.dom);
+
+        var statsWorker = new Stats();
+        statsWorker.showPanel(0); // 0: fps, 1: ms, 2: mb, 3+: custom
+        document.getElementById("stats2").appendChild(statsWorker.dom);
+        /**
+         * APP / ELEMENTS
+         */
+        var container = document.getElementById('app');
+        var video = document.getElementById('video');
+        var canvas = document.getElementById("canvas");
+
+        if (navigator.mediaDevices && navigator.mediaDevices.getUserMedia) {
+          var hint = {
+            audio: false,
+            video: true
+          };
+          if( window.innerWidth < 800 ) {
+            var width = ( window.innerWidth < window.innerHeight ) ? 480 : 640;
+            var height = ( window.innerWidth < window.innerHeight ) ? 480 : 640;
+
+              var aspectRatio = window.innerWidth / window.innerHeight;
+
+              console.log( width, height );
+
+              hint = {
+                  audio: false,
+                  video: {
+                      facingMode: 'environment',
+                      width: { min: width, max: width }
+                  },
+              };
+
+              console.log( hint );
+          }
+
+
+          navigator.mediaDevices.getUserMedia( hint ).then(function (stream) {
+            video.srcObject = stream;
+            video.addEventListener('loadedmetadata', () => {
+              video.play();
+              start(container, markers['marker_1'], video, video.videoWidth, video.videoHeight, canvas, function() { statsMain.update(); }, function() {statsWorker.update(); });
+              start(container, markers['marker_2'], video, video.videoWidth, video.videoHeight, canvas, function() { statsMain.update(); }, function() {statsWorker.update();});
+              start(container, markers['marker_3'], video, video.videoWidth, video.videoHeight, canvas, function() { statsMain.update(); }, function() {statsWorker.update();});
+            });
+          }).catch(function(err) {
+
+           console.log(err.name + ": " + err.message);
+
+         });
+       }
+      </script>
+
+</body>
+</html>
