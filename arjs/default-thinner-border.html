@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html>
+<!-- include aframe -->
+<script src='../resources/aframe-v1.0.4.min.js'></script>
+<!-- include aframe-ar.js -->
+<script src="../resources/aframe-ar.js"></script>
+
+<body style='margin: 0px; overflow: hidden;'>
+	<!-- enable arjs on this scene -->
+	<a-scene embedded arjs='patternRatio: 0.9; sourceType: image; sourceUrl: ../resources/data/images/marker-artoolkit-pattern-pattratio-09.png;'>
+		<a-marker
+				type='pattern'
+				url='../resources/data/pattern-arjs.patt'
+			>
+		  <!-- define the object which gonna be put on this marker  -->
+		  <a-box position='0 0 0.5' material='opacity: 0.5; side: double'>
+			  <a-torus-knot radius='0.26' radius-tubular='0.05'>
+				  <a-animation attribute="rotation" to="360 0 0" dur="3000" easing='linear' repeat="indefinite"></a-animation>
+			  </a-torus-knot>
+		  </a-box>
+		  </a-marker>
+		<a-entity camera></a-entity>
+	</a-scene>
+</body>
+</html>
