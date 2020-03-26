@@ -62,12 +62,11 @@ function start(container, marker, video, input_width, input_height, canvas_draw,
     let pw, ph;
     let ox, oy;
     let worker;
-    let camera_para = '../../../resources/data/camera_para-iPhone 5 rear 640x480 1.0m.dat'
+    let camera_para = '../../../resources/data/camera_para.dat'
 
     let canvas_process = document.createElement('canvas');
     let context_process = canvas_process.getContext('2d');
 
-    // let context_draw = canvas_draw.getContext('2d');
     let renderer = new THREE.WebGLRenderer({ canvas: canvas_draw, alpha: true, antialias: true });
     renderer.setPixelRatio(window.devicePixelRatio);
 
@@ -101,22 +100,21 @@ function start(container, marker, video, input_width, input_height, canvas_draw,
 
         sw = vw * sscale;
         sh = vh * sscale;
-        video.style.width = sw + "px";
+        // for custom sizing inside the load function
+        /*video.style.width = sw + "px";
         video.style.height = sh + "px";
         container.style.width = sw + "px";
         container.style.height = sh + "px";
         canvas_draw.style.clientWidth = sw + "px";
-        canvas_draw.style.clientHeight = sh + "px";
-        canvas_draw.width = sw;
-        canvas_draw.height = sh;
+        canvas_draw.style.clientHeight = sh + "px";*/
         w = vw * pscale;
         h = vh * pscale;
         pw = Math.max(w, h / 3 * 4);
         ph = Math.max(h, w / 4 * 3);
         ox = (pw - w) / 2;
         oy = (ph - h) / 2;
-        canvas_process.style.clientWidth = pw + "px";
-        canvas_process.style.clientHeight = ph + "px";
+        // canvas_process.style.clientWidth = pw + "px";
+        // canvas_process.style.clientHeight = ph + "px";
         canvas_process.width = pw;
         canvas_process.height = ph;
 
