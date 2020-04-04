@@ -62,72 +62,17 @@
 		<script src="../resources/js/libs/stats.min.js"></script>
     <script src="../resources/js/GLTFLoader.js"></script>
     <script src="threejs_filter_worker_gltf.js"></script>
+		<script src="nftLoader.js"></script>
 
     <script>
+     /**
+      * APP / ELEMENTS
+      */
+     var container = document.getElementById( 'app' );
+     var video = document.getElementById( 'video' );
+     var canvas = document.getElementById( 'canvas' );
 
-    /**
-     * STATS
-     */
-    var statsMain = new Stats();
-    statsMain.showPanel( 0 ); // 0: fps, 1: ms, 2: mb, 3+: custom
-    document.getElementById( 'stats1' ).appendChild( statsMain.dom );
-
-    var statsWorker = new Stats();
-    statsWorker.showPanel( 0 ); // 0: fps, 1: ms, 2: mb, 3+: custom
-    document.getElementById( 'stats2' ).appendChild( statsWorker.dom );
-
-    /**
-     * APP / ELEMENTS
-     */
-    var container = document.getElementById( 'app' );
-    var video = document.getElementById( 'video' );
-    var canvas = document.getElementById( 'canvas' );
-
-    /**
-     * APP / VIDEO STREAM
-     */
-
-        if (navigator.mediaDevices && navigator.mediaDevices.getUserMedia) {
-          var hint = {
-              audio: false,
-              video: true
-          };
-          if( window.innerWidth < 800 ) {
-              hint = {
-                  audio: false,
-                  video: {
-                      facingMode: 'environment',
-                      width: { ideal: 1024, },
-                      height: { ideal: 540, }
-                  },
-              };
-          }
-
-          navigator.mediaDevices.getUserMedia( hint ).then( function( stream ) {
-              video.srcObject = stream;
-              video.addEventListener( 'loadedmetadata', function() {
-                  video.play();
-
-                  console.log( 'video', video, video.videoWidth, video.videoHeight );
-
-                  start(
-                      container,
-                      markers['pinball'],
-                      video,
-                      video.videoWidth,
-                      video.videoHeight,
-                      canvas,
-                      function() {
-                          statsMain.update()
-                      },
-                      function() {
-                          statsWorker.update();
-                      },
-                      null
-                  );
-              } );
-          } );
-      }
+     nftLoader(container, video, 1024, 540, canvas, "pinball", true);
     </script>
 </body>
 
