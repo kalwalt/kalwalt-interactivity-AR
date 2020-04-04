@@ -49,7 +49,7 @@ function start(container, marker, video, input_width, input_height, canvas_draw,
     var pw, ph;
     var ox, oy;
     var worker;
-    var camera_para = '../../../resources/data/camera_para-iPhone 5 rear 640x480 1.0m.dat'
+    var camera_para = '../../../resources/data/camera_para.dat'
 
     var canvas_process = document.createElement('canvas');
     var context_process = canvas_process.getContext('2d');
@@ -57,8 +57,9 @@ function start(container, marker, video, input_width, input_height, canvas_draw,
     var renderer = new THREE.WebGLRenderer({
       canvas: canvas_draw,
       alpha: true,
-      logarithmicDepthBuffer: true,
+      //logarithmicDepthBuffer: true,
       side: 'double',
+      precision: 'mediump',
       antialias: true });
     renderer.setPixelRatio(window.devicePixelRatio);
 
@@ -83,6 +84,9 @@ function start(container, marker, video, input_width, input_height, canvas_draw,
     threeGLTFLoader.load("../resources/models/cube/cube.glb", function (gltf) {
             model = gltf.scene;
             model.scale.set(80,80,80);
+            model.position.z = 0;
+            model.position.x = 40;
+            model.position.y = 40;
 
             root.matrixAutoUpdate = false;
             root.add(model);

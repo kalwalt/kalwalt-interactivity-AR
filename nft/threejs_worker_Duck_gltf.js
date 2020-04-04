@@ -6,6 +6,24 @@ function isMobile() {
     return /Android|mobile|iPad|iPhone/i.test(navigator.userAgent);
 }
 
+var interpolationFactor = 24;
+
+var trackedMatrix = {
+    // for interpolation
+    delta: [
+        0, 0, 0, 0,
+        0, 0, 0, 0,
+        0, 0, 0, 0,
+        0, 0, 0, 0
+    ],
+    interpolated: [
+        0, 0, 0, 0,
+        0, 0, 0, 0,
+        0, 0, 0, 0,
+        0, 0, 0, 0
+    ]
+}
+
 var markers = {
     pinball: {
         width: 1637,
@@ -44,7 +62,7 @@ function start( container, marker, video, input_width, input_height, canvas_draw
         canvas: canvas_draw,
         alpha: true,
         antialias: true,
-        precision: 'mediump',
+        precision: 'mediump'
     });
     renderer.setPixelRatio(window.devicePixelRatio);
 
@@ -58,29 +76,25 @@ function start( container, marker, video, input_width, input_height, canvas_draw
     var light = new THREE.AmbientLight(0xffffff);
     scene.add(light);
 
-    var sphere = new THREE.Mesh(
-        new THREE.SphereGeometry(0.5, 8, 8),
-        new THREE.MeshNormalMaterial()
-    );
-
     var root = new THREE.Object3D();
     scene.add(root);
 
     /* Load Model */
     var threeGLTFLoader = new THREE.GLTFLoader();
 
+    var objPositions;
+
     threeGLTFLoader.load("../resources/models/Duck/glTF/Duck.glb", function (gltf) {
             model = gltf.scene;
-            model.position.z = 0;
-            model.position.x = 80;
-            model.position.y = 100;
-            model.rotateX(Math.PI*.5);
-            model.scale.set(100,100,100);
+            model.name = "Duck";
+            model.scale.set(100, 100, 100);
+            model.rotation.x = Math.PI/2;
 
             root.matrixAutoUpdate = false;
             root.add(model);
         }
     );
+
 
     var load = function() {
         vw = input_width;
@@ -91,28 +105,28 @@ function start( container, marker, video, input_width, input_height, canvas_draw
 
         sw = vw * sscale;
         sh = vh * sscale;
-        /* video.style.width = sw + "px";
-        video.style.height = sh + "px";
-        container.style.width = sw + "px";
-        container.style.height = sh + "px";
-        canvas_draw.style.clientWidth = sw + "px";
-        canvas_draw.style.clientHeight = sh + "px";
-        canvas_draw.width = sw;
-        canvas_draw.height = sh; */
+        // video.style.width = sw + "px";
+        // video.style.height = sh + "px";
+        // container.style.width = sw + "px";
+        // container.style.height = sh + "px";
+        // canvas_draw.style.clientWidth = sw + "px";
+        // canvas_draw.style.clientHeight = sh + "px";
+        // canvas_draw.width = sw;
+        // canvas_draw.height = sh;
         w = vw * pscale;
         h = vh * pscale;
         pw = Math.max(w, (h / 3) * 4);
         ph = Math.max(h, (w / 4) * 3);
         ox = (pw - w) / 2;
         oy = (ph - h) / 2;
-        // canvas_process.style.clientWidth = pw + "px";
-        // canvas_process.style.clientHeight = ph + "px";
+        canvas_process.style.clientWidth = pw + "px";
+        canvas_process.style.clientHeight = ph + "px";
         canvas_process.width = pw;
         canvas_process.height = ph;
 
         renderer.setSize(sw, sh);
 
-        worker = new Worker("../resources/jsartoolkit5/artoolkit/artoolkit_filter.worker.js");
+        worker = new Worker('../resources/jsartoolkit5/artoolkit/artoolkit_pos.worker.js');
 
         worker.postMessage({
             type: "load",
@@ -176,6 +190,20 @@ function start( container, marker, video, input_width, input_height, canvas_draw
             world = null;
         } else {
             world = JSON.parse(msg.matrixGL_RH);
+
+            // ~nicolocarpignoli this is absolutely based on empirics. Have to test with other 3D models and
+            // other different images, possibly with different aspect ratio
+            if (!window.firstPositioning) {
+                window.firstPositioning = true;
+                model.position.y = (msg.height / msg.dpi * 2.54 * 10)/2.0;
+                model.position.x = (msg.width / msg.dpi * 2.54 * 10)/2.0;
+            }
+
+            console.log("NFT width: ", msg.width);
+            console.log("NFT height: ", msg.height);
+            console.log("NFT dpi: ", msg.dpi);
+            var o_view = scene.getObjectByName('Duck');
+            console.log(o_view);
         }
     };
 
@@ -210,8 +238,16 @@ function start( container, marker, video, input_width, input_height, canvas_draw
         } else {
             root.visible = true;
 
+            // interpolate matrix
+            for (var i = 0; i < 16; i++) {
+                trackedMatrix.delta[i] = world[i] - trackedMatrix.interpolated[i];
+                trackedMatrix.interpolated[i] =
+                    trackedMatrix.interpolated[i] +
+                    trackedMatrix.delta[i] / interpolationFactor;
+            }
+
             // set matrix of 'root' by detected 'world' matrix
-            setMatrix(root.matrix, world);
+            setMatrix(root.matrix, trackedMatrix.interpolated);
         }
 
         renderer.render(scene, camera);
