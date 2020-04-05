@@ -10,7 +10,7 @@ var NFTLoader = function (width, height, cameraPara) {
 };
 
 NFTLoader.prototype.init = function (container, video, canvas, marker, stats) {
-console.log(this.cameraPara);
+
 var cameraParam = this.cameraPara;
 var root = this.root;
   if(stats){
@@ -97,7 +97,6 @@ NFTLoader.prototype.loadModel = function (url, scale) {
 
   threeGLTFLoader.load(url, function (gltf) {
           model = gltf.scene;
-          model.name = "Duck";
           model.scale.set(scale, scale, scale);
           model.rotation.x = Math.PI/2;
 
@@ -154,7 +153,7 @@ var setMatrix = function (matrix, value) {
     }
 };
 
-function start(container, marker, video, input_width, input_height, canvas_draw, render_update, track_update, cameraParam, root) {
+function start(container, marker, video, input_width, input_height, canvas_draw, render_update, track_update, camera_para, root) {
     var vw, vh;
     var sw, sh;
     var pscale, sscale;
@@ -162,11 +161,6 @@ function start(container, marker, video, input_width, input_height, canvas_draw,
     var pw, ph;
     var ox, oy;
     var worker;
-    var camera_para
-    if(window !== 'undefined'){
-      console.log(cameraParam);
-      camera_para = cameraParam;
-    }
 
     var canvas_process = document.createElement("canvas");
     var context_process = canvas_process.getContext("2d");
