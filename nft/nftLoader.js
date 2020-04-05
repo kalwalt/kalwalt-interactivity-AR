@@ -10,15 +10,8 @@ var NFTLoader = function (width, height, cameraPara) {
 };
 
 NFTLoader.prototype.init = function (marker, stats) {
-var container = document.createElement('div');
-container.id = "app";
-var canvas = document.createElement('canvas');
-canvas.id = "canvas";
-var video = document.createElement('video');
-video.id = "video";
-container.appendChild(video);
-container.appendChild(canvas);
-document.body.appendChild(container);
+ var container, canvas, video = createContainer();
+ createStats(stats);
 
 var cameraParam = this.cameraPara;
 var root = this.root;
@@ -335,6 +328,45 @@ function start(container, marker, video, input_width, input_height, canvas_draw,
     process();
 }
 
+function createContainer() {
+  var container = document.createElement('div');
+  container.id = "app";
+  var canvas = document.createElement('canvas');
+  canvas.id = "canvas";
+  var video = document.createElement('video');
+  video.id = "video";
+  container.appendChild(video);
+  container.appendChild(canvas);
+  var loading = document.getElementById('loading');
+  document.body.insertBefore(container, loading);
+  return container, canvas, video;
+}
+
+function createStats(create) {
+  if(create) {
+    var stats = document.createElement('div');
+    stats.id = "stats";
+    stats.className = "ui stats";
+    var stats1 = document.createElement('div');
+    stats1.id = "stats1";
+    stats1.className = "stats-item";
+    var stats1p = document.createElement('p');
+    stats1p.className = "stats-item-title";
+    stats1p.innerText = "Main";
+    stats1.appendChild(stats1p);
+    stats.appendChild(stats1);
+    var stats2 = document.createElement('div');
+    stats2.id = "stats2";
+    stats2.className = "stats-item";
+    var stats2p = document.createElement('p');
+    stats2p.className = "stats-item-title";
+    stats2p.innerText = "Worker";
+    stats2.appendChild(stats2p);
+    stats.appendChild(stats2);
+    var loading = document.getElementById('loading');
+    document.body.insertBefore(stats, loading);
+  }
+}
 
 window.NFTLoader = NFTLoader;
 window.THREE = THREE;

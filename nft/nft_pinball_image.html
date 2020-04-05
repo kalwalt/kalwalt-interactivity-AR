@@ -9,29 +9,6 @@
 			<img alt="ar.js logo" src="../resources/data/logo.gif" />
 			<span class="loading-text">Loading, please wait</span>
 	</div>
-
-<!--
-==================
-STATS
-==================
--->
-
-    <div id="stats" class="ui stats">
-
-        <div id="stats1" class="stats-item">
-            <p class="stats-item-title">
-                Main
-            </p>
-        </div>
-
-        <div id="stats2" class="stats-item">
-            <p class="stats-item-title">
-                Worker
-            </p>
-        </div>
-
-    </div>
-
     <a
         href="https://raw.githubusercontent.com/artoolkitx/artoolkit5/master/doc/Marker%20images/pinball.jpg"
         class="ui marker"
@@ -41,25 +18,25 @@ STATS
 		<script src="../resources/three.min.js"></script>
 		<script src="../resources/js/libs/stats.min.js"></script>
 		<script src="nftLoader.js"></script>
-<script>
+		<script>
 
-var nftLoader = new NFTLoader(640, 480, '../../../resources/data/camera_para.dat');
+		var nftLoader = new NFTLoader(640, 480, '../../../resources/data/camera_para.dat');
 
-nftLoader.init("pinball", true);
+		nftLoader.init("pinball", true);
 
-var texture = new THREE.TextureLoader().load( '../../../resources/data/textures/aframe-k.png' );
+		var texture = new THREE.TextureLoader().load( '../../../resources/data/textures/aframe-k.png' );
 
-var mat = new THREE.MeshLambertMaterial({color: 0xbbbbff, map: texture});
-var planeGeom = new THREE.PlaneGeometry(1,1,1,1);
-var plane = new THREE.Mesh(planeGeom, mat);
-plane.position.z = 0;
-plane.position.x = 90;
-plane.position.y = 90;
-plane.scale.set(180,180,180);
+		var mat = new THREE.MeshLambertMaterial({color: 0xbbbbff, map: texture});
+		var planeGeom = new THREE.PlaneGeometry(1,1,1,1);
+		var plane = new THREE.Mesh(planeGeom, mat);
+		plane.position.z = 0;
+		plane.position.x = 90;
+		plane.position.y = 90;
+		plane.scale.set(180,180,180);
 
-nftLoader.add(plane);
+		nftLoader.add(plane);
 
-</script>
+		</script>
 
 </body>
 </html>
