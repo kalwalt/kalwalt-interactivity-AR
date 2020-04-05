@@ -9,9 +9,9 @@ var NFTLoader = function (width, height, cameraPara) {
   this.root.matrixAutoUpdate = false;
 };
 
-NFTLoader.prototype.init = function (marker, stats) {
- var container, canvas, video = createContainer();
- createStats(stats);
+NFTLoader.prototype.init = function (markerUrl, stats) {
+createStats(stats);
+var container, canvas, video = createContainer();
 
 var cameraParam = this.cameraPara;
 var root = this.root;
@@ -54,7 +54,7 @@ var root = this.root;
 
         start(
           container,
-          markers[marker],
+          markerUrl,
           video,
           video.videoWidth,
           video.videoHeight,
@@ -134,15 +134,6 @@ var trackedMatrix = {
     ]
 }
 
-var markers = {
-    pinball: {
-        width: 1637,
-        height: 2048,
-        dpi: 215,
-        url: "../../dataNFT/pinball",
-    }
-};
-
 var setMatrix = function (matrix, value) {
     var array = [];
     for (var key in value) {
@@ -155,7 +146,7 @@ var setMatrix = function (matrix, value) {
     }
 };
 
-function start(container, marker, video, input_width, input_height, canvas_draw, render_update, track_update, camera_para, root) {
+function start(container, markerUrl, video, input_width, input_height, canvas_draw, render_update, track_update, camera_para, root) {
     var vw, vh;
     var sw, sh;
     var pscale, sscale;
@@ -218,7 +209,7 @@ function start(container, marker, video, input_width, input_height, canvas_draw,
             pw: pw,
             ph: ph,
             camera_para: camera_para,
-            marker: marker.url
+            marker: markerUrl
         });
 
         worker.onmessage = function(ev) {
@@ -335,10 +326,9 @@ function createContainer() {
   canvas.id = "canvas";
   var video = document.createElement('video');
   video.id = "video";
-  video.setAttribute('loop', true);
-  video.setAttribute('autoplay', true);
-  video.setAttribute('muted', true);
-  video.setAttribute('playsinline', true);
+  video.setAttribute('autoplay', '');
+  video.setAttribute('muted', '');
+  video.setAttribute('playsinline', '');
   container.appendChild(video);
   container.appendChild(canvas);
   var loading = document.getElementById('loading');
