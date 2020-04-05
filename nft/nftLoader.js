@@ -23,8 +23,6 @@ var root = this.root;
     var statsWorker = new Stats();
     statsWorker.showPanel(0); // 0: fps, 1: ms, 2: mb, 3+: custom
     document.getElementById("stats2").appendChild(statsWorker.dom);
-  } else {
-    document.getElementById("stats").remove();
   };
 
   if (navigator.mediaDevices && navigator.mediaDevices.getUserMedia) {
