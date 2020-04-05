@@ -11,7 +11,10 @@ var NFTLoader = function (width, height, cameraPara) {
 
 NFTLoader.prototype.init = function (markerUrl, stats) {
 createStats(stats);
-var container, canvas, video = createContainer();
+var containerObj = createContainer();
+var container = containerObj['container'];
+var canvas = containerObj['canvas'];
+var video = containerObj['video'];
 
 var cameraParam = this.cameraPara;
 var root = this.root;
@@ -331,7 +334,8 @@ function createContainer() {
   container.appendChild(canvas);
   var loading = document.getElementById('loading');
   document.body.insertBefore(container, loading);
-  return container, canvas, video;
+  var obj = {container: container, canvas: canvas, video: video}
+  return obj;
 }
 
 function createStats(create) {
