@@ -89,7 +89,7 @@ NFTLoader.prototype.add = function (obj) {
   root.add(obj);
 };
 
-NFTLoader.prototype.loadModel = function (url, scale) {
+NFTLoader.prototype.loadModel = function (url, x, y, z, scale) {
   var root = this.root;
   var model;
 
@@ -102,6 +102,10 @@ NFTLoader.prototype.loadModel = function (url, scale) {
           model = gltf.scene;
           model.scale.set(scale, scale, scale);
           model.rotation.x = Math.PI/2;
+
+          model.position.x = x;
+          model.position.y = y;
+          model.position.z = z;
 
           root.matrixAutoUpdate = false;
           root.add(model);
