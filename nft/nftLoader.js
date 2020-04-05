@@ -1,5 +1,5 @@
 ;(function () {
-    'use strict'
+  'use strict'
 
 var NFTLoader = function (width, height, cameraPara) {
   this.width = width;
@@ -7,6 +7,7 @@ var NFTLoader = function (width, height, cameraPara) {
   this.cameraPara = cameraPara;
   this.root = new THREE.Object3D();
   this.root.matrixAutoUpdate = false;
+  this.config = "./config.json";
 };
 
 NFTLoader.prototype.init = function (markerUrl, stats) {
@@ -15,6 +16,10 @@ var containerObj = createContainer();
 var container = containerObj['container'];
 var canvas = containerObj['canvas'];
 var video = containerObj['video'];
+
+var config = this.config;
+var data = jsonParser(config);
+console.log(data);
 
 var cameraParam = this.cameraPara;
 var root = this.root;
@@ -367,6 +372,23 @@ function createStats(create) {
     document.body.insertBefore(stats, loading);
   }
 }
+
+function jsonParser(requestURL, callback) {
+  return new Promise( function(resolve, reject) {
+    let data;
+    let request = new XMLHttpRequest();
+    request.open('GET', requestURL);
+    request.responseType = 'json';
+    request.onload = function() {
+      resolve(request.response);
+    }
+    request.onerror = function () {
+      reject('error ' + request.status);
+    }
+    request.send(null);
+  });
+}
+
 
 window.NFTLoader = NFTLoader;
 window.THREE = THREE;
