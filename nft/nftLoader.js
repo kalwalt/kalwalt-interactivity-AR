@@ -9,7 +9,16 @@ var NFTLoader = function (width, height, cameraPara) {
   this.root.matrixAutoUpdate = false;
 };
 
-NFTLoader.prototype.init = function (container, video, canvas, marker, stats) {
+NFTLoader.prototype.init = function (marker, stats) {
+var container = document.createElement('div');
+container.id = "app";
+var canvas = document.createElement('canvas');
+canvas.id = "canvas";
+var video = document.createElement('video');
+video.id = "video";
+container.appendChild(video);
+container.appendChild(canvas);
+document.body.appendChild(container);
 
 var cameraParam = this.cameraPara;
 var root = this.root;

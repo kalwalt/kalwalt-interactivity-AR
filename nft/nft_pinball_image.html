@@ -32,24 +32,6 @@ STATS
 
     </div>
 
-<!--
-==================
-CAMERA VIDEO & CANVAS
-==================
--->
-
-    <div id="app">
-        <video
-            loop
-            autoplay
-            muted
-            playsinline
-            id="video">
-        </video>
-
-        <canvas id="canvas"></canvas>
-    </div>
-
     <a
         href="https://raw.githubusercontent.com/artoolkitx/artoolkit5/master/doc/Marker%20images/pinball.jpg"
         class="ui marker"
@@ -61,13 +43,9 @@ CAMERA VIDEO & CANVAS
 		<script src="nftLoader.js"></script>
 <script>
 
-var container = document.getElementById( 'app' );
-var video = document.getElementById( 'video' );
-var canvas = document.getElementById( 'canvas' );
-
 var nftLoader = new NFTLoader(640, 480, '../../../resources/data/camera_para.dat');
 
-nftLoader.init(container, video, canvas, "pinball", true);
+nftLoader.init("pinball", true);
 
 var texture = new THREE.TextureLoader().load( '../../../resources/data/textures/aframe-k.png' );
 
