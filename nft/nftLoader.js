@@ -335,6 +335,10 @@ function createContainer() {
   canvas.id = "canvas";
   var video = document.createElement('video');
   video.id = "video";
+  video.setAttribute('loop', true);
+  video.setAttribute('autoplay', true);
+  video.setAttribute('muted', true);
+  video.setAttribute('playsinline', true);
   container.appendChild(video);
   container.appendChild(canvas);
   var loading = document.getElementById('loading');
