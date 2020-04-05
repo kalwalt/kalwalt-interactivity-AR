@@ -1,0 +1,4 @@
+{
+  "workerUrl": "../resources/jsartoolkit5/artoolkit/artoolkit.worker.js",
+  "artoolkitUrl": "../standard/artoolkit.min.js"
+}
