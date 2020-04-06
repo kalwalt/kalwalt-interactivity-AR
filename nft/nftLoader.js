@@ -1,45 +1,47 @@
 ;(function () {
   'use strict'
 
-var NFTLoader = function (width, height, cameraPara) {
+var NFTLoader = function (width, height, cameraPara, config) {
   this.width = width;
   this.height = height;
   this.cameraPara = cameraPara;
   this.root = new THREE.Object3D();
   this.root.matrixAutoUpdate = false;
-  this.config = "./config.json";
+  this.config = config;
 };
 
-NFTLoader.prototype.init = function (markerUrl, stats) {
-createStats(stats);
-var containerObj = createContainer();
-var container = containerObj['container'];
-var canvas = containerObj['canvas'];
-var video = containerObj['video'];
+  NFTLoader.prototype.init = function (markerUrl, stats) {
+    createStats(stats);
+    var containerObj = createContainer();
+    var container = containerObj['container'];
+    var canvas = containerObj['canvas'];
+    var video = containerObj['video'];
 
-var config = this.config;
-var data = jsonParser(config);
-console.log(data);
+    var cameraParam = this.cameraPara;
+    var root = this.root
+    var config = this.config;
+    var data = jsonParser(config);
 
-var cameraParam = this.cameraPara;
-var root = this.root;
-  if(stats){
-    var statsMain = new Stats();
-    statsMain.showPanel(0); // 0: fps, 1: ms, 2: mb, 3+: custom
-    document.getElementById("stats1").appendChild(statsMain.dom);
+    data.then( function (configData) {
+    // console.log(configData);
 
-    var statsWorker = new Stats();
-    statsWorker.showPanel(0); // 0: fps, 1: ms, 2: mb, 3+: custom
-    document.getElementById("stats2").appendChild(statsWorker.dom);
-  };
+      if (stats) {
+        var statsMain = new Stats();
+        statsMain.showPanel(0); // 0: fps, 1: ms, 2: mb, 3+: custom
+        document.getElementById("stats1").appendChild(statsMain.dom);
 
-  if (navigator.mediaDevices && navigator.mediaDevices.getUserMedia) {
-    var hint = {
-      audio: false,
-      video: true
-    };
+        var statsWorker = new Stats();
+        statsWorker.showPanel(0); // 0: fps, 1: ms, 2: mb, 3+: custom
+        document.getElementById("stats2").appendChild(statsWorker.dom);
+      }
 
-    if (window.innerWidth < 800) {
+      if (navigator.mediaDevices && navigator.mediaDevices.getUserMedia) {
+        var hint = {
+          audio: false,
+          video: true
+        };
+
+       if (window.innerWidth < 800) {
       hint = {
         audio: false,
         video: {
@@ -53,48 +55,49 @@ var root = this.root;
       };
     };
 
-    navigator.mediaDevices.getUserMedia(hint).then(function(stream) {
-      video.srcObject = stream;
-      video.addEventListener("loadedmetadata", function() {
-        video.play();
+       navigator.mediaDevices.getUserMedia(hint).then(function(stream) {
+          video.srcObject = stream;
+          video.addEventListener("loadedmetadata", function() {
+          video.play();
 
-        start(
-          container,
-          markerUrl,
-          video,
-          video.videoWidth,
-          video.videoHeight,
-          canvas,
-          function() {
-            if(stats){
+          start(
+            container,
+            markerUrl,
+            video,
+            video.videoWidth,
+            video.videoHeight,
+            canvas,
+            function() {
+              if(stats){
               statsMain.update();
             }
-          },
-          function() {
-            if(stats){
+            },
+            function() {
+              if(stats){
               statsWorker.update();
             }
-          },
-          cameraParam,
-          root
-        );
-      });
-    }).catch(function(err) {
+            },
+            cameraParam,
+            root,
+            configData
+          );
+        });
+      }).catch(function(err) {
 
-     console.log(err.name + ": " + err.message);
+        console.log(err.name + ": " + err.message);
 
-   });
+     });
+    };
+  })
+
   };
 
-
-};
-
-NFTLoader.prototype.add = function (obj) {
+  NFTLoader.prototype.add = function (obj) {
   var root = this.root;
   root.add(obj);
 };
 
-NFTLoader.prototype.loadModel = function (url, x, y, z, scale) {
+  NFTLoader.prototype.loadModel = function (url, x, y, z, scale) {
   var root = this.root;
   var model;
 
@@ -119,16 +122,16 @@ NFTLoader.prototype.loadModel = function (url, x, y, z, scale) {
 };
 
 
-var clock = new THREE.Clock();
-var mixers = [];
+  var clock = new THREE.Clock();
+  var mixers = [];
 
-function isMobile() {
+  function isMobile () {
     return /Android|mobile|iPad|iPhone/i.test(navigator.userAgent);
 }
 
-var interpolationFactor = 24;
+  var interpolationFactor = 24;
 
-var trackedMatrix = {
+  var trackedMatrix = {
     // for interpolation
     delta: [
         0, 0, 0, 0,
@@ -144,7 +147,7 @@ var trackedMatrix = {
     ]
 }
 
-var setMatrix = function (matrix, value) {
+  var setMatrix = function (matrix, value) {
     var array = [];
     for (var key in value) {
         array[key] = value[key];
@@ -156,7 +159,7 @@ var setMatrix = function (matrix, value) {
     }
 };
 
-function start(container, markerUrl, video, input_width, input_height, canvas_draw, render_update, track_update, camera_para, root) {
+  function start (container, markerUrl, video, input_width, input_height, canvas_draw, render_update, track_update, camera_para, root, configData) {
     var vw, vh;
     var sw, sh;
     var pscale, sscale;
@@ -170,9 +173,9 @@ function start(container, markerUrl, video, input_width, input_height, canvas_dr
 
     var renderer = new THREE.WebGLRenderer({
         canvas: canvas_draw,
-        alpha: true,
-        antialias: true,
-        precision: 'mediump'
+        alpha: configData.renderer.alpha,
+        antialias: configData.renderer.antialias,
+        precision: configData.renderer.precision
     });
     renderer.setPixelRatio(window.devicePixelRatio);
 
@@ -212,7 +215,7 @@ function start(container, markerUrl, video, input_width, input_height, canvas_dr
 
         renderer.setSize(sw, sh);
 
-        worker = new Worker('../resources/jsartoolkit5/artoolkit/artoolkit.worker.js');
+        worker = new Worker(configData.workerUrl);
 
         worker.postMessage({
             type: "load",
@@ -327,9 +330,9 @@ function start(container, markerUrl, video, input_width, input_height, canvas_dr
     load();
     tick();
     process();
-}
+  }
 
-function createContainer() {
+  function createContainer() {
   var container = document.createElement('div');
   container.id = "app";
   var canvas = document.createElement('canvas');
@@ -347,7 +350,7 @@ function createContainer() {
   return obj;
 }
 
-function createStats(create) {
+  function createStats(create) {
   if(create) {
     var stats = document.createElement('div');
     stats.id = "stats";
@@ -373,23 +376,23 @@ function createStats(create) {
   }
 }
 
-function jsonParser(requestURL, callback) {
-  return new Promise( function(resolve, reject) {
-    let data;
-    let request = new XMLHttpRequest();
-    request.open('GET', requestURL);
-    request.responseType = 'json';
-    request.onload = function() {
-      resolve(request.response);
-    }
-    request.onerror = function () {
-      reject('error ' + request.status);
-    }
-    request.send(null);
-  });
-}
+  async function jsonParser(requestURL, callback) {
+    return await new Promise( function(resolve, reject) {
+      let data;
+      let request = new XMLHttpRequest();
+      request.open('GET', requestURL);
+      request.responseType = 'json';
+      request.onload = function() {
+        resolve(request.response);
+      }
+      request.onerror = function () {
+        reject('error ' + request.status);
+      }
+      request.send(null);
+    });
+  }
 
 
-window.NFTLoader = NFTLoader;
-window.THREE = THREE;
+  window.NFTLoader = NFTLoader;
+  window.THREE = THREE;
 })();
