@@ -220,7 +220,8 @@
             pw: pw,
             ph: ph,
             camera_para: configData.cameraPara,
-            marker: markerUrl
+            marker: markerUrl,
+            artoolkitUrl: configData.artoolkitUrl
         });
 
         worker.onmessage = function(ev) {
