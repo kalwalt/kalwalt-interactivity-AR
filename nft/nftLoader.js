@@ -10,12 +10,6 @@
   };
 
   NFTLoader.prototype.init = function (markerUrl, stats) {
-    createLoading();
-    createStats(stats);
-    var containerObj = createContainer();
-    var container = containerObj['container'];
-    var canvas = containerObj['canvas'];
-    var video = containerObj['video'];
 
     var cameraParam = this.cameraPara;
     var root = this.root
@@ -24,6 +18,12 @@
 
     data.then( function (configData) {
     // console.log(configData);
+      createLoading(configData);
+      createStats(stats);
+      var containerObj = createContainer();
+      var container = containerObj['container'];
+      var canvas = containerObj['canvas'];
+      var video = containerObj['video'];
 
       if (stats) {
         var statsMain = new Stats();
@@ -332,15 +332,15 @@
     process();
   }
 
-  function createLoading() {
+  function createLoading(configData) {
     var loader = document.createElement('div');
     loader.id = "loading";
     var logo = document.createElement('img');
-    logo.src = "../resources/data/logo.gif";
-    logo.alt = "ar.js logo";
+    logo.src = configData.loading.logo.src;
+    logo.alt = configData.loading.logo.alt;
     var loadingMessage = document.createElement('span');
     loadingMessage.setAttribute('class', "loading-text");
-    loadingMessage.innerText = "Loading, please wait...";
+    loadingMessage.innerText = configData.loading.loadingMessage;
     loader.appendChild(logo);
     loader.appendChild(loadingMessage);
     var marker = document.getElementById('marker');

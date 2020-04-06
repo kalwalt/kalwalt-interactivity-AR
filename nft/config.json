@@ -2,6 +2,13 @@
   "workerUrl": "../resources/jsartoolkit5/artoolkit/artoolkit_nft.worker.js",
   "artoolkitUrl": "../standard/artoolkit.min.js",
   "cameraPara": "../../../resources/data/camera_para.dat",
+  "loading": {
+    "logo": {
+      "src": "../resources/data/logo.gif",
+      "alt": "ar.js logo"
+    },
+    "loadingMessage": "Loading, please wait..."  
+  },
   "renderer": {
     "alpha": true,
     "antialias": true,
