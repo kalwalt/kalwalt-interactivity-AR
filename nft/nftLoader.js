@@ -1,14 +1,13 @@
 ;(function () {
   'use strict'
 
-var NFTLoader = function (width, height, cameraPara, config) {
-  this.width = width;
-  this.height = height;
-  this.cameraPara = cameraPara;
-  this.root = new THREE.Object3D();
-  this.root.matrixAutoUpdate = false;
-  this.config = config;
-};
+  var NFTLoader = function (width, height, config) {
+    this.width = width;
+    this.height = height;
+    this.root = new THREE.Object3D();
+    this.root.matrixAutoUpdate = false;
+    this.config = config;
+  };
 
   NFTLoader.prototype.init = function (markerUrl, stats) {
     createStats(stats);
@@ -77,7 +76,6 @@ var NFTLoader = function (width, height, cameraPara, config) {
               statsWorker.update();
             }
             },
-            cameraParam,
             root,
             configData
           );
@@ -159,7 +157,7 @@ var NFTLoader = function (width, height, cameraPara, config) {
     }
 };
 
-  function start (container, markerUrl, video, input_width, input_height, canvas_draw, render_update, track_update, camera_para, root, configData) {
+  function start (container, markerUrl, video, input_width, input_height, canvas_draw, render_update, track_update, root, configData) {
     var vw, vh;
     var sw, sh;
     var pscale, sscale;
@@ -221,7 +219,7 @@ var NFTLoader = function (width, height, cameraPara, config) {
             type: "load",
             pw: pw,
             ph: ph,
-            camera_para: camera_para,
+            camera_para: configData.cameraPara,
             marker: markerUrl
         });
 
