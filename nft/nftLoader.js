@@ -10,6 +10,7 @@
   };
 
   NFTLoader.prototype.init = function (markerUrl, stats) {
+    createLoading();
     createStats(stats);
     var containerObj = createContainer();
     var container = containerObj['container'];
@@ -329,6 +330,21 @@
     load();
     tick();
     process();
+  }
+
+  function createLoading() {
+    var loader = document.createElement('div');
+    loader.id = "loading";
+    var logo = document.createElement('img');
+    logo.src = "../resources/data/logo.gif";
+    logo.alt = "ar.js logo";
+    var loadingMessage = document.createElement('span');
+    loadingMessage.setAttribute('class', "loading-text");
+    loadingMessage.innerText = "Loading, please wait...";
+    loader.appendChild(logo);
+    loader.appendChild(loadingMessage);
+    var marker = document.getElementById('marker');
+    document.body.insertBefore(loader, document.body.firstChild);
   }
 
   function createContainer() {
