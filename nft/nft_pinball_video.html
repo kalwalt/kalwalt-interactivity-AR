@@ -5,132 +5,45 @@
 <link rel="stylesheet" type="text/css" href="../resources/css/video-style.css">
 </head>
 <body>
-	<div id="loading">
-		<img alt="ar.js logo" src="../resources/data/logo.gif" />
-		<span class="loading-text">Loading, please wait</span>
-	</div>
+  <a
+	  href="https://raw.githubusercontent.com/artoolkitx/artoolkit5/master/doc/Marker%20images/pinball.jpg"
+		class="ui marker"
+		target="_blank">
+			🖼 Marker Image
+	</a>
 
-	    <!--
-	  ==================
-	  STATS
-	  ==================
-	  -->
+	<video
+	  loop
+		autoplay
+		muted
+	  playsinline
+		id="arvideo">
+		<!-- video taken from https://github.com/hatsumatsu/lab--ar002/blob/master/video/video--01.mp4 by @hatsumatsu -->
+		<source src="../resources/data/videos/video--01.mp4" type='video/mp4'>
+	</video>
+  <script src="../resources/three.min.js"></script>
+  <script src="../resources/js/libs/stats.min.js"></script>
+  <script src="../resources/build/nftLoader/nftLoader.min.js"></script>
+  <script>
 
-	    <div id="stats" class="ui stats">
-	      <div id="stats1" class="stats-item">
-	        <p class="stats-item-title">
-	          Main
-	        </p>
-	      </div>
+	var nftLoader = new NFTLoader(640, 480, 'config.json');
 
-	      <div id="stats2" class="stats-item">
-	        <p class="stats-item-title">
-	          Worker
-	        </p>
-	      </div>
-	    </div>
-			<!--
-				==================
-				CAMERA VIDEO & CANVAS
-				==================
-				-->
+	nftLoader.init("../../dataNFT/pinball", true);
 
-			<div id="app">
-				<video loop autoplay muted playsinline id="video"></video>
+	var ARVideo = document.getElementById( 'arvideo' );
+	var texture = new THREE.VideoTexture( ARVideo );
+	var mat = new THREE.MeshLambertMaterial({color: 0xbbbbff, map: texture});
+	ARVideo.play();
+	var planeGeom = new THREE.PlaneGeometry(1,1,1,1);
+	var plane = new THREE.Mesh(planeGeom, mat);
+	plane.position.z = 0;
+	plane.position.x = 90;
+	plane.position.y = 90;
+	plane.scale.set(180,180,180);
 
-				<canvas id="canvas"></canvas>
-			</div>
-			<a
-				href="https://raw.githubusercontent.com/artoolkit/artoolkit5/master/doc/Marker%20images/pinball.jpg"
-				class="ui marker"
-				target="_blank"
-			>
-				🖼 Marker Image
-			</a>
+	nftLoader.add(plane);
 
-			<video
-		         loop
-		         autoplay
-		         muted
-		         playsinline
-		         id="arvideo">
-						 <!-- video taken from https://github.com/hatsumatsu/lab--ar002/blob/master/video/video--01.mp4 by @hatsumatsu -->
-		         <source src="../resources/data/videos/video--01.mp4" type='video/mp4'>
-		     </video>
-<script src="../resources/three.min.js"></script>
-<script src="../resources/js/libs/stats.min.js"></script>
-<script src="threejs_worker_pinball_video.js"></script>
-<script>
-/**
- * STATS
- */
-var statsMain = new Stats();
-statsMain.showPanel(0); // 0: fps, 1: ms, 2: mb, 3+: custom
-document.getElementById("stats1").appendChild(statsMain.dom);
-
-var statsWorker = new Stats();
-statsWorker.showPanel(0); // 0: fps, 1: ms, 2: mb, 3+: custom
-document.getElementById("stats2").appendChild(statsWorker.dom);
-/**
- * APP / ELEMENTS
- */
-var container = document.getElementById("app");
-var video = document.getElementById("video");
-var canvas = document.getElementById("canvas");
-
-if (navigator.mediaDevices && navigator.mediaDevices.getUserMedia) {
-	var hint = {
-		audio: false,
-		video: true
-	};
-
-	if( window.innerWidth < 800 ) {
-			let width = ( window.innerWidth < window.innerHeight ) ? 240 : 360;
-			let height = ( window.innerWidth < window.innerHeight ) ? 360 : 240;
-
-			let aspectRatio = window.innerWidth / window.innerHeight;
-
-			console.log( width, height );
-
-			hint = {
-					audio: false,
-					video: {
-							facingMode: 'environment',
-							width: { min: width, max: width }
-					},
-			};
-
-			console.log( hint );
-	}
-
-	navigator.mediaDevices.getUserMedia(hint).then(function(stream) {
-		video.srcObject = stream;
-		video.addEventListener("loadedmetadata", function() {
-			video.play();
-
-			start(
-				container,
-				markers["pinball"],
-				video,
-				video.videoWidth,
-				video.videoHeight,
-				canvas,
-				function() {
-					statsMain.update();
-				},
-				function() {
-					statsWorker.update();
-				},
-				null
-			);
-		});
-	}).catch(function(err) {
-
-	 console.log(err.name + ": " + err.message);
-
- });
-}
-</script>
+  </script>
 
 </body>
 </html>
