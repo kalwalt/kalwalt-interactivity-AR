@@ -5,31 +5,25 @@
 <link rel="stylesheet" type="text/css" href="../resources/css/video-style.css">
 </head>
 <body>
-	<div id="loading">
-		<img alt="ar.js logo" src="../resources/data/logo.gif" />
-		<span class="loading-text">Loading, please wait</span>
-	</div>
+	<a
+		href="https://raw.githubusercontent.com/artoolkitx/artoolkit5/master/doc/Marker%20images/pinball.jpg"
+		class="ui marker"
+		target="_blank">
+		🖼 Marker Image
+	</a>
 
-			<a
-				href="https://raw.githubusercontent.com/artoolkit/artoolkit5/master/doc/Marker%20images/pinball.jpg"
-				class="ui marker"
-				target="_blank"
-			>
-				🖼 Marker Image
-			</a>
+  <script src="../resources/three.min.js"></script>
+  <script src="../resources/js/libs/stats.min.js"></script>
+  <script src="../resources/js/GLTFLoader.js"></script>
+  <script src="../resources/build/nftLoader/nftLoader.min.js"></script>
+  <script>
 
-<script src="../resources/three.min.js"></script>
-<script src="../resources/js/libs/stats.min.js"></script>
-<script src="../resources/js/GLTFLoader.js"></script>
-<script src="nftLoader.js"></script>
-<script>
+  var nftLoader = new NFTLoader(640, 480, 'config.json');
 
-var nftLoader = new NFTLoader(640, 480, '../../../resources/data/camera_para.dat');
+  nftLoader.init("../../dataNFT/pinball", true);
+  nftLoader.loadModel('../resources/models/cube/cube.glb', 40, 40, 0, 80);
 
-nftLoader.init("../../dataNFT/pinball", true);
-nftLoader.loadModel('../resources/models/cube/cube.glb', 40, 40, 0, 80);
-
-</script>
+  </script>
 
 </body>
 </html>
