@@ -7,7 +7,7 @@ module.exports = function(grunt) {
   grunt.initConfig({
     pkg: pkg,
 
-    uglify: {
+    terser: {
       options: {},
       dist: {
         src: "resources/js/nftLoader/nftLoader.js",
@@ -16,5 +16,5 @@ module.exports = function(grunt) {
     }
   });
 
-  grunt.loadNpmTasks("grunt-contrib-uglify-es");
+  grunt.loadNpmTasks("grunt-terser");
 };
