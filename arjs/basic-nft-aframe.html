@@ -21,7 +21,6 @@
   }
 </style>
 
-<!-- rawgithack development URL -->
 <script src="../resources/aframe-ar-nft.js"></script>
 
 <body style='margin : 0px; overflow: hidden;'>
@@ -34,7 +33,7 @@
         renderer="logarithmicDepthBuffer: true;"
         embedded arjs='trackingMethod: best; sourceType: webcam; debugUIEnabled: false;'>
 
-        <!-- use rawgithack to retrieve the correct url for nft marker (see 'pinball' below) -->
+        <!-- if you are hosting on localhost url='../resources/dataNFT/pinball' on gh-pages url='https://kalwalt.github.io/kalwalt-interactivity-AR/resources/dataNFT/pinball' -->
         <a-nft
             type='nft' url='../resources/dataNFT/pinball'
             smooth='true' smoothCount='10' smoothTolerance='0.01' smoothThreshold='5'>
