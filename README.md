@@ -7,6 +7,10 @@ Note that some of them maybe can not works... It's my notebook, block of sketche
 ## NFT and Jsartoolkit5
 In the repository there are some examples not included in the official [artoolkitx/jsartoolkit5](https://github.com/artoolkitx/jsartoolkit5) repository.
 
+## nftLoader
+If you are interested in AR try this utility.
+You can try the examples with the `nftLoader.js` library. Use nftLoader.js in development and `nftLoader.min.js` in production. But i sugggest you to use the new [ARnft](https://github.com/kalwalt/ARnft) library, based on [JsartoolkitNFT](https://github.com/kalwalt/jsartoolkitNFT) and with ES6.
+
 ## Website
 You can visit the Website [https://kalwalt.github.io/kalwalt-interactivity-AR/](kalwalt.github.io/kalwalt-interactivity-AR/) The site is hosted on gh-pages.
 
