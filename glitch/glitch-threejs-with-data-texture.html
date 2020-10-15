@@ -38,8 +38,8 @@
 		</div>
 
 		<script>
-			if ( WEBGL.isWebGLAvailable() === false ) {
-				document.body.appendChild( WEBGL.getWebGLErrorMessage() );
+			if ( THREE.WEBGL.isWebGLAvailable() === false ) {
+				document.body.appendChild( THREE.WEBGL.getWebGLErrorMessage() );
 			}
 			var camera, scene, renderer, clock, mesh, dataTexture, diffuseMap;
 			init();

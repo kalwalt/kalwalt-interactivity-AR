@@ -103,8 +103,8 @@
 
     </script>
     <script>
-      if ( WEBGL.isWebGLAvailable() === false ) {
-        document.body.appendChild( WEBGL.getWebGLErrorMessage() );
+      if ( THREE.WEBGL.isWebGLAvailable() === false ) {
+        document.body.appendChild( THREE.WEBGL.getWebGLErrorMessage() );
       };
       var camera, scene, geometry,texture, material, mesh, renderer, clock, time;
       let uniforms = {};
