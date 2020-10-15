@@ -29,8 +29,8 @@
         <script src="../resources/js/glitchLib.js"></script>
         <script src="../resources/js/WebGL.js"></script>
         <script>
-        if ( WEBGL.isWebGLAvailable() === false ) {
-				document.body.appendChild( WEBGL.getWebGLErrorMessage() );
+        if ( THREE.WEBGL.isWebGLAvailable() === false ) {
+				document.body.appendChild( THREE.WEBGL.getWebGLErrorMessage() );
 			}
         var camera, scene, renderer;
         this.texture = null;
