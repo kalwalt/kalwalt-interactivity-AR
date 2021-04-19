@@ -1,7 +1,7 @@
 <span class="badge-patreon"><a href="https://patreon.com/walterperdan" title="Donate to this project using Patreon"><img src="https://img.shields.io/badge/patreon-donate-yellow.svg" alt="Patreon donate button" /></a></span>
 [![Build Status](https://travis-ci.com/kalwalt/kalwalt-interactivity-AR.svg?branch=master)](https://travis-ci.com/kalwalt/kalwalt-interactivity-AR)
 # kalwalt-interactivity-AR
-Some various experiments with [Ar.js](https://github.com/jeromeetienne/AR.js) and [Three.js](https://threejs.org/) and not only.
+Some various experiments with [Ar.js](https://github.com/AR-js-org/AR.js) and [Three.js](https://threejs.org/) and not only.
 Note that some of them maybe can not works... It's my notebook, block of sketches of small applications or fragments of code that I am testing.
 
 ## NFT and Jsartoolkit5
@@ -9,20 +9,20 @@ In the repository there are some examples not included in the official [artoolki
 
 ## nftLoader
 If you are interested in AR try this utility.
-You can try the examples with the `nftLoader.js` library. Use nftLoader.js in development and `nftLoader.min.js` in production. But i sugggest you to use the new [ARnft](https://github.com/kalwalt/ARnft) library, based on [JsartoolkitNFT](https://github.com/kalwalt/jsartoolkitNFT) and with ES6.
+You can try the examples with the `nftLoader.js` library. Use nftLoader.js in development and `nftLoader.min.js` in production. But i sugggest you to use the new [ARnft](https://github.com/webarkit/ARnft) library, based on [JsartoolkitNFT](https://github.com/webarkit/jsartoolkitNFT) and with ES6.
 
 ## Website
-You can visit the Website [https://kalwalt.github.io/kalwalt-interactivity-AR/](kalwalt.github.io/kalwalt-interactivity-AR/) The site is hosted on gh-pages.
+You can visit the Website [kalwalt.github.io/kalwalt-interactivity-AR/](https://kalwalt.github.io/kalwalt-interactivity-AR/) The site is hosted on gh-pages.
 
 ## How to run things locally
 
 You should run a local server, if you have python run in a console:
 
-```
-//Python 2.x
+```python
+// Python 2.x
 python -m SimpleHTTPServer
 
-//Python 3.x
+// Python 3.x
 python -m http.server
 ```
 
