@@ -29,10 +29,9 @@
   ],
   "author": "Walter Perdan, @kalwalt",
   "license": "LGPL-3.0",
-  "dependencies": {},
   "devDependencies": {
-    "grunt": "^1.1.0",
-    "grunt-cli": "^1.3.2",
-    "grunt-terser": "^1.0.0"
+    "grunt": "^1.4.0",
+    "grunt-cli": "^1.4.2",
+    "grunt-terser": "^2.0.0"
   }
 }
