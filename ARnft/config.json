@@ -1,6 +1,6 @@
 {
   "addPath": "kalwalt-interactivity-AR",
-  "cameraPara": "kalwalt-interactivity-AR/ARnft/Data/camera_para.dat",
+  "cameraPara": "ARnft/Data/camera_para.dat",
   "container": {
     "create": true,
     "containerName": "",
