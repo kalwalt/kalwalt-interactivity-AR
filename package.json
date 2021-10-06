@@ -4,8 +4,7 @@
   "description": "Repository for different projects, sketches, code snippets, tests.",
   "main": "",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
-    "minify": "grunt terser"
+    "test": "echo \"Error: no test specified\" && exit 1"
   },
   "repository": {
     "type": "git",
@@ -29,9 +28,5 @@
   ],
   "author": "Walter Perdan, @kalwalt",
   "license": "LGPL-3.0",
-  "devDependencies": {
-    "grunt": "^1.4.1",
-    "grunt-cli": "^1.4.3",
-    "grunt-terser": "^2.0.0"
-  }
+  "devDependencies": {}
 }
