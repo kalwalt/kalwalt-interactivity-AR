@@ -38,6 +38,9 @@
                     let canvas = document.getElementById('canvas');
                     let fov = 0.8 * 180 / Math.PI;
                     let ratio = window.clientWidth / window.clientHeight;
+                    console.log(ratio);
+                    ratio = 640 /480;
+                    console.log(ratio);
                     let config = {
                         "renderer": {
                             "alpha": true,
@@ -65,13 +68,13 @@
                     const camera = sceneThreejs.getCamera();
                     console.log(camera);
                     var cam = new THREE.PerspectiveCamera( 45, 640 / 480, 1, 1000 );
-                    sceneThreejs.setCamera(cam);
+                    //sceneThreejs.setCamera(cam);
 
                     cam.position.set(0.0, 0.0, 10.0);
 
                     const interactionManager = new THREE.InteractionManager(
                         renderer,
-                        cam,
+                        camera,
                         canvas
                     );
 
