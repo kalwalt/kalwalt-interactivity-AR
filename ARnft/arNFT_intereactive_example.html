@@ -21,7 +21,9 @@
     <script src="https://raw.githack.com/markuslerner/THREE.Interactive/master/build/three.interactive.js"></script>
 
     <script>
-        ARnft.ARnft.init(640, 480, ["ARnft/DataNFT/pinball"], ['pinball'], 'config.json', true)
+        let width = 640;
+        let height = 480;
+        ARnft.ARnft.init(width, height, ["ARnft/DataNFT/pinball"], ['pinball'], 'config.json', true)
             .then((nft) => {
                 let mat = new THREE.MeshLambertMaterial({
                     color: 0xff0000
@@ -37,10 +39,7 @@
 
                     let canvas = document.getElementById('canvas');
                     let fov = 0.8 * 180 / Math.PI;
-                    let ratio = window.clientWidth / window.clientHeight;
-                    console.log(ratio);
-                    ratio = 640 /480;
-                    console.log(ratio);
+                    let ratio = width / height;
                     let config = {
                         "renderer": {
                             "alpha": true,
@@ -66,11 +65,8 @@
                     sceneThreejs.initRenderer();
                     const renderer = sceneThreejs.getRenderer();
                     const camera = sceneThreejs.getCamera();
-                    console.log(camera);
-                    var cam = new THREE.PerspectiveCamera( 45, 640 / 480, 1, 1000 );
-                    //sceneThreejs.setCamera(cam);
 
-                    cam.position.set(0.0, 0.0, 10.0);
+                    camera.position.set(0.0, 0.0, 10.0);
 
                     const interactionManager = new THREE.InteractionManager(
                         renderer,
