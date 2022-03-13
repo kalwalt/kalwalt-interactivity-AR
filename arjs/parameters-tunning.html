@@ -5,7 +5,7 @@
 <!-- three.js library -->
 <script src='../resources/three.min.js'></script>
 <!-- ar.js -->
-<script src="../resources/ar.js"></script>
+<script src="../resources/ar-threex.js"></script>
 <script>THREEx.ArToolkitContext.baseURL = '../'</script>
 
 <!-- domElement UI -->
@@ -191,9 +191,12 @@ body {
 
 	// array of functions for the rendering loop
 	var onRenderFcts= [];
+	var arToolkitContext, arMarkerControls;
 
 	// init scene and camera
 	var scene	= new THREE.Scene();
+	var markerRoot = new THREE.Group
+	scene.add(markerRoot)
 
 	var ambient = new THREE.AmbientLight( 0x666666 );
 	scene.add( ambient );
@@ -295,10 +298,22 @@ body {
 
 	var arToolkitSource = new THREEx.ArToolkitSource(sourceParameters)
 
-	arToolkitSource.init(function onReady(){
-		// handle resize of renderer
-		onResize()
-	})
+	arToolkitSource.init(function onReady() {
+			arToolkitSource.domElement.addEventListener('canplay', () => {
+				console.log(
+					'canplay',
+					'actual source dimensions',
+					arToolkitSource.domElement.videoWidth,
+					arToolkitSource.domElement.videoHeight
+				);
+
+				initARContext();
+			});
+			window.arToolkitSource = arToolkitSource;
+			setTimeout(() => {
+				onResize()
+			}, 2000);
+		})
 
 	// handle resize
 	window.addEventListener('resize', function(){
@@ -318,36 +333,67 @@ body {
 	//          initialize arToolkitContext
 	////////////////////////////////////////////////////////////////////////////////
 
-	// create atToolkitContext
-	var arToolkitContext = new THREEx.ArToolkitContext({
-		cameraParametersUrl: THREEx.ArToolkitContext.baseURL + '../resources/data/camera_para.dat',
-		detectionMode: 'mono',
-	})
-	// initialize it
-	arToolkitContext.init(function onCompleted(){
-		// copy projection matrix to camera
-		camera.projectionMatrix.copy( arToolkitContext.getProjectionMatrix() );
-	})
+	function initARContext() { // create atToolkitContext
+			arToolkitContext = new THREEx.ArToolkitContext({
+				cameraParametersUrl: THREEx.ArToolkitContext.baseURL + '../resources/data/camera_para.dat',
+				detectionMode: 'mono'
+			})
+			// initialize it
+			arToolkitContext.init(() => { // copy projection matrix to camera
+				camera.projectionMatrix.copy(arToolkitContext.getProjectionMatrix());
 
-	// update artoolkit on every frame
-	onRenderFcts.push(function(){
-		if( arToolkitSource.ready === false )	return
+				arToolkitContext.arController.orientation = getSourceOrientation();
+				arToolkitContext.arController.options.orientation = getSourceOrientation();
 
-		arToolkitContext.update( arToolkitSource.domElement )
-	})
+				console.log('arToolkitContext', arToolkitContext);
+				window.arToolkitContext = arToolkitContext;
+			})
+
+			// MARKER
+			arMarkerControls = new THREEx.ArMarkerControls(arToolkitContext, markerRoot, {
+				type: 'pattern',
+				patternUrl : THREEx.ArToolkitContext.baseURL + '../resources/data/patt.hiro',
+			})
+
+			scene.visible = false
+
+			console.log('ArMarkerControls', arMarkerControls);
+			window.arMarkerControls = arMarkerControls;
+		}
 
 
-	////////////////////////////////////////////////////////////////////////////////
-	//          Create a ArMarkerControls
-	////////////////////////////////////////////////////////////////////////////////
+		function getSourceOrientation() {
+			if (!arToolkitSource) {
+				return null;
+			}
 
-	var markerRoot = new THREE.Group
-	scene.add(markerRoot)
-	var artoolkitMarker = new THREEx.ArMarkerControls(arToolkitContext, markerRoot, {
-		type : 'pattern',
-		patternUrl : THREEx.ArToolkitContext.baseURL + '../resources/data/patt.hiro',
-		// patternUrl : THREEx.ArToolkitContext.baseURL + '../data/data/patt.kanji',
-	})
+			console.log(
+				'actual source dimensions',
+				arToolkitSource.domElement.videoWidth,
+				arToolkitSource.domElement.videoHeight
+			);
+
+			if (arToolkitSource.domElement.videoWidth > arToolkitSource.domElement.videoHeight) {
+				console.log('source orientation', 'landscape');
+				return 'landscape';
+			} else {
+				console.log('source orientation', 'portrait');
+				return 'portrait';
+			}
+		}
+
+		// update artoolkit on every frame
+		onRenderFcts.push(function () {
+			if (!arToolkitContext || !arToolkitSource || !arToolkitSource.ready) {
+				return;
+			}
+
+			arToolkitContext.update(arToolkitSource.domElement)
+
+			// update scene.visible if the marker is seen
+			scene.visible = camera.visible
+		})
+
 
 	//////////////////////////////////////////////////////////////////////////////////
 	//		add an object in the scene
@@ -358,7 +404,7 @@ body {
 	markerRoot.add(mesh)
 
 	// add a torus knot
-	var geometry	= new THREE.CubeGeometry(1,1,1);
+	var geometry	= new THREE.BoxGeometry(1,1,1);
 	var material	= new THREE.MeshNormalMaterial({
 		transparent : true,
 		opacity: 0.5,
