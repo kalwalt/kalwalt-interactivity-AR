@@ -5,66 +5,71 @@
 <!-- three.js library -->
 <script src='../resources/three.min.js'></script>
 <!-- ar.js -->
-<script src="../resources/ar.js"></script>
+<script src="../resources/ar-threex.js"></script>
 <script>THREEx.ArToolkitContext.baseURL = '../'</script>
 
 <!-- domElement UI -->
 <style>
-body {
-	font-family: Monospace;
-}
-#demoUISource {
-	    z-index: 3;
-	position: absolute;
-	top: 0;
-	left: 0;
-	background-color: rgba(255,255,255,0.4);
-	padding: 10px;
-}
-#demoUIContext {
-	    z-index: 3;
-	position: absolute;
-	bottom: 0;
-	left: 0;
-	background-color: rgba(255,255,255,0.4);
-	padding: 10px;
-}
-#demoUIControls {
-	    z-index: 3;
-	position: absolute;
-	bottom: 0;
-	right: 0;
-	background-color: rgba(255,255,255,0.4);
-	padding: 10px;
-}
-.rs-base {	/* the aframe stat */
-	left : auto;
-	right: 20px;
-}
+	body {
+		font-family: Monospace;
+	}
+
+	#demoUISource {
+		z-index: 3;
+		position: absolute;
+		top: 0;
+		left: 0;
+		background-color: rgba(255, 255, 255, 0.4);
+		padding: 10px;
+	}
+
+	#demoUIContext {
+		z-index: 3;
+		position: absolute;
+		bottom: 0;
+		left: 0;
+		background-color: rgba(255, 255, 255, 0.4);
+		padding: 10px;
+	}
+
+	#demoUIControls {
+		z-index: 3;
+		position: absolute;
+		bottom: 0;
+		right: 0;
+		background-color: rgba(255, 255, 255, 0.4);
+		padding: 10px;
+	}
+
+	.rs-base {
+		/* the aframe stat */
+		left: auto;
+		right: 20px;
+	}
 </style>
 <div id='demoUISource'>
 	<h3>Source Parameters</h3>
 	<label title='the video source used by artoolkit'>Video Source :
 		<select id='videoSourceType'>
-		  <option value="webcam">webcam</option>
-		  <option value="video_headtracking.mp4">video_headtracking</option>
-		  <option value="video_output_4.mp4">video_output_4</option>
-		  <option value="image_armchair.jpg">image_armchair</option>
-		  <option value="image_chalk_multi.jpg">image_chalk_multi</option>
-		  <option value="image_chalk.jpg">image_chalk</option>
-		  <option value="image_img.jpg">image_img</option>
-		  <option value="image_kuva.jpg">image_kuva</option>
+			<option value="webcam">webcam</option>
+			<option value="video_headtracking.mp4">video_headtracking</option>
+			<option value="video_output_4.mp4">video_output_4</option>
+			<option value="image_armchair.jpg">image_armchair</option>
+			<option value="image_chalk_multi.jpg">image_chalk_multi</option>
+			<option value="image_chalk.jpg">image_chalk</option>
+			<option value="image_img.jpg">image_img</option>
+			<option value="image_kuva.jpg">image_kuva</option>
 		</select>
 	</label>
-	<br/>
+	<br />
 	<label title='the video source used by artoolkit'>Source Width x Height :
 		<select id='videoSourceDimensions'>
-		  <option value="640x480">640x480</option>
-		  <option value="320x240">320x240</option>
-		  <option value="240x180">240x180</option>
+			<option value="640x480">640x480</option>
+			<option value="320x240">320x240</option>
+			<option value="240x180">240x180</option>
 		</select>
 	</label>
-	<br/>
+	<br />
 	<label title='the video source used by artoolkit'>Display Width x Height :
 		<select id='videoDisplayDimensions'>
 			<option value="640x480">640x480</option>
@@ -77,20 +82,20 @@ body {
 	<h3>Context Parameters</h3>
 	<label title='enabled debug in artoolkit'>debug :
 		<select id='debug'>
-		  <option value="true">true</option>
-		  <option value="false">false</option>
+			<option value="true">true</option>
+			<option value="false">false</option>
 		</select>
 	</label>
-	<br/>
+	<br />
 	<label title='type of marker detected by artoolkit'>detectionMode :
 		<select id='detectionMode'>
-		  <option value="color">color</option>
-		  <option value="color_and_matrix">color_and_matrix</option>
-		  <option value="mono">mono</option>
-		  <option value="mono_and_matrix">mono_and_matrix</option>
+			<option value="color">color</option>
+			<option value="color_and_matrix">color_and_matrix</option>
+			<option value="mono">mono</option>
+			<option value="mono_and_matrix">mono_and_matrix</option>
 		</select>
 	</label>
-	<br/>
+	<br />
 	<label title='valid only detectionMode contains matrix'>matrixCodeType :
 		<select id='matrixCodeType'>
 			<option value="3x3">3x3</option>
@@ -101,7 +106,7 @@ body {
 			<option value="4x4_BCH_13_5_5">4x4_BCH_13_5_5</option>
 		</select>
 	</label>
-	<br/>
+	<br />
 	<label title='max detection rate'>maxDetectionRate :
 		<select id='maxDetectionRate'>
 			<option value="10">10</option>
@@ -112,7 +117,7 @@ body {
 			<option value="60" selected="selected">60</option>
 		</select>
 	</label>
-	<br/>
+	<br />
 	<label title='resolution of at which we detect pose in the source image'>Canvas Width x Height :
 		<select id='canvasDimensions'>
 			<option value="640x480">640x480</option>
@@ -120,7 +125,7 @@ body {
 			<option value="240x180">240x180</option>
 		</select>
 	</label>
-	<br/>
+	<br />
 	<label title='enabled image smoothing'>image smoothing :
 		<select id='imageSmoothingEnabled'>
 			<option value="true">true</option>
@@ -132,20 +137,20 @@ body {
 	<h3>Controls Parameters</h3>
 	<label title='The type of marker detected'>Marker Type :
 		<select id='markerType'>
-		  <option value="hiro">hiro</option>
-		  <option value="kanji">kanji</option>
-		  <option value="unknown">unknown</option>
-		  <option value="barcode_3x3_20">barcode_3x3_20</option>
+			<option value="hiro">hiro</option>
+			<option value="kanji">kanji</option>
+			<option value="unknown">unknown</option>
+			<option value="barcode_3x3_20">barcode_3x3_20</option>
 		</select>
 	</label>
-	<br/>
+	<br />
 	<label title='change matrix mode'>matrix mode :
 		<select id='matrixMode'>
 			<option value="modelViewMatrix">modelViewMatrix</option>
 			<option value="cameraTransformMatrix">cameraTransformMatrix</option>
 		</select>
 	</label>
-	<br/>
+	<br />
 	<label title='size of the marker in meters'>size in meters :
 		<select id='makerSize'>
 			<option value="1">1</option>
@@ -155,7 +160,7 @@ body {
 			<option value="5">5</option>
 		</select>
 	</label>
-	<br/>
+	<br />
 	<label title='minimal confidence in the marke recognition'>minimal recognition confidence :
 		<select id='confidence'>
 			<option value="0">0</option>
@@ -169,238 +174,288 @@ body {
 </div>
 
 
-<body style='margin : 0px; overflow: hidden; font-family: Monospace;'><div style='position: absolute; top: 10px; width:100%; text-align: center;z-index:1;'>
-	Based on the original example parameters-tunning.html by <a href="https://github.com/jeromeetienne/AR.js/" target="_blank">AR.js</a>
-	<br/>
-</div><script>
-	//////////////////////////////////////////////////////////////////////////////////
-	//		Init
-	//////////////////////////////////////////////////////////////////////////////////
+<body style='margin : 0px; overflow: hidden; font-family: Monospace;'>
+	<div style='position: absolute; top: 10px; width:100%; text-align: center;z-index:1;'>
+		Based on the original example parameters-tunning.html by <a href="https://github.com/jeromeetienne/AR.js/"
+			target="_blank">AR.js</a>
+		<br />
+	</div>
+	<script>
+		//////////////////////////////////////////////////////////////////////////////////
+		//		Init
+		//////////////////////////////////////////////////////////////////////////////////
 
-	// init renderer
-	var renderer	= new THREE.WebGLRenderer({
-		antialias	: true,
-		alpha: true
-	});
-	renderer.setClearColor(new THREE.Color('lightgrey'), 0)
-	renderer.setSize( 640, 480 );
-	renderer.domElement.style.position = 'absolute'
-	renderer.domElement.style.top = '0px'
-	renderer.domElement.style.left = '0px'
-	document.body.appendChild( renderer.domElement );
+		// init renderer
+		var renderer = new THREE.WebGLRenderer({
+			antialias: true,
+			alpha: true
+		});
+		renderer.setClearColor(new THREE.Color('lightgrey'), 0)
+		renderer.setSize(640, 480);
+		renderer.domElement.style.position = 'absolute'
+		renderer.domElement.style.top = '0px'
+		renderer.domElement.style.left = '0px'
+		document.body.appendChild(renderer.domElement);
 
-	// array of functions for the rendering loop
-	var onRenderFcts= [];
+		// array of functions for the rendering loop
+		var onRenderFcts = [];
+		var arToolkitContext, arMarkerControls;
 
-	// init scene and camera
-	var scene	= new THREE.Scene();
+		// init scene and camera
+		var scene = new THREE.Scene();
+		var markerRoot = new THREE.Group
+		scene.add(markerRoot)
 
-	var ambient = new THREE.AmbientLight( 0x666666 );
-	scene.add( ambient );
+		var ambient = new THREE.AmbientLight(0x666666);
+		scene.add(ambient);
 
-	var directionalLight = new THREE.DirectionalLight( 0x887766 );
-	directionalLight.position.set( -1, 1, 1 ).normalize();
-	scene.add( directionalLight );
+		var directionalLight = new THREE.DirectionalLight(0x887766);
+		directionalLight.position.set(-1, 1, 1).normalize();
+		scene.add(directionalLight);
 
-	//////////////////////////////////////////////////////////////////////////////////
-	//		Initialize a basic camera
-	//////////////////////////////////////////////////////////////////////////////////
+		//////////////////////////////////////////////////////////////////////////////////
+		//		Initialize a basic camera
+		//////////////////////////////////////////////////////////////////////////////////
 
-	// Create a camera
-	var camera = new THREE.Camera();
-	scene.add(camera);
+		// Create a camera
+		var camera = new THREE.Camera();
+		scene.add(camera);
 
-	////////////////////////////////////////////////////////////////////////////////
-	//          handle arToolkitSource
-	////////////////////////////////////////////////////////////////////////////////
-	function buildSourceParameters(){
-		var sourceParameters = {}
+		////////////////////////////////////////////////////////////////////////////////
+		//          handle arToolkitSource
+		////////////////////////////////////////////////////////////////////////////////
+		function buildSourceParameters() {
+			var sourceParameters = {}
 
-		// handle #videoSourceType
-		var value = document.querySelector('#videoSourceType').value
-		var sourceType = value.split('_')[0]
-		console.log(sourceType);
-		var sourceUrl = value.split('_')[1]
-		console.log(sourceUrl);
-		if( sourceType === 'webcam' ){
-			sourceParameters.sourceType = sourceType
-		}else if( sourceType === 'image' ){
-			sourceParameters.sourceType = sourceType
-			sourceParameters.sourceUrl = THREEx.ArToolkitContext.baseURL + '../resources/data/images/' + sourceUrl
-		}else if( sourceType === 'video' ){
-			sourceParameters.sourceType = sourceType
-			sourceParameters.sourceUrl = THREEx.ArToolkitContext.baseURL + '../resources/data/videos/' + sourceUrl
+			// handle #videoSourceType
+			var value = document.querySelector('#videoSourceType').value
+			var sourceType = value.split('_')[0]
+			console.log(sourceType);
+			var sourceUrl = value.split('_')[1]
+			console.log(sourceUrl);
+			if (sourceType === 'webcam') {
+				sourceParameters.sourceType = sourceType
+			} else if (sourceType === 'image') {
+				sourceParameters.sourceType = sourceType
+				sourceParameters.sourceUrl = THREEx.ArToolkitContext.baseURL + '../resources/data/images/' + sourceUrl
+			} else if (sourceType === 'video') {
+				sourceParameters.sourceType = sourceType
+				sourceParameters.sourceUrl = THREEx.ArToolkitContext.baseURL + '../resources/data/videos/' + sourceUrl
+			}
+
+			return sourceParameters
 		}
 
-		return sourceParameters
-	}
+		function buildContextParameters() {
+			var contextParameters = {}
 
-	function buildContextParameters(){
-		var contextParameters = {}
-
-		var value = document.querySelector('#debug').value
-		if(value === 'true'){
-			contextParameters.debug = value;
-		} else if(value === 'false') {
-			contextParameters.debug = value;
-		}
-		return contextParameters
-	}
-
-	function onParametersChange(){
-		var parameters = {
-			sourceParameters : buildSourceParameters()
+			var value = document.querySelector('#debug').value
+			if (value === 'true') {
+				contextParameters.debug = value;
+			} else if (value === 'false') {
+				contextParameters.debug = value;
+			}
+			return contextParameters
 		}
 
-		location.hash = '#' + encodeURIComponent( JSON.stringify(parameters) )
-		location.reload()
-	}
+		function onParametersChange() {
+			var parameters = {
+				sourceParameters: buildSourceParameters()
+			}
 
-	document.querySelector('#videoSourceType').addEventListener('change', onParametersChange)
-
-	var sourceParameters = {
-		sourceType : 'webcam'
-	}
-
-	if( location.hash.substring(1) ){
-		var data = JSON.parse( decodeURIComponent( location.hash.substring(1) ) )
-		sourceParameters = data.sourceParameters
-
-		console.log('there is a hash parameters', data)
-	}
-
-	function onEnableDebug() {
-		var parameters = {
-			contextParameters: buildContextParameters()
+			location.hash = '#' + encodeURIComponent(JSON.stringify(parameters))
+			location.reload()
 		}
-		location.hash = '#' + encodeURIComponent( JSON.stringify(parameters) )
-		location.reload()
-	}
 
-	document.querySelector('#debug').addEventListener('change', onEnableDebug)
+		document.querySelector('#videoSourceType').addEventListener('change', onParametersChange)
 
-	var contextParameters = {
-		debug : 'true'
-	}
-
-	if( location.hash.substring(1) ){
-		var data = JSON.parse( decodeURIComponent( location.hash.substring(1) ) )
-		contextParameters = data.contextParameters
-
-		console.log('there is a hash parameters', data)
-	}
-
-	var arToolkitContext = new THREEx.ArToolkitContext(contextParameters)
-
-
-	var arToolkitSource = new THREEx.ArToolkitSource(sourceParameters)
-
-	arToolkitSource.init(function onReady(){
-		// handle resize of renderer
-		onResize()
-	})
-
-	// handle resize
-	window.addEventListener('resize', function(){
-		// handle arToolkitSource resize
-		onResize()
-	})
-
-	function onResize(){
-		arToolkitSource.onResizeElement()
-		arToolkitSource.copyElementSizeTo(renderer.domElement)
-		if( arToolkitContext.arController !== null ){
-			arToolkitSource.copyElementSizeTo(arToolkitContext.arController.canvas)
+		var sourceParameters = {
+			sourceType: 'webcam'
 		}
-	}
 
-	////////////////////////////////////////////////////////////////////////////////
-	//          initialize arToolkitContext
-	////////////////////////////////////////////////////////////////////////////////
+		if (location.hash.substring(1)) {
+			var data = JSON.parse(decodeURIComponent(location.hash.substring(1)))
+			sourceParameters = data.sourceParameters
 
-	// create atToolkitContext
-	var arToolkitContext = new THREEx.ArToolkitContext({
-		cameraParametersUrl: THREEx.ArToolkitContext.baseURL + '../resources/data/camera_para.dat',
-		detectionMode: 'mono',
-	})
-	// initialize it
-	arToolkitContext.init(function onCompleted(){
-		// copy projection matrix to camera
-		camera.projectionMatrix.copy( arToolkitContext.getProjectionMatrix() );
-	})
+			console.log('there is a hash parameters', data)
+		}
 
-	// update artoolkit on every frame
-	onRenderFcts.push(function(){
-		if( arToolkitSource.ready === false )	return
+		function onEnableDebug() {
+			var parameters = {
+				contextParameters: buildContextParameters()
+			}
+			location.hash = '#' + encodeURIComponent(JSON.stringify(parameters))
+			location.reload()
+		}
 
-		arToolkitContext.update( arToolkitSource.domElement )
-	})
+		document.querySelector('#debug').addEventListener('change', onEnableDebug)
 
+		var contextParameters = {
+			debug: 'true'
+		}
 
-	////////////////////////////////////////////////////////////////////////////////
-	//          Create a ArMarkerControls
-	////////////////////////////////////////////////////////////////////////////////
+		if (location.hash.substring(1)) {
+			var data = JSON.parse(decodeURIComponent(location.hash.substring(1)))
+			contextParameters = data.contextParameters
 
-	var markerRoot = new THREE.Group
-	scene.add(markerRoot)
-	var artoolkitMarker = new THREEx.ArMarkerControls(arToolkitContext, markerRoot, {
-		type : 'pattern',
-		patternUrl : THREEx.ArToolkitContext.baseURL + '../resources/data/patt.hiro',
-		// patternUrl : THREEx.ArToolkitContext.baseURL + '../data/data/patt.kanji',
-	})
+			console.log('there is a hash parameters', data)
+		}
 
-	//////////////////////////////////////////////////////////////////////////////////
-	//		add an object in the scene
-	//////////////////////////////////////////////////////////////////////////////////
+		var arToolkitContext = new THREEx.ArToolkitContext(contextParameters)
 
 
-	var mesh = new THREE.AxesHelper()
-	markerRoot.add(mesh)
+		var arToolkitSource = new THREEx.ArToolkitSource(sourceParameters)
 
-	// add a torus knot
-	var geometry	= new THREE.CubeGeometry(1,1,1);
-	var material	= new THREE.MeshNormalMaterial({
-		transparent : true,
-		opacity: 0.5,
-		side: THREE.DoubleSide
-	});
-	var mesh	= new THREE.Mesh( geometry, material );
-	mesh.position.y	= geometry.parameters.height/2
-	markerRoot.add( mesh );
+		arToolkitSource.init(function onReady() {
+			arToolkitSource.domElement.addEventListener('canplay', () => {
+				console.log(
+					'canplay',
+					'actual source dimensions',
+					arToolkitSource.domElement.videoWidth,
+					arToolkitSource.domElement.videoHeight
+				);
 
-	var geometry	= new THREE.TorusKnotGeometry(0.3,0.1,64,16);
-	var material	= new THREE.MeshNormalMaterial();
-	var mesh	= new THREE.Mesh( geometry, material );
-	mesh.position.y	= 0.5
-	markerRoot.add( mesh );
-
-	onRenderFcts.push(function(delta){
-		mesh.rotation.x += delta * Math.PI
-	})
-
-	//////////////////////////////////////////////////////////////////////////////////
-	//		render the whole thing on the page
-	//////////////////////////////////////////////////////////////////////////////////
-	var stats = new Stats();
-	// document.body.appendChild( stats.dom );
-	// render the scene
-	onRenderFcts.push(function(){
-		renderer.render( scene, camera );
-		stats.update();
-	})
-
-	// run the rendering loop
-	var lastTimeMsec= null
-	requestAnimationFrame(function animate(nowMsec){
-		// keep looping
-		requestAnimationFrame( animate );
-		// measure time
-		lastTimeMsec	= lastTimeMsec || nowMsec-1000/60
-		var deltaMsec	= Math.min(200, nowMsec - lastTimeMsec)
-		lastTimeMsec	= nowMsec
-		// call each update function
-		onRenderFcts.forEach(function(onRenderFct){
-			onRenderFct(deltaMsec/1000, nowMsec/1000)
+				initARContext();
+			});
+			window.arToolkitSource = arToolkitSource;
+			setTimeout(() => {
+				onResize()
+			}, 2000);
 		})
-	})
-</script></body>
+
+		// handle resize
+		window.addEventListener('resize', function () {
+			// handle arToolkitSource resize
+			onResize()
+		})
+
+		function onResize() {
+			arToolkitSource.onResizeElement()
+			arToolkitSource.copyElementSizeTo(renderer.domElement)
+			if (arToolkitContext.arController !== null) {
+				arToolkitSource.copyElementSizeTo(arToolkitContext.arController.canvas)
+			}
+		}
+
+		////////////////////////////////////////////////////////////////////////////////
+		//          initialize arToolkitContext
+		////////////////////////////////////////////////////////////////////////////////
+
+		function initARContext() { // create atToolkitContext
+			arToolkitContext = new THREEx.ArToolkitContext({
+				cameraParametersUrl: THREEx.ArToolkitContext.baseURL + '../resources/data/camera_para.dat',
+				detectionMode: 'mono'
+			})
+			// initialize it
+			arToolkitContext.init(() => { // copy projection matrix to camera
+				camera.projectionMatrix.copy(arToolkitContext.getProjectionMatrix());
+
+				arToolkitContext.arController.orientation = getSourceOrientation();
+				arToolkitContext.arController.options.orientation = getSourceOrientation();
+
+				console.log('arToolkitContext', arToolkitContext);
+				window.arToolkitContext = arToolkitContext;
+			})
+
+			// MARKER
+			arMarkerControls = new THREEx.ArMarkerControls(arToolkitContext, markerRoot, {
+				type: 'pattern',
+				patternUrl: THREEx.ArToolkitContext.baseURL + '../resources/data/patt.hiro',
+			})
+
+			scene.visible = false
+
+			console.log('ArMarkerControls', arMarkerControls);
+			window.arMarkerControls = arMarkerControls;
+		}
+
+
+		function getSourceOrientation() {
+			if (!arToolkitSource) {
+				return null;
+			}
+
+			console.log(
+				'actual source dimensions',
+				arToolkitSource.domElement.videoWidth,
+				arToolkitSource.domElement.videoHeight
+			);
+
+			if (arToolkitSource.domElement.videoWidth > arToolkitSource.domElement.videoHeight) {
+				console.log('source orientation', 'landscape');
+				return 'landscape';
+			} else {
+				console.log('source orientation', 'portrait');
+				return 'portrait';
+			}
+		}
+
+		// update artoolkit on every frame
+		onRenderFcts.push(function () {
+			if (!arToolkitContext || !arToolkitSource || !arToolkitSource.ready) {
+				return;
+			}
+
+			arToolkitContext.update(arToolkitSource.domElement)
+
+			// update scene.visible if the marker is seen
+			scene.visible = camera.visible
+		})
+
+
+		//////////////////////////////////////////////////////////////////////////////////
+		//		add an object in the scene
+		//////////////////////////////////////////////////////////////////////////////////
+
+
+		var mesh = new THREE.AxesHelper()
+		markerRoot.add(mesh)
+
+		// add a torus knot
+		var geometry = new THREE.BoxGeometry(1, 1, 1);
+		var material = new THREE.MeshNormalMaterial({
+			transparent: true,
+			opacity: 0.5,
+			side: THREE.DoubleSide
+		});
+		var mesh = new THREE.Mesh(geometry, material);
+		mesh.position.y = geometry.parameters.height / 2
+		markerRoot.add(mesh);
+
+		var geometry = new THREE.TorusKnotGeometry(0.3, 0.1, 64, 16);
+		var material = new THREE.MeshNormalMaterial();
+		var mesh = new THREE.Mesh(geometry, material);
+		mesh.position.y = 0.5
+		markerRoot.add(mesh);
+
+		onRenderFcts.push(function (delta) {
+			mesh.rotation.x += delta * Math.PI
+		})
+
+		//////////////////////////////////////////////////////////////////////////////////
+		//		render the whole thing on the page
+		//////////////////////////////////////////////////////////////////////////////////
+		var stats = new Stats();
+		// document.body.appendChild( stats.dom );
+		// render the scene
+		onRenderFcts.push(function () {
+			renderer.render(scene, camera);
+			stats.update();
+		})
+
+		// run the rendering loop
+		var lastTimeMsec = null
+		requestAnimationFrame(function animate(nowMsec) {
+			// keep looping
+			requestAnimationFrame(animate);
+			// measure time
+			lastTimeMsec = lastTimeMsec || nowMsec - 1000 / 60
+			var deltaMsec = Math.min(200, nowMsec - lastTimeMsec)
+			lastTimeMsec = nowMsec
+			// call each update function
+			onRenderFcts.forEach(function (onRenderFct) {
+				onRenderFct(deltaMsec / 1000, nowMsec / 1000)
+			})
+		})
+	</script>
+</body>
