@@ -1,0 +1,157 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Optical Flow with OpenCV.js - kalwalt-interactivity-AR</title>
+</head>
+
+<body>
+    <h2>Optical Flow with OpenCV.js</h2>
+    <p id="status">OpenCV.js is loading...</p>
+    <button onClick="runOpticalFlow()" type="button" id="webcamButton">
+        grab frames
+    </button>
+    <video id="webcam" autoplay muted width="640" height="480"></video>
+    <canvas id="canvasOutput" width="640" height="480"></canvas>
+
+    <script>
+        const video = document.getElementById('webcam');
+        const enableWebcamButton = document.getElementById('webcamButton');
+        let streaming = false;
+
+        // Check if webcam access is supported.
+        function getUserMediaSupported() {
+            return !!(navigator.mediaDevices &&
+                navigator.mediaDevices.getUserMedia);
+        }
+        if (getUserMediaSupported()) {
+            enableWebcamButton.addEventListener('click', enableCam);
+        } else {
+            console.warn('getUserMedia() is not supported by your browser');
+        }
+
+        // Enable the live webcam view.
+        function enableCam() {
+
+            // getUsermedia parameters to force video but not audio.
+            const constraints = {
+                video: true
+            };
+
+            // Activate the webcam stream.
+            navigator.mediaDevices.getUserMedia(constraints).then(function (stream) {
+                video.srcObject = stream;
+                video.addEventListener('loadeddata', runOpticalFlow);
+                streaming = true;
+            });
+        }
+
+        function runOpticalFlow() {
+            //let video = document.getElementById('webcam');
+            let cap = new cv.VideoCapture(video);
+
+            // parameters for ShiTomasi corner detection
+            let [maxCorners, qualityLevel, minDistance, blockSize] = [30, 0.3, 7, 7];
+
+            // parameters for lucas kanade optical flow
+            let winSize = new cv.Size(15, 15);
+            let maxLevel = 2;
+            let criteria = new cv.TermCriteria(cv.TERM_CRITERIA_EPS | cv.TERM_CRITERIA_COUNT, 10, 0.03);
+
+            // create some random colors
+            let color = [];
+            for (let i = 0; i < maxCorners; i++) {
+                color.push(new cv.Scalar(parseInt(Math.random() * 255), parseInt(Math.random() * 255),
+                    parseInt(Math.random() * 255), 255));
+            }
+
+            // take first frame and find corners in it
+            let oldFrame = new cv.Mat(video.height, video.width, cv.CV_8UC4);
+            cap.read(oldFrame);
+            let oldGray = new cv.Mat();
+            cv.cvtColor(oldFrame, oldGray, cv.COLOR_RGB2GRAY);
+            let p0 = new cv.Mat();
+            let none = new cv.Mat();
+            cv.goodFeaturesToTrack(oldGray, p0, maxCorners, qualityLevel, minDistance, none, blockSize);
+
+            // Create a mask image for drawing purposes
+            let zeroEle = new cv.Scalar(0, 0, 0, 255);
+            let mask = new cv.Mat(oldFrame.rows, oldFrame.cols, oldFrame.type(), zeroEle);
+
+            let frame = new cv.Mat(video.height, video.width, cv.CV_8UC4);
+            let frameGray = new cv.Mat();
+            let p1 = new cv.Mat();
+            let st = new cv.Mat();
+            let err = new cv.Mat();
+
+            const FPS = 30;
+            function processVideo() {
+                try {
+                    if (!streaming) {
+                        // clean and stop.
+                        frame.delete(); oldGray.delete(); p0.delete(); p1.delete(); err.delete(); mask.delete();
+                        return;
+                    }
+                    let begin = Date.now();
+
+                    // start processing.
+                    cap.read(frame);
+                    console.log('reading');
+                    cv.cvtColor(frame, frameGray, cv.COLOR_RGBA2GRAY);
+
+                    // calculate optical flow
+                    cv.calcOpticalFlowPyrLK(oldGray, frameGray, p0, p1, st, err, winSize, maxLevel, criteria);
+
+                    // select good points
+                    let goodNew = [];
+                    let goodOld = [];
+                    for (let i = 0; i < st.rows; i++) {
+                        if (st.data[i] === 1) {
+                            goodNew.push(new cv.Point(p1.data32F[i * 2], p1.data32F[i * 2 + 1]));
+                            goodOld.push(new cv.Point(p0.data32F[i * 2], p0.data32F[i * 2 + 1]));
+                        }
+                    }
+
+                    // draw the tracks
+                    for (let i = 0; i < goodNew.length; i++) {
+                        cv.line(mask, goodNew[i], goodOld[i], color[i], 2);
+                        cv.circle(frame, goodNew[i], 5, color[i], -1);
+                    }
+                    cv.add(frame, mask, frame);
+
+                    cv.imshow('canvasOutput', frame);
+
+                    // now update the previous frame and previous points
+                    frameGray.copyTo(oldGray);
+                    p0.delete(); p0 = null;
+                    p0 = new cv.Mat(goodNew.length, 1, cv.CV_32FC2);
+                    for (let i = 0; i < goodNew.length; i++) {
+                        p0.data32F[i * 2] = goodNew[i].x;
+                        p0.data32F[i * 2 + 1] = goodNew[i].y;
+                    }
+
+                    // schedule the next one.
+                    let delay = 1000 / FPS - (Date.now() - begin);
+                    setTimeout(processVideo, delay);
+                } catch (err) {
+                    console.log(err);
+                }
+            };
+
+            // schedule the first one.
+            setTimeout(processVideo, 0);
+        }
+
+        async function onOpenCvReady() {
+            window.cv = await window.cv
+            document.getElementById('status').innerHTML = 'OpenCV.js is ready.';
+        }
+
+    </script>
+    <script async src="../resources/opencv/opencv.js" onload="onOpenCvReady();" type="text/javascript"></script>
+</body>
+
+</html>
