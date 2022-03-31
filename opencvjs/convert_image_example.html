@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="en">
+    <!-- code from this gist https://gist.github.com/pirosuke/1c31c2e6370c53a15e8774bb90b2d6cf-->
+    <head>
+        <meta charset="UTF-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>OpenCV.js image converter example - kalwalt-interactivity-AR</title>
+    </head>
+    <body>
+        <h2>Convert an image with Opencv.js</h2>
+        <p id="status">OpenCV.js is loading...</p>
+        <table>
+            <tr>
+                <th>source</th>
+                <th>output</th>
+            </tr>
+            <tr>
+                <td>
+                    <img src="../resources/data/images/pinball.jpg" id="src-image" style="width: 400px;" />
+                    <img id="hidden-image" src="../resources/data/images/pinball.jpg" style="display: none;" />
+                </td>
+                <td>
+                    <canvas id="dest-canvas"></canvas>
+                    <canvas id="hidden-canvas" style="display: none;"></canvas>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <input type="file" id="input-file" />
+                </td>
+                <td>
+                    <input type="button" value="convert to grayscale" id="gray-scale-btn" />
+                    <input type="button" value="find contours" id="linedraw-btn" />
+                    <a href="#" id="download-btn" download="converted.png">Download image</a>
+                </td>
+            </tr>
+        </table>
+        
+        <script async src="../resources/opencv/opencv.js" onload="onOpenCvReady();" type="text/javascript"></script>
+        <script src="./converter.js" type="text/javascript"></script>
+    </body>
+</html>

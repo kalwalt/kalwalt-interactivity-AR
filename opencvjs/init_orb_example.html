@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="en">
+<!-- code adapted from C++ https://github.com/EdwardLu2018/wasm-ar-->
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Create orb descriptors with Opencv.js - kalwalt-interactivity-AR</title>
+</head>
+
+<body>
+    <h2>Create orb descriptors with Opencv.js</h2>
+    <p id="status">OpenCV.js is loading...</p>
+    <div class="inputoutput">
+        <img id="imageSrc" alt="No Image" />
+        <div class="caption">imageSrc <input type="file" id="fileInput" name="file" /></div>
+    </div>
+    <div class="inputoutput">
+        <canvas id="canvasOutput" ></canvas>
+        <div class="caption">canvasOutput</div>
+      </div>
+    <script>
+        let imgElement = document.getElementById('imageSrc');
+        let inputElement = document.getElementById('fileInput');
+        inputElement.addEventListener('change', (e) => {
+            imgElement.src = URL.createObjectURL(e.target.files[0]);
+        }, false);
+        imgElement.onload = function () {
+            console.log(cv);
+            console.log(imgElement.width)
+            initAR(imgElement, imgElement.width, imgElement.height)
+        };
+        
+        async function onOpenCvReady() {
+            window.cv = await window.cv
+            document.getElementById('status').innerHTML = 'OpenCV.js is ready.';
+        }
+    </script>
+    <script src="image-tracker-cv.js"></script>
+    <script async src="../resources/opencv/opencv.js" onload="onOpenCvReady();" type="text/javascript"></script>
+</body>
+
+</html>
