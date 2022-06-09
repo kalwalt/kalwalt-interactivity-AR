@@ -4,6 +4,9 @@
 Some various experiments with [Ar.js](https://github.com/AR-js-org/AR.js) and [Three.js](https://threejs.org/) and not only.
 Note that some of them maybe can not works... It's my notebook, block of sketches of small applications or fragments of code that I am testing.
 
+## AR.js Examples
+You can find some **AR.js** examples not included in the official repository. Now using version `3.4.0-alpha-rc1`.
+
 ## NFT and Jsartoolkit5
 In the repository there are some examples not included in the official [artoolkitx/jsartoolkit5](https://github.com/artoolkitx/jsartoolkit5) repository.
 
