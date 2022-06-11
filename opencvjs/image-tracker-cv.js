@@ -4,7 +4,8 @@ var refDescr;
 var corners = [];
 var initialized;
 
-const ValidPointTotal = 15
+const ValidPointTotal = 6;
+const MaxFeatures = 2000;
 var template_keypoints_vector;
 var template_descriptors;
 var homography_transform;
@@ -52,7 +53,7 @@ function initTemplateImage(templateImageData) {
   // 
   var noArray = new cv.Mat();
   // 
-  var orb = new cv.ORB();
+  var orb = new cv.ORB(MaxFeatures);
   // 
   orb.detectAndCompute(src, noArray, template_keypoints_vector, template_descriptors);
   // 
@@ -73,7 +74,7 @@ function detectAndCompute(keyFrameImageData) {
   // 
   var frame_descriptors = new cv.Mat();
   // 
-  var orb = new cv.ORB();
+  var orb = new cv.ORB(MaxFeatures);
   // 
   var noArray = new cv.Mat();
   // 
@@ -86,8 +87,7 @@ function detectAndCompute(keyFrameImageData) {
   var frame_keypoints = [];
   // 
   var template_keypoints = [];
-
-  // 
+  //
   for (var i = 0; i < knnMatches.size(); i++) {
       var point = knnMatches.get(i).get(0)
       var point2 = knnMatches.get(i).get(1)
@@ -115,6 +115,7 @@ function detectAndCompute(keyFrameImageData) {
       templateMat.data32F[i * 2] = template_keypoints[i].x;
       templateMat.data32F[i * 2 + 1] = template_keypoints[i].y;
   }
+  console.log("template key points: ",template_keypoints.length);
   // 
   if (template_keypoints.length >= ValidPointTotal) {
       var homography = cv.findHomography(templateMat, frameMat, cv.RANSAC)
